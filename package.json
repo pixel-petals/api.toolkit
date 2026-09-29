@@ -1,5 +1,5 @@
 {
-  "name": "@px-petals/yaak-human-ids",
+  "name": "@px-petals/api.yaak-human-ids",
   "private": true,
   "version": "0.0.1",
   "scripts": {

@@ -1,4 +1,4 @@
-# @px-petals/yaak-human-ids
+# @px-petals/api.yaak-human-ids
 
 A [Yaak](https://yaak.app) plugin that gives folders readable IDs, so a workspace synced to disk or git references `folder-Users` rather than a random string.
 
