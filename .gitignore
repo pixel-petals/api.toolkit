@@ -12,6 +12,7 @@
 !/.gitignore
 !/.gitmodules
 !/LICENSE
+!/.npmrc
 
 !/src
 !/src/**
@@ -21,3 +22,9 @@
 !package.json
 !package-lock.json
 !tsconfig.json
+
+# Blacklist (after the whitelist, so it wins over !/src/**)
+# ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+# links this checkout's dependencies to sibling checkouts (packager)
+**/package-local.json

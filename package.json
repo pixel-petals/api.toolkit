@@ -4,10 +4,12 @@
   "version": "0.0.1",
   "scripts": {
     "build": "yaak plugin build",
+    "dependencies": "packager link || exit 0",
     "dev": "yaak plugin dev",
     "test": "vitest run"
   },
   "devDependencies": {
+    "@px-petals/tools.packager": "github:pixel-petals/tools.packager",
     "@types/node": "^24.10.1",
     "@yaakapp/cli": "^2026.8.1",
     "typescript": "^5.9.3",
