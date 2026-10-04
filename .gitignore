@@ -12,6 +12,7 @@
 !/.gitignore
 !/.gitmodules
 !/LICENSE
+!/.npmrc
 
 !/src
 !/src/**
@@ -21,3 +22,6 @@
 !package.json
 !package-lock.json
 !tsconfig.json
+
+# links this checkout's dependencies to sibling checkouts (packager)
+**/package-local.json
