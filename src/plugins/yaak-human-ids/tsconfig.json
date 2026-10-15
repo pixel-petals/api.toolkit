@@ -1,20 +1,12 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2021",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "useDefineForClassFields": true,
-    "allowJs": false,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    // Yaak runs plugins in Node
+    "types": ["node"]
   },
-  "include": ["src"]
+  // the Yaak plugin scaffold is TypeScript, bundled by the Yaak CLI
+  "include": [
+    "src/**/*.ts",
+    "src/**/.*/**/*.ts"
+  ]
 }

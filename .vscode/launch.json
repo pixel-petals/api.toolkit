@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // rebuilds build/index.js on every change; Yaak reloads the bundle
+      "name": "Yaak human IDs plugin (yaak plugin dev)",
+      "request": "launch",
+      "type": "node-terminal",
+      "command": "npm run plugin:yaak-human-ids dev",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

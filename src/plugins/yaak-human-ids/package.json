@@ -6,7 +6,8 @@
   "scripts": {
     "build": "yaak plugin build",
     "dev": "yaak plugin dev",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc -p ."
   },
   "dependencies": {
     "@yaakapp/api": "^0.8.3"
