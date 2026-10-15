@@ -4,26 +4,29 @@
       "main"
     ]
   },
-  "name": "@px-petals/api.yaak-human-ids",
+  "name": "@px-petals/api.toolkit",
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "yaak plugin build",
     "dependencies": "packager link || exit 0",
-    "dev": "yaak plugin dev",
     "metapak": "metapak-px",
-    "test": "vitest run"
+    "plugin:yaak-human-ids": "npm run --workspace @plugin/yaak-human-ids",
+    "test": "npm run --workspaces --if-present test"
   },
+  "workspaces": [
+    "src/.tests/*",
+    "src/apps/*",
+    "src/packages/*",
+    "src/plugins/*",
+    "src/tools/*",
+    "src/utils/*"
+  ],
   "devDependencies": {
     "@px-petals/metapak-dependencies": "github:pixel-petals/.dependencies",
     "@px-petals/tools.packager": "github:pixel-petals/tools.packager",
     "@types/node": "^24.10.1",
-    "@yaakapp/cli": "^2026.8.1",
     "metapak": "7.1.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.14"
-  },
-  "dependencies": {
-    "@yaakapp/api": "^0.8.3"
   }
 }

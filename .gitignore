@@ -25,3 +25,7 @@
 
 # links this checkout's dependencies to sibling checkouts (packager)
 **/package-local.json
+
+# workspace packages' installs and Yaak bundles
+**/node_modules/
+**/build/
