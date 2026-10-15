@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    // Yaak runs plugins in Node
+    "types": ["node"]
+  },
+  // the Yaak plugin scaffold is TypeScript, bundled by the Yaak CLI
+  "include": [
+    "src/**/*.ts",
+    "src/**/.*/**/*.ts"
+  ]
+}
