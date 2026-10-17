@@ -59,3 +59,4 @@ Load the `skills-monorepo:vscode-sync` skill whenever a `package.json` script is
 - **Bundle location:** the Yaak CLI writes `build/index.js` beside the plugin's `package.json` and has no option to change it, and Yaak loads the plugin from there. So that one package keeps `build/` instead of `.artifacts/dist/`.
 - **CommonJS:** the bundle is CommonJS (`exports.plugin = …`), so the plugin package is `"type": "commonjs"`. Making it `"module"` stops Yaak loading the bundle.
 - **Setup:** loading the plugin into Yaak is covered in [src/.docs/setup.md](src/.docs/setup.md). npm's warning that `@yaakapp/cli`'s postinstall was blocked is expected and safe to ignore.
+- **API specs:** [src/apps/spec](src/apps/spec) is the former `api.spec` repository, absorbed with its history. Its members (`src/apps/spec/src/{packages,utils}/*`) are workspaces of this root, and its own [CLAUDE.md](src/apps/spec/CLAUDE.md) covers them.
