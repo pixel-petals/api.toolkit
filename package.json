@@ -9,7 +9,7 @@
   "private": true,
   "author": "Pixel Petals",
   "license": "Apache-2.0",
-  "description": "Tooling for working with HTTP APIs, starting with a Yaak plugin.",
+  "description": "Tooling for working with HTTP APIs: a Yaak plugin, and vendored API specification schemas split into fragments an editor can validate against.",
   "repository": {
     "url": "https://github.com/pixel-petals/api.toolkit",
     "type": "git"
@@ -43,9 +43,7 @@
     "src/packages/*",
     "src/plugins/*",
     "src/tools/*",
-    "src/utils/*",
-    "src/apps/spec/src/packages/*",
-    "src/apps/spec/src/utils/*"
+    "src/utils/*"
   ],
   "engines": {
     "node": ">=24"
