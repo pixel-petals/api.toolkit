@@ -1,0 +1,249 @@
+{
+  "get": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_search",
+    "summary": "Search a DataStore table",
+    "description": "Search, filter, and paginate data in a DataStore resource. By default returns 100 rows.\n\nA public DataStore resource can be read without authentication. Private resources require an API token.\n\nAll parameters can also be sent as a JSON POST body.",
+    "parameters": [
+      {
+        "name": "resource_id",
+        "in": "query",
+        "required": true,
+        "description": "Resource id or alias (e.g. `_table_metadata` to list all tables).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "description": "JSON dict of equality or comparison filters. E.g. `{\"name\":\"fred\"}` or `{\"year\":{\"lt\":2020}}`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Full-text search string across all fields, or JSON dict `{field: value}` for per-field search.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "distinct",
+        "in": "query",
+        "description": "Return distinct rows only.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "plain",
+        "in": "query",
+        "description": "Treat query as plain text (vs PostgreSQL tsquery syntax).",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "description": "Language for full-text search.",
+        "schema": {
+          "type": "string",
+          "default": "english"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Max rows (default 100, max 32000).",
+        "schema": {
+          "type": "integer",
+          "default": 100,
+          "maximum": 32000
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "fields",
+        "in": "query",
+        "description": "Comma-separated or JSON array of fields to return.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Sort expression. E.g. `fieldname1, fieldname2 desc nulls last`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_total",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "records_format",
+        "in": "query",
+        "description": "Response format for records: `objects` (default), `lists`, `csv`, `tsv`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "objects",
+            "lists",
+            "csv",
+            "tsv"
+          ],
+          "default": "objects"
+        }
+      },
+      {
+        "name": "include_next_page",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "result": {
+                  "$ref": "../../components/schemas/DatastoreSearchResult.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_search_post",
+    "summary": "Search a DataStore table (POST)",
+    "description": "Same as GET. Use POST for longer queries.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string"
+              },
+              "filters": {
+                "type": "object"
+              },
+              "q": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "distinct": {
+                "type": "boolean"
+              },
+              "plain": {
+                "type": "boolean"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "fields": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              },
+              "sort": {
+                "type": "string"
+              },
+              "include_total": {
+                "type": "boolean"
+              },
+              "records_format": {
+                "type": "string"
+              },
+              "include_next_page": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "resource_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

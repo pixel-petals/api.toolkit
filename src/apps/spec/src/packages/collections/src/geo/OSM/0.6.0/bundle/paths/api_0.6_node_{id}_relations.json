@@ -1,0 +1,34 @@
+{
+  "get": {
+    "operationId": "getNodeRelations",
+    "summary": "Get relations containing a node",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "All relations that include this node as a member",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "description": "OSM JSON response envelope",
+  "properties": {
+    "version": {
+      "type": "string",
+      "example": "0.6"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "copyright": {
+      "type": "string"
+    },
+    "attribution": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "$ref": "./OsmElement.json"
+      }
+    }
+  }
+}

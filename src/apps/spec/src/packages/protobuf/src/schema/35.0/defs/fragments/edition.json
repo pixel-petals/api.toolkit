@@ -1,0 +1,42 @@
+{
+  "name": "Edition",
+  "fullName": "google.protobuf.Edition",
+  "kind": "enum",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/Edition",
+  "descriptor": {
+    "edition": "proto2",
+    "values": {
+      "EDITION_UNKNOWN": 0,
+      "EDITION_LEGACY": 900,
+      "EDITION_PROTO2": 998,
+      "EDITION_PROTO3": 999,
+      "EDITION_2023": 1000,
+      "EDITION_2024": 1001,
+      "EDITION_2026": 1002,
+      "EDITION_UNSTABLE": 9999,
+      "EDITION_1_TEST_ONLY": 1,
+      "EDITION_2_TEST_ONLY": 2,
+      "EDITION_99997_TEST_ONLY": 99997,
+      "EDITION_99998_TEST_ONLY": 99998,
+      "EDITION_99999_TEST_ONLY": 99999,
+      "EDITION_MAX": 2147483647
+    },
+    "comment": "The full set of known editions.",
+    "comments": {
+      "EDITION_UNKNOWN": "A placeholder for an unknown edition value.",
+      "EDITION_LEGACY": "A placeholder edition for specifying default behaviors *before* a feature\nwas first introduced.  This is effectively an \"infinite past\".",
+      "EDITION_PROTO2": "Legacy syntax \"editions\".  These pre-date editions, but behave much like\ndistinct editions.  These can't be used to specify the edition of proto\nfiles, but feature definitions must supply proto2/proto3 defaults for\nbackwards compatibility.",
+      "EDITION_PROTO3": null,
+      "EDITION_2023": "Editions that have been released.  The specific values are arbitrary and\nshould not be depended on, but they will always be time-ordered for easy\ncomparison.",
+      "EDITION_2024": null,
+      "EDITION_2026": null,
+      "EDITION_UNSTABLE": "A placeholder edition for developing and testing unscheduled features.",
+      "EDITION_1_TEST_ONLY": "Placeholder editions for testing feature resolution.  These should not be\nused or relied on outside of tests.",
+      "EDITION_2_TEST_ONLY": null,
+      "EDITION_99997_TEST_ONLY": null,
+      "EDITION_99998_TEST_ONLY": null,
+      "EDITION_99999_TEST_ONLY": null,
+      "EDITION_MAX": "Placeholder for specifying unbounded edition support.  This should only\never be used by plugins that can expect to never require any changes to\nsupport a new edition."
+    }
+  }
+}

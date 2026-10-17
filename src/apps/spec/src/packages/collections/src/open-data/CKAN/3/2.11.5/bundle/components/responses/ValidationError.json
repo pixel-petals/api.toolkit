@@ -1,0 +1,19 @@
+{
+  "description": "Validation Error \u2014 the request body failed validation.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ActionResponse.json"
+      },
+      "example": {
+        "success": false,
+        "error": {
+          "__type": "Validation Error",
+          "name": [
+            "Missing value"
+          ]
+        }
+      }
+    }
+  }
+}

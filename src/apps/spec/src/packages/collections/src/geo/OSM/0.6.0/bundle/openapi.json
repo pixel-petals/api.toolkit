@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenStreetMap API v0.6",
+    "version": "0.6.0",
+    "description": "The OpenStreetMap Editing API v0.6. Allows reading and writing of OSM map data (nodes, ways, relations), changesets, GPS traces, notes, user data, and more.\n\nAuthentication uses OAuth 2.0. Read-only endpoints are generally public; write operations require authorization.\n\nBase URL: https://api.openstreetmap.org\n\nTest server: https://master.apis.dev.openstreetmap.org",
+    "contact": {
+      "name": "OpenStreetMap",
+      "url": "https://www.openstreetmap.org"
+    },
+    "license": {
+      "name": "ODbL 1.0",
+      "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.openstreetmap.org",
+      "description": "Production server"
+    },
+    {
+      "url": "https://master.apis.dev.openstreetmap.org",
+      "description": "Development/test server"
+    }
+  ],
+  "security": [
+    {},
+    {
+      "oauth2": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://www.openstreetmap.org/oauth2/authorize",
+            "tokenUrl": "https://www.openstreetmap.org/oauth2/token",
+            "scopes": {
+              "read_prefs": "Read user preferences",
+              "write_prefs": "Modify user preferences",
+              "write_api": "Modify the map (includes write_changeset_comments)",
+              "write_changeset_comments": "Comment on changesets",
+              "read_gpx": "Read private GPS traces",
+              "write_gpx": "Upload GPS traces",
+              "write_notes": "Modify notes",
+              "write_redactions": "Redact element versions",
+              "write_blocks": "Create and revoke user blocks",
+              "consume_messages": "Read, update status and delete user messages",
+              "send_messages": "Send private messages to other users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Miscellaneous",
+      "description": "API info, capabilities, map data, permissions"
+    },
+    {
+      "name": "Changesets",
+      "description": "Create, read, update, close, query changesets and upload diffs"
+    },
+    {
+      "name": "Changeset Discussion",
+      "description": "Comments and subscriptions on changesets"
+    },
+    {
+      "name": "Elements",
+      "description": "CRUD operations on nodes, ways and relations"
+    },
+    {
+      "name": "GPS Traces",
+      "description": "Upload and download GPS track data"
+    },
+    {
+      "name": "Users",
+      "description": "User details and preferences"
+    },
+    {
+      "name": "Notes",
+      "description": "Map notes (bug reports / field notes)"
+    },
+    {
+      "name": "User Blocks",
+      "description": "User block management"
+    }
+  ],
+  "paths": {
+    "/api/versions": {
+      "$ref": "paths/api_versions.json"
+    },
+    "/api/0.6/capabilities": {
+      "$ref": "paths/api_0.6_capabilities.json"
+    },
+    "/api/0.6/map": {
+      "$ref": "paths/api_0.6_map.json"
+    },
+    "/api/0.6/permissions": {
+      "$ref": "paths/api_0.6_permissions.json"
+    },
+    "/api/0.6/changeset/create": {
+      "$ref": "paths/api_0.6_changeset_create.json"
+    },
+    "/api/0.6/changeset/{id}": {
+      "$ref": "paths/api_0.6_changeset_{id}.json"
+    },
+    "/api/0.6/changeset/{id}/close": {
+      "$ref": "paths/api_0.6_changeset_{id}_close.json"
+    },
+    "/api/0.6/changeset/{id}/download": {
+      "$ref": "paths/api_0.6_changeset_{id}_download.json"
+    },
+    "/api/0.6/changesets": {
+      "$ref": "paths/api_0.6_changesets.json"
+    },
+    "/api/0.6/changeset/{id}/upload": {
+      "$ref": "paths/api_0.6_changeset_{id}_upload.json"
+    },
+    "/api/0.6/changeset/{id}/comment": {
+      "$ref": "paths/api_0.6_changeset_{id}_comment.json"
+    },
+    "/api/0.6/changeset/{id}/subscription": {
+      "$ref": "paths/api_0.6_changeset_{id}_subscription.json"
+    },
+    "/api/0.6/changeset_comments": {
+      "$ref": "paths/api_0.6_changeset_comments.json"
+    },
+    "/api/0.6/changeset_comments/{id}/visibility": {
+      "$ref": "paths/api_0.6_changeset_comments_{id}_visibility.json"
+    },
+    "/api/0.6/nodes": {
+      "$ref": "paths/api_0.6_nodes.json"
+    },
+    "/api/0.6/node/{id}": {
+      "$ref": "paths/api_0.6_node_{id}.json"
+    },
+    "/api/0.6/node/{id}/history": {
+      "$ref": "paths/api_0.6_node_{id}_history.json"
+    },
+    "/api/0.6/node/{id}/{version}": {
+      "$ref": "paths/api_0.6_node_{id}_{version}.json"
+    },
+    "/api/0.6/node/{id}/relations": {
+      "$ref": "paths/api_0.6_node_{id}_relations.json"
+    },
+    "/api/0.6/node/{id}/ways": {
+      "$ref": "paths/api_0.6_node_{id}_ways.json"
+    },
+    "/api/0.6/node/{id}/{version}/redact": {
+      "$ref": "paths/api_0.6_node_{id}_{version}_redact.json"
+    },
+    "/api/0.6/ways": {
+      "$ref": "paths/api_0.6_ways.json"
+    },
+    "/api/0.6/way/{id}": {
+      "$ref": "paths/api_0.6_way_{id}.json"
+    },
+    "/api/0.6/way/{id}/history": {
+      "$ref": "paths/api_0.6_way_{id}_history.json"
+    },
+    "/api/0.6/way/{id}/{version}": {
+      "$ref": "paths/api_0.6_way_{id}_{version}.json"
+    },
+    "/api/0.6/way/{id}/relations": {
+      "$ref": "paths/api_0.6_way_{id}_relations.json"
+    },
+    "/api/0.6/way/{id}/full": {
+      "$ref": "paths/api_0.6_way_{id}_full.json"
+    },
+    "/api/0.6/way/{id}/{version}/redact": {
+      "$ref": "paths/api_0.6_way_{id}_{version}_redact.json"
+    },
+    "/api/0.6/relations": {
+      "$ref": "paths/api_0.6_relations.json"
+    },
+    "/api/0.6/relation/{id}": {
+      "$ref": "paths/api_0.6_relation_{id}.json"
+    },
+    "/api/0.6/relation/{id}/history": {
+      "$ref": "paths/api_0.6_relation_{id}_history.json"
+    },
+    "/api/0.6/relation/{id}/{version}": {
+      "$ref": "paths/api_0.6_relation_{id}_{version}.json"
+    },
+    "/api/0.6/relation/{id}/relations": {
+      "$ref": "paths/api_0.6_relation_{id}_relations.json"
+    },
+    "/api/0.6/relation/{id}/full": {
+      "$ref": "paths/api_0.6_relation_{id}_full.json"
+    },
+    "/api/0.6/relation/{id}/{version}/redact": {
+      "$ref": "paths/api_0.6_relation_{id}_{version}_redact.json"
+    },
+    "/api/0.6/trackpoints": {
+      "$ref": "paths/api_0.6_trackpoints.json"
+    },
+    "/api/0.6/gpx": {
+      "$ref": "paths/api_0.6_gpx.json"
+    },
+    "/api/0.6/gpx/{id}": {
+      "$ref": "paths/api_0.6_gpx_{id}.json"
+    },
+    "/api/0.6/gpx/{id}/data": {
+      "$ref": "paths/api_0.6_gpx_{id}_data.json"
+    },
+    "/api/0.6/user/gpx_files": {
+      "$ref": "paths/api_0.6_user_gpx_files.json"
+    },
+    "/api/0.6/user/{id}": {
+      "$ref": "paths/api_0.6_user_{id}.json"
+    },
+    "/api/0.6/users": {
+      "$ref": "paths/api_0.6_users.json"
+    },
+    "/api/0.6/user/details": {
+      "$ref": "paths/api_0.6_user_details.json"
+    },
+    "/api/0.6/user/preferences": {
+      "$ref": "paths/api_0.6_user_preferences.json"
+    },
+    "/api/0.6/user/preferences/{key}": {
+      "$ref": "paths/api_0.6_user_preferences_{key}.json"
+    },
+    "/api/0.6/notes": {
+      "$ref": "paths/api_0.6_notes.json"
+    },
+    "/api/0.6/notes/{id}": {
+      "$ref": "paths/api_0.6_notes_{id}.json"
+    },
+    "/api/0.6/notes/{id}/comment": {
+      "$ref": "paths/api_0.6_notes_{id}_comment.json"
+    },
+    "/api/0.6/notes/{id}/close": {
+      "$ref": "paths/api_0.6_notes_{id}_close.json"
+    },
+    "/api/0.6/notes/{id}/reopen": {
+      "$ref": "paths/api_0.6_notes_{id}_reopen.json"
+    },
+    "/api/0.6/notes/{id}/subscription": {
+      "$ref": "paths/api_0.6_notes_{id}_subscription.json"
+    },
+    "/api/0.6/notes/search": {
+      "$ref": "paths/api_0.6_notes_search.json"
+    },
+    "/api/0.6/notes/feed": {
+      "$ref": "paths/api_0.6_notes_feed.json"
+    },
+    "/api/0.6/user_blocks": {
+      "$ref": "paths/api_0.6_user_blocks.json"
+    },
+    "/api/0.6/user_blocks/{id}": {
+      "$ref": "paths/api_0.6_user_blocks_{id}.json"
+    },
+    "/api/0.6/user/blocks/active": {
+      "$ref": "paths/api_0.6_user_blocks_active.json"
+    }
+  }
+}

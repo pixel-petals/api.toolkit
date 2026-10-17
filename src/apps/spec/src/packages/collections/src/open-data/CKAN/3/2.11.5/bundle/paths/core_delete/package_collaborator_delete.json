@@ -1,0 +1,52 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_collaborator_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Remove a dataset collaborator",
+    "description": "Remove a user collaborator from a dataset.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "user_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "user_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

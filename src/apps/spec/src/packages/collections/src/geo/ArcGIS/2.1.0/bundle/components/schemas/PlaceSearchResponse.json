@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "./PlaceResult.json"
+      }
+    },
+    "pagination": {
+      "type": "object",
+      "properties": {
+        "previousUrl": {
+          "type": "string"
+        },
+        "nextUrl": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "get": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "current_package_list_with_resources",
+    "summary": "List recent datasets with resources",
+    "description": "Return a list of the site's datasets and their resources, sorted by most-recently-modified first.",
+    "parameters": [
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Deprecated. Use `offset`.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of dataset dicts with resources",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

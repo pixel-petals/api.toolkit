@@ -1,0 +1,62 @@
+{
+  "post": {
+    "operationId": "subscribeToNote",
+    "summary": "Subscribe to a note for notifications",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successfully subscribed"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "409": {
+        "description": "Already subscribed"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "unsubscribeFromNote",
+    "summary": "Unsubscribe from a note",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successfully unsubscribed"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "404": {
+        "description": "Not subscribed to this note"
+      }
+    }
+  }
+}

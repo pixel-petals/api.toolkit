@@ -1,0 +1,141 @@
+{
+  "get": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "solveRoute",
+    "summary": "Solve a route \u2013 directions (direct/sync)",
+    "description": "Finds the best path between two or more stops with turn-by-turn directions, total distance, and travel time. Supports walking, driving, trucking and other travel modes.",
+    "parameters": [
+      {
+        "name": "stops",
+        "in": "query",
+        "required": true,
+        "description": "Stops as JSON FeatureSet, `lon,lat;lon,lat`, or address strings.",
+        "schema": {
+          "type": "string",
+          "example": "-117.196,34.057;-118.243,34.052"
+        }
+      },
+      {
+        "name": "travelMode",
+        "in": "query",
+        "description": "Travel mode name or JSON (e.g. `Driving Time`, `Walking Time`, `Trucking Time`).",
+        "schema": {
+          "type": "string",
+          "default": "Driving Time"
+        }
+      },
+      {
+        "name": "returnDirections",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "returnRoutes",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "findBestSequence",
+        "in": "query",
+        "description": "Optimize stop order (traveling salesman).",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "preserveFirstStop",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "preserveLastStop",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "startTime",
+        "in": "query",
+        "description": "Departure time as epoch milliseconds. Enables live traffic.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "outputLines",
+        "in": "query",
+        "description": "`esriNAOutputLineTrueShape`, `esriNAOutputLineStraight`, or `esriNAOutputLineNone`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "directionsLanguage",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "outSR",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 4326
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Route solve result.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "routes": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "stops": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "directions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

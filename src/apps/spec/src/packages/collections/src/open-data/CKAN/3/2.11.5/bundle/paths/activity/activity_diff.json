@@ -1,0 +1,56 @@
+{
+  "get": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "activity_diff",
+    "summary": "Get diff between two activity versions",
+    "description": "Return the differences between an activity and the previous version of the same object.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Activity id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "object_type",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "diff_type",
+        "in": "query",
+        "description": "Diff format: `html` or `unified`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "html",
+            "unified"
+          ],
+          "default": "html"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Diff object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

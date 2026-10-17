@@ -1,0 +1,10 @@
+{
+  "name": "offset",
+  "in": "query",
+  "description": "Index of the first item to return (starting at 0).\n\nTo use with the `limit` parameter to implement pagination.\n\n**Note:** the maximum value depends on the type of query, see the note on `limit` for the details\n",
+  "schema": {
+    "minimum": 0,
+    "type": "integer",
+    "default": 0
+  }
+}

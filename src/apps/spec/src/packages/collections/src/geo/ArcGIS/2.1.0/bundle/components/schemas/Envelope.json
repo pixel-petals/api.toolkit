@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "description": "Bounding envelope / extent.",
+  "required": [
+    "xmin",
+    "ymin",
+    "xmax",
+    "ymax"
+  ],
+  "properties": {
+    "xmin": {
+      "type": "number"
+    },
+    "ymin": {
+      "type": "number"
+    },
+    "xmax": {
+      "type": "number"
+    },
+    "ymax": {
+      "type": "number"
+    },
+    "spatialReference": {
+      "$ref": "./SpatialReference.json"
+    }
+  }
+}

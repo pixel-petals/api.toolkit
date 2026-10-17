@@ -1,0 +1,8 @@
+type __Directive {
+  name: String!
+  description: String
+  type: __Type
+  onOperation: Boolean!
+  onFragment: Boolean!
+  onField: Boolean!
+}

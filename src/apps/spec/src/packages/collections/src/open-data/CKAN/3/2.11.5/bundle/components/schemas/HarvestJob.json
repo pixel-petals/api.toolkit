@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "description": "A single run of a harvest source.",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Running",
+        "Finished",
+        "Error"
+      ]
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "gather_started": {
+      "type": "string",
+      "format": "date-time",
+      "nullable": true
+    },
+    "gather_finished": {
+      "type": "string",
+      "format": "date-time",
+      "nullable": true
+    },
+    "finished": {
+      "type": "string",
+      "format": "date-time",
+      "nullable": true
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "added": {
+          "type": "integer"
+        },
+        "updated": {
+          "type": "integer"
+        },
+        "not_modified": {
+          "type": "integer"
+        },
+        "errors": {
+          "type": "integer"
+        },
+        "deleted": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

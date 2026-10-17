@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "description": "A post published on a campaign. Requires `campaigns.posts` scope. Request fields via `fields[post]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "post"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "app_status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "HTML content of the post. Only available for posts the token holder can access."
+        },
+        "embed_data": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "embed_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "is_paid": {
+          "type": "boolean",
+          "description": "True if the post was paid for by patrons."
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "was_posted_by_campaign_owner": {
+          "type": "boolean"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "user_defined_tags": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

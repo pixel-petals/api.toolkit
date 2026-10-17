@@ -1,0 +1,124 @@
+{
+  "get": {
+    "operationId": "getGpxMetadata",
+    "summary": "Download GPX trace metadata",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_gpx"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "GPX trace metadata",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "updateGpxTrace",
+    "summary": "Update a GPX trace",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_gpx"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "maxLength": 255
+              },
+              "tags": {
+                "type": "string"
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "public",
+                  "trackable",
+                  "identifiable"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Trace successfully updated"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "deleteGpxTrace",
+    "summary": "Delete a GPX trace",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_gpx"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Trace successfully deleted"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

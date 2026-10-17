@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "description": "Request body for a SODA3 `/query` request.",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "A SoQL query string (SELECT/WHERE/GROUP BY/ORDER BY/LIMIT/OFFSET/HAVING). Defaults to `SELECT *`.",
+      "example": "SELECT region, count(*) AS quake_count WHERE magnitude > 3.0 GROUP BY region ORDER BY quake_count DESC"
+    },
+    "page": {
+      "$ref": "./PageOptions.json"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Named parameters required by parameterized views.",
+      "additionalProperties": true
+    },
+    "timeout": {
+      "type": "integer",
+      "description": "Request timeout in seconds. Default is 600 (10 minutes).",
+      "default": 600,
+      "example": 60
+    },
+    "includeSystem": {
+      "type": "boolean",
+      "description": "Whether to include system columns (`:id`, `:created_at`, `:updated_at`). Defaults to true.",
+      "default": true
+    },
+    "includeSynthetic": {
+      "type": "boolean",
+      "description": "Whether to include computed/synthetic columns not explicitly requested. Defaults to true.",
+      "default": true
+    },
+    "orderingSpecifier": {
+      "$ref": "./OrderingSpecifier.json"
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "get": {
+    "tags": [
+      "Campaigns"
+    ],
+    "operationId": "getCampaignMembers",
+    "summary": "List members for a campaign",
+    "description": "Returns all Members for a given Campaign.\n\n**Scope:** `campaigns.members` (required). `campaigns.members[email]` for email. `campaigns.members.address` for shipping address.\n\n**Top-level includes:** `address`, `campaign`, `currently_entitled_tiers`, `user`, `pledge_history`\n\n**Pagination:** Default 1000 results per page (500 if `pledge_history` is included). Use `page[cursor]` from `meta.pagination.cursors.next`.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "campaign_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[member]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Member attributes. E.g. `full_name,patron_status,last_charge_status,currently_entitled_amount_cents,lifetime_support_cents`."
+      },
+      {
+        "name": "fields[tier]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Tier attributes when currently_entitled_tiers is included."
+      },
+      {
+        "name": "fields[address]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Address attributes. Requires `campaigns.members.address` scope."
+      },
+      {
+        "name": "fields[user]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/pageCursor.json"
+      },
+      {
+        "$ref": "../../components/parameters/pageCount.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Paginated list of campaign members.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            },
+            "example": {
+              "data": [
+                {
+                  "attributes": {
+                    "full_name": "A Patron",
+                    "patron_status": "active_patron",
+                    "last_charge_status": "Paid",
+                    "currently_entitled_amount_cents": 500
+                  },
+                  "id": "member-uuid",
+                  "type": "member"
+                }
+              ],
+              "meta": {
+                "pagination": {
+                  "cursors": {
+                    "next": "cursor_string"
+                  },
+                  "total": 500
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

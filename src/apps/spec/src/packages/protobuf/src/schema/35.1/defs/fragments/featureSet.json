@@ -1,0 +1,260 @@
+{
+  "name": "FeatureSet",
+  "fullName": "google.protobuf.FeatureSet",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FeatureSet",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "field_presence": {
+        "type": "FieldPresence",
+        "id": 1,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_2023",
+          "edition_defaults.value": "EXPLICIT"
+        },
+        "comment": null
+      },
+      "enum_type": {
+        "type": "EnumType",
+        "id": 2,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_PROTO3",
+          "edition_defaults.value": "OPEN"
+        },
+        "comment": null
+      },
+      "repeated_field_encoding": {
+        "type": "RepeatedFieldEncoding",
+        "id": 3,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_PROTO3",
+          "edition_defaults.value": "PACKED"
+        },
+        "comment": null
+      },
+      "utf8_validation": {
+        "type": "Utf8Validation",
+        "id": 4,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_PROTO3",
+          "edition_defaults.value": "VERIFY"
+        },
+        "comment": null
+      },
+      "message_encoding": {
+        "type": "MessageEncoding",
+        "id": 5,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_LEGACY",
+          "edition_defaults.value": "LENGTH_PREFIXED"
+        },
+        "comment": null
+      },
+      "json_format": {
+        "type": "JsonFormat",
+        "id": 6,
+        "options": {
+          "retention": "RETENTION_RUNTIME",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2023",
+          "edition_defaults.edition": "EDITION_PROTO3",
+          "edition_defaults.value": "ALLOW"
+        },
+        "comment": null
+      },
+      "enforce_naming_style": {
+        "type": "EnforceNamingStyle",
+        "id": 7,
+        "options": {
+          "retention": "RETENTION_SOURCE",
+          "targets": "TARGET_TYPE_METHOD",
+          "feature_support.edition_introduced": "EDITION_2024",
+          "edition_defaults.edition": "EDITION_UNSTABLE",
+          "edition_defaults.value": "STYLE2026"
+        },
+        "comment": null
+      },
+      "default_symbol_visibility": {
+        "type": "VisibilityFeature.DefaultSymbolVisibility",
+        "id": 8,
+        "options": {
+          "retention": "RETENTION_SOURCE",
+          "targets": "TARGET_TYPE_FILE",
+          "feature_support.edition_introduced": "EDITION_2024",
+          "edition_defaults.edition": "EDITION_2024",
+          "edition_defaults.value": "EXPORT_TOP_LEVEL"
+        },
+        "comment": null
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        9994
+      ],
+      [
+        9995,
+        9999
+      ],
+      [
+        10000,
+        10000
+      ]
+    ],
+    "reserved": [
+      [
+        999,
+        999
+      ]
+    ],
+    "nested": {
+      "FieldPresence": {
+        "values": {
+          "FIELD_PRESENCE_UNKNOWN": 0,
+          "EXPLICIT": 1,
+          "IMPLICIT": 2,
+          "LEGACY_REQUIRED": 3
+        },
+        "comment": null,
+        "comments": {
+          "FIELD_PRESENCE_UNKNOWN": null,
+          "EXPLICIT": null,
+          "IMPLICIT": null,
+          "LEGACY_REQUIRED": null
+        }
+      },
+      "EnumType": {
+        "values": {
+          "ENUM_TYPE_UNKNOWN": 0,
+          "OPEN": 1,
+          "CLOSED": 2
+        },
+        "comment": null,
+        "comments": {
+          "ENUM_TYPE_UNKNOWN": null,
+          "OPEN": null,
+          "CLOSED": null
+        }
+      },
+      "RepeatedFieldEncoding": {
+        "values": {
+          "REPEATED_FIELD_ENCODING_UNKNOWN": 0,
+          "PACKED": 1,
+          "EXPANDED": 2
+        },
+        "comment": null,
+        "comments": {
+          "REPEATED_FIELD_ENCODING_UNKNOWN": null,
+          "PACKED": null,
+          "EXPANDED": null
+        }
+      },
+      "Utf8Validation": {
+        "values": {
+          "UTF8_VALIDATION_UNKNOWN": 0,
+          "VERIFY": 2,
+          "NONE": 3
+        },
+        "reserved": [
+          [
+            1,
+            1
+          ]
+        ],
+        "comment": null,
+        "comments": {
+          "UTF8_VALIDATION_UNKNOWN": null,
+          "VERIFY": null,
+          "NONE": null
+        }
+      },
+      "MessageEncoding": {
+        "values": {
+          "MESSAGE_ENCODING_UNKNOWN": 0,
+          "LENGTH_PREFIXED": 1,
+          "DELIMITED": 2
+        },
+        "comment": null,
+        "comments": {
+          "MESSAGE_ENCODING_UNKNOWN": null,
+          "LENGTH_PREFIXED": null,
+          "DELIMITED": null
+        }
+      },
+      "JsonFormat": {
+        "values": {
+          "JSON_FORMAT_UNKNOWN": 0,
+          "ALLOW": 1,
+          "LEGACY_BEST_EFFORT": 2
+        },
+        "comment": null,
+        "comments": {
+          "JSON_FORMAT_UNKNOWN": null,
+          "ALLOW": null,
+          "LEGACY_BEST_EFFORT": null
+        }
+      },
+      "EnforceNamingStyle": {
+        "values": {
+          "ENFORCE_NAMING_STYLE_UNKNOWN": 0,
+          "STYLE2024": 1,
+          "STYLE_LEGACY": 2,
+          "STYLE2026": 3
+        },
+        "comment": null,
+        "comments": {
+          "ENFORCE_NAMING_STYLE_UNKNOWN": null,
+          "STYLE2024": null,
+          "STYLE_LEGACY": null,
+          "STYLE2026": null
+        }
+      },
+      "VisibilityFeature": {
+        "fields": {},
+        "reserved": [
+          [
+            1,
+            536870911
+          ]
+        ],
+        "nested": {
+          "DefaultSymbolVisibility": {
+            "values": {
+              "DEFAULT_SYMBOL_VISIBILITY_UNKNOWN": 0,
+              "EXPORT_ALL": 1,
+              "EXPORT_TOP_LEVEL": 2,
+              "LOCAL_ALL": 3,
+              "STRICT": 4
+            },
+            "comment": null,
+            "comments": {
+              "DEFAULT_SYMBOL_VISIBILITY_UNKNOWN": null,
+              "EXPORT_ALL": "Default pre-EDITION_2024, all UNSET visibility are export.",
+              "EXPORT_TOP_LEVEL": "All top-level symbols default to export, nested default to local.",
+              "LOCAL_ALL": "All symbols default to local.",
+              "STRICT": "All symbols local by default. Nested types cannot be exported.\nWith special case caveat for message { enum {} reserved 1 to max; }\nThis is the recommended setting for new protos."
+            }
+          }
+        },
+        "comment": null
+      }
+    },
+    "comment": "TODO Enums in C++ gencode (and potentially other languages) are\nnot well scoped.  This means that each of the feature enums below can clash\nwith each other.  The short names we've chosen maximize call-site\nreadability, but leave us very open to this scenario.  A future feature will\nbe designed and implemented to handle this, hopefully before we ever hit a\nconflict here."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "get": {
+    "tags": [
+      "Posts"
+    ],
+    "operationId": "getPost",
+    "summary": "Get a post by ID",
+    "description": "Fetch a single Post by its ID.\n\n**Scope:** `campaigns.posts`\n\nPost content is only available for posts the token holder has access to.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "post_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[post]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Post attributes. E.g. `title,content,url,published_at,is_public,is_paid`."
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The post resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

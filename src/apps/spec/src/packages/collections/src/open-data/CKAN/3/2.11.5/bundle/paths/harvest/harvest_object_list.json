@@ -1,0 +1,48 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_object_list",
+    "summary": "List harvest objects for a source or job",
+    "description": "Return the list of harvest objects for a given source or job.",
+    "parameters": [
+      {
+        "name": "source_id",
+        "in": "query",
+        "description": "Harvest source id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "job_id",
+        "in": "query",
+        "description": "Harvest job id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "package_id",
+        "in": "query",
+        "description": "Dataset id to filter by.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of harvest object dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

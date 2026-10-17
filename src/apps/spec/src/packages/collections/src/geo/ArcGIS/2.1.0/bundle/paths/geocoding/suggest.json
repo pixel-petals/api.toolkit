@@ -1,0 +1,87 @@
+{
+  "get": {
+    "tags": [
+      "Geocoding Service"
+    ],
+    "operationId": "geocodeSuggest",
+    "summary": "Get typeahead address/place suggestions",
+    "description": "Returns candidate suggestions for partial text input. Use the returned `magicKey` with `findAddressCandidates` to retrieve full coordinates at no additional credit cost.",
+    "parameters": [
+      {
+        "name": "text",
+        "in": "query",
+        "required": true,
+        "description": "Partial address or place name.",
+        "schema": {
+          "type": "string",
+          "example": "380 New Yor"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "description": "Preference location as JSON `{x,y}`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "distance",
+        "in": "query",
+        "description": "Radius in meters around preference location.",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "maxSuggestions",
+        "in": "query",
+        "description": "Maximum suggestions (default 5, max 15).",
+        "schema": {
+          "type": "integer",
+          "default": 5,
+          "maximum": 15
+        }
+      },
+      {
+        "name": "searchExtent",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Suggestion candidates.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/SuggestResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      }
+    }
+  }
+}

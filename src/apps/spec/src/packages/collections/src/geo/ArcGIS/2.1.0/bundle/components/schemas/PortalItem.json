@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "description": "An ArcGIS portal item (map, layer, application, file, etc.).",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "example": "Feature Service"
+    },
+    "url": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "access": {
+      "type": "string",
+      "enum": [
+        "private",
+        "shared",
+        "org",
+        "public"
+      ]
+    },
+    "created": {
+      "type": "integer"
+    },
+    "modified": {
+      "type": "integer"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "snippet": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "numViews": {
+      "type": "integer"
+    }
+  }
+}

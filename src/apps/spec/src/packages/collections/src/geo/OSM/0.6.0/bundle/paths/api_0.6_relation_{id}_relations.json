@@ -1,0 +1,29 @@
+{
+  "get": {
+    "operationId": "getRelationRelations",
+    "summary": "Get relations containing a relation",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Relations containing this relation",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

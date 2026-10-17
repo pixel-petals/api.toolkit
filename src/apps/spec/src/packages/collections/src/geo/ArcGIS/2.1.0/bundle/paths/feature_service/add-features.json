@@ -1,0 +1,74 @@
+{
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "addFeatures",
+    "summary": "Add new features to a layer",
+    "description": "Inserts one or more new features into a feature layer. Returns per-feature success/error results including newly assigned object IDs.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "features"
+            ],
+            "properties": {
+              "features": {
+                "type": "string",
+                "description": "JSON array of features to add. Each has `geometry` and `attributes`."
+              },
+              "rollbackOnFailure": {
+                "type": "boolean",
+                "default": true
+              },
+              "trueCurveClient": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Add results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "addResults": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../../components/schemas/EditResult.json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

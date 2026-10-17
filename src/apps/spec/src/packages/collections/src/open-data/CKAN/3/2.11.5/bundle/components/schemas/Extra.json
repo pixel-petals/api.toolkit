@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "description": "A key-value extra metadata field.",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    }
+  }
+}

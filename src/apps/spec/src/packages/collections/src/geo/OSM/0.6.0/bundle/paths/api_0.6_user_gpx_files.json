@@ -1,0 +1,36 @@
+{
+  "get": {
+    "operationId": "listUserGpxFiles",
+    "summary": "List GPS traces for the authenticated user",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_gpx"
+        ]
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of GPS traces",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

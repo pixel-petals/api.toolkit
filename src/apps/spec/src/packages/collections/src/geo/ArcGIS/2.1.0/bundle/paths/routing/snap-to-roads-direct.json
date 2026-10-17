@@ -1,0 +1,56 @@
+{
+  "get": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "snapToRoads",
+    "summary": "Snap GPS track points to roads (direct/sync)",
+    "description": "Snaps a series of GPS track points to the underlying road network for map-matching and track correction.",
+    "parameters": [
+      {
+        "name": "inputFeatures",
+        "in": "query",
+        "required": true,
+        "description": "GPS track points as JSON FeatureSet.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "outputCurrentLocation",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "coordinateType",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Snapped track points.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

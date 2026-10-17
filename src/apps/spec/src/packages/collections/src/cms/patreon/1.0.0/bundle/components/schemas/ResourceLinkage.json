@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "description": "JSON:API resource linkage (type + id reference).",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "id"
+  ]
+}

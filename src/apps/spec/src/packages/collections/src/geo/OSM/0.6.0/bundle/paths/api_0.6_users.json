@@ -1,0 +1,41 @@
+{
+  "get": {
+    "operationId": "getMultipleUsers",
+    "summary": "Get details of multiple users",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "users",
+        "in": "query",
+        "required": true,
+        "description": "Comma-separated list of user IDs",
+        "schema": {
+          "type": "string"
+        },
+        "example": "1,2,3"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User details for each specified ID",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

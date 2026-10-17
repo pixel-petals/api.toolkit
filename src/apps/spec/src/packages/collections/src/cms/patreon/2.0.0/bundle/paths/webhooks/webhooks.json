@@ -1,0 +1,254 @@
+{
+  "get": {
+    "tags": [
+      "Webhooks"
+    ],
+    "operationId": "listWebhooks",
+    "summary": "List webhooks",
+    "description": "Returns all webhooks created by the current client for the authorized user's campaign. Only webhooks created by your client are visible.\n\n**Scope:** `w:campaigns.webhook`\n\n**Top-level includes:** `client`, `campaign`",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[webhook]",
+        "in": "query",
+        "description": "Webhook attributes. E.g. `last_attempted_at,num_consecutive_times_failed,paused,secret,triggers,uri`.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of webhooks.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            },
+            "example": {
+              "data": [
+                {
+                  "attributes": {
+                    "last_attempted_at": "2018-04-01T20:09:18+00:00",
+                    "num_consecutive_times_failed": 0,
+                    "paused": false,
+                    "secret": "hereisaverycomplexsecret",
+                    "triggers": [
+                      "members:create",
+                      "members:delete",
+                      "members:update"
+                    ],
+                    "uri": "https://example.com/patreon-webhook"
+                  },
+                  "id": "2793",
+                  "type": "webhook"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "Webhooks"
+    ],
+    "operationId": "createWebhook",
+    "summary": "Create a webhook",
+    "description": "Create a new webhook on the current user's campaign.\n\n**Scope:** `w:campaigns.webhook`\n\nWebhook payloads are signed: verify the `X-Patreon-Signature` header (HMAC-MD5 hex digest of the body using the webhook secret).\n\n**Available triggers:**\n- `members:create` / `members:update` / `members:delete`\n- `members:pledge:create` / `members:pledge:update` / `members:pledge:delete`\n- `posts:publish` / `posts:update` / `posts:delete`",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "properties": {
+              "data": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "attributes",
+                  "relationships"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "webhook"
+                    ]
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "required": [
+                      "triggers",
+                      "uri"
+                    ],
+                    "properties": {
+                      "triggers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "members:create",
+                            "members:update",
+                            "members:delete",
+                            "members:pledge:create",
+                            "members:pledge:update",
+                            "members:pledge:delete",
+                            "posts:publish",
+                            "posts:update",
+                            "posts:delete"
+                          ]
+                        }
+                      },
+                      "uri": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  },
+                  "relationships": {
+                    "type": "object",
+                    "required": [
+                      "campaign"
+                    ],
+                    "properties": {
+                      "campaign": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "campaign"
+                                ]
+                              },
+                              "id": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "example": {
+            "data": {
+              "type": "webhook",
+              "attributes": {
+                "triggers": [
+                  "members:create",
+                  "members:update",
+                  "members:delete"
+                ],
+                "uri": "https://example.com/hooks/patreon"
+              },
+              "relationships": {
+                "campaign": {
+                  "data": {
+                    "type": "campaign",
+                    "id": "12345"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created webhook resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            },
+            "example": {
+              "data": {
+                "attributes": {
+                  "last_attempted_at": null,
+                  "paused": false,
+                  "num_consecutive_times_failed": 0,
+                  "secret": "abcdefghiklmnopqrstuvwyz",
+                  "triggers": [
+                    "members:create",
+                    "members:update",
+                    "members:delete"
+                  ],
+                  "uri": "https://example.com/hooks/patreon"
+                },
+                "id": "3955",
+                "type": "webhook"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

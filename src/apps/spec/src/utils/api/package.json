@@ -1,0 +1,25 @@
+{
+  "name": "@util/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "exports": {
+    "./*": "./src/*.js"
+  },
+  "imports": {
+    "#bundle/*": "./src/bundle/*.js",
+    "#fragments/*": "./src/fragments/*.js",
+    "#schema/*": "./src/schema/*.js",
+    "#serialize/*": "./src/serialize/*.js",
+    "#source/*": "./src/source/*.js",
+    "#spec/*": "./src/spec/*.js"
+  },
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^16.0.1",
+    "@redocly/openapi-core": "^2.51.1",
+    "commander": "^15.0.0",
+    "yaml": "^2.8.1"
+  }
+}

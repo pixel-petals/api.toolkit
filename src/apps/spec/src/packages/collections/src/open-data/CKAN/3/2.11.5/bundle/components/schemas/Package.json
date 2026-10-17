@@ -1,0 +1,126 @@
+{
+  "type": "object",
+  "description": "A CKAN dataset (internally called a 'package').",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "URL-safe lowercase identifier. Unique across the site."
+    },
+    "title": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Dataset description. Markdown supported."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Source URL of the dataset (optional)."
+    },
+    "version": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deleted"
+      ],
+      "default": "active"
+    },
+    "type": {
+      "type": "string",
+      "default": "dataset"
+    },
+    "license_id": {
+      "type": "string",
+      "example": "cc-by"
+    },
+    "license_title": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string",
+      "format": "email"
+    },
+    "maintainer": {
+      "type": "string"
+    },
+    "maintainer_email": {
+      "type": "string",
+      "format": "email"
+    },
+    "owner_org": {
+      "type": "string",
+      "description": "Organization id or name that owns the dataset."
+    },
+    "private": {
+      "type": "boolean",
+      "default": false
+    },
+    "metadata_created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metadata_modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "./Tag.json"
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "./Resource.json"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "organization": {
+      "$ref": "./Organization.json"
+    },
+    "extras": {
+      "type": "array",
+      "items": {
+        "$ref": "./Extra.json"
+      }
+    },
+    "relationships_as_object": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "relationships_as_subject": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "num_tags": {
+      "type": "integer"
+    },
+    "num_resources": {
+      "type": "integer"
+    },
+    "isopen": {
+      "type": "boolean"
+    }
+  }
+}

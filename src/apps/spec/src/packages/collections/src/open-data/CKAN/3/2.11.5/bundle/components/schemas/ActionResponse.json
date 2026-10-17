@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "description": "Standard CKAN Action API response envelope.",
+  "required": [
+    "success"
+  ],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "`true` if the action succeeded, `false` otherwise."
+    },
+    "result": {
+      "description": "The returned data. Type varies by action.",
+      "nullable": true
+    },
+    "error": {
+      "type": "object",
+      "description": "Present only when `success` is false.",
+      "properties": {
+        "__type": {
+          "type": "string",
+          "example": "Authorization Error"
+        },
+        "message": {
+          "type": "string",
+          "example": "Access denied"
+        }
+      }
+    },
+    "help": {
+      "type": "string",
+      "description": "URL of the help text for the action that was called."
+    }
+  }
+}

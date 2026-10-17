@@ -1,0 +1,6 @@
+{
+  "type": "http",
+  "scheme": "bearer",
+  "bearerFormat": "OAuth2 access token",
+  "description": "Creator's Access Token from the Patreon developer portal, or an OAuth2 access token with the required v2 scopes."
+}

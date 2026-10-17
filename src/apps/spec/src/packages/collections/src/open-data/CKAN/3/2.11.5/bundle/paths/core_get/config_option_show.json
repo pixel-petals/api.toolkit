@@ -1,0 +1,40 @@
+{
+  "get": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "config_option_show",
+    "summary": "Get a config option value",
+    "description": "Return the current value of a runtime-editable configuration option. Sysadmin only.",
+    "parameters": [
+      {
+        "name": "key",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Config value",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

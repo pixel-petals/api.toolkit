@@ -1,0 +1,240 @@
+{
+  "name": "FieldOptions",
+  "fullName": "google.protobuf.FieldOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FieldOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "ctype": {
+        "type": "CType",
+        "id": 1,
+        "options": {
+          "default": "STRING"
+        },
+        "comment": "NOTE: ctype is deprecated. Use `features.(pb.cpp).string_type` instead.\nThe ctype option instructs the C++ code generator to use a different\nrepresentation of the field than it normally would.  See the specific\noptions below.  This option is only implemented to support use of\n[ctype=CORD] and [ctype=STRING] (the default) on non-repeated fields of\ntype \"bytes\" in the open source release.\nTODO: make ctype actually deprecated."
+      },
+      "packed": {
+        "type": "bool",
+        "id": 2,
+        "comment": "The packed option can be enabled for repeated primitive fields to enable\na more efficient representation on the wire. Rather than repeatedly\nwriting the tag and type for each element, the entire array is encoded as\na single length-delimited blob. In proto3, only explicit setting it to\nfalse will avoid using packed encoding.  This option is prohibited in\nEditions, but the `repeated_field_encoding` feature can be used to control\nthe behavior."
+      },
+      "jstype": {
+        "type": "JSType",
+        "id": 6,
+        "options": {
+          "default": "JS_NORMAL"
+        },
+        "comment": "The jstype option determines the JavaScript type used for values of the\nfield.  The option is permitted only for 64 bit integral and fixed types\n(int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\nis represented as JavaScript string, which avoids loss of precision that\ncan happen when a large value is converted to a floating point JavaScript.\nSpecifying JS_NUMBER for the jstype causes the generated JavaScript code to\nuse the JavaScript \"number\" type.  The behavior of the default option\nJS_NORMAL is implementation dependent.\n\nThis option is an enum to permit additional types to be added, e.g.\ngoog.math.Integer."
+      },
+      "lazy": {
+        "type": "bool",
+        "id": 5,
+        "options": {
+          "default": false
+        },
+        "comment": "Should this field be parsed lazily?  Lazy applies only to message-type\nfields.  It means that when the outer message is initially parsed, the\ninner message's contents will not be parsed but instead stored in encoded\nform.  The inner message will actually be parsed when it is first accessed.\n\nThis is only a hint.  Implementations are free to choose whether to use\neager or lazy parsing regardless of the value of this option.  However,\nsetting this option true suggests that the protocol author believes that\nusing lazy parsing on this field is worth the additional bookkeeping\noverhead typically needed to implement it.\n\nThis option does not affect the public interface of any generated code;\nall method signatures remain the same.  Furthermore, thread-safety of the\ninterface is not affected by this option; const methods remain safe to\ncall from multiple threads concurrently, while non-const methods continue\nto require exclusive access.\n\nNote that lazy message fields are still eagerly verified to check\nill-formed wireformat or missing required fields. Calling IsInitialized()\non the outer message would fail if the inner message has missing required\nfields. Failed verification would result in parsing failure (except when\nuninitialized messages are acceptable)."
+      },
+      "unverified_lazy": {
+        "type": "bool",
+        "id": 15,
+        "options": {
+          "default": false
+        },
+        "comment": "unverified_lazy does no correctness checks on the byte stream. This should\nonly be used where lazy with verification is prohibitive for performance\nreasons."
+      },
+      "deprecated": {
+        "type": "bool",
+        "id": 3,
+        "options": {
+          "default": false
+        },
+        "comment": "Is this field deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor accessors, or it will be completely ignored; in the very least, this\nis a formalization for deprecating fields."
+      },
+      "weak": {
+        "type": "bool",
+        "id": 10,
+        "options": {
+          "default": false,
+          "deprecated": true
+        },
+        "comment": "DEPRECATED. DO NOT USE!\nFor Google-internal migration only. Do not use."
+      },
+      "debug_redact": {
+        "type": "bool",
+        "id": 16,
+        "options": {
+          "default": false
+        },
+        "comment": "Indicate that the field value should not be printed out when using debug\nformats, e.g. when the field contains sensitive credentials."
+      },
+      "retention": {
+        "type": "OptionRetention",
+        "id": 17,
+        "comment": null
+      },
+      "targets": {
+        "rule": "repeated",
+        "type": "OptionTargetType",
+        "id": 19,
+        "comment": null
+      },
+      "edition_defaults": {
+        "rule": "repeated",
+        "type": "EditionDefault",
+        "id": 20,
+        "comment": null
+      },
+      "features": {
+        "type": "FeatureSet",
+        "id": 21,
+        "comment": "Any features defined in the specific edition.\nWARNING: This field should only be used by protobuf plugins or special\ncases like the proto compiler. Other uses are discouraged and\ndevelopers should rely on the protoreflect APIs for their client language."
+      },
+      "feature_support": {
+        "type": "FeatureSupport",
+        "id": 22,
+        "comment": null
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        990,
+        998
+      ],
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "reserved": [
+      [
+        4,
+        4
+      ],
+      [
+        18,
+        18
+      ]
+    ],
+    "nested": {
+      "CType": {
+        "values": {
+          "STRING": 0,
+          "CORD": 1,
+          "STRING_PIECE": 2
+        },
+        "comment": null,
+        "comments": {
+          "STRING": "Default mode.",
+          "CORD": "The option [ctype=CORD] may be applied to a non-repeated field of type\n\"bytes\". It indicates that in C++, the data should be stored in a Cord\ninstead of a string.  For very large strings, this may reduce memory\nfragmentation. It may also allow better performance when parsing from a\nCord, or when parsing with aliasing enabled, as the parsed Cord may then\nalias the original buffer.",
+          "STRING_PIECE": null
+        }
+      },
+      "JSType": {
+        "values": {
+          "JS_NORMAL": 0,
+          "JS_STRING": 1,
+          "JS_NUMBER": 2
+        },
+        "comment": null,
+        "comments": {
+          "JS_NORMAL": "Use the default type.",
+          "JS_STRING": "Use JavaScript strings.",
+          "JS_NUMBER": "Use JavaScript numbers."
+        }
+      },
+      "OptionRetention": {
+        "values": {
+          "RETENTION_UNKNOWN": 0,
+          "RETENTION_RUNTIME": 1,
+          "RETENTION_SOURCE": 2
+        },
+        "comment": "If set to RETENTION_SOURCE, the option will be omitted from the binary.",
+        "comments": {
+          "RETENTION_UNKNOWN": null,
+          "RETENTION_RUNTIME": null,
+          "RETENTION_SOURCE": null
+        }
+      },
+      "OptionTargetType": {
+        "values": {
+          "TARGET_TYPE_UNKNOWN": 0,
+          "TARGET_TYPE_FILE": 1,
+          "TARGET_TYPE_EXTENSION_RANGE": 2,
+          "TARGET_TYPE_MESSAGE": 3,
+          "TARGET_TYPE_FIELD": 4,
+          "TARGET_TYPE_ONEOF": 5,
+          "TARGET_TYPE_ENUM": 6,
+          "TARGET_TYPE_ENUM_ENTRY": 7,
+          "TARGET_TYPE_SERVICE": 8,
+          "TARGET_TYPE_METHOD": 9
+        },
+        "comment": "This indicates the types of entities that the field may apply to when used\nas an option. If it is unset, then the field may be freely used as an\noption on any kind of entity.",
+        "comments": {
+          "TARGET_TYPE_UNKNOWN": null,
+          "TARGET_TYPE_FILE": null,
+          "TARGET_TYPE_EXTENSION_RANGE": null,
+          "TARGET_TYPE_MESSAGE": null,
+          "TARGET_TYPE_FIELD": null,
+          "TARGET_TYPE_ONEOF": null,
+          "TARGET_TYPE_ENUM": null,
+          "TARGET_TYPE_ENUM_ENTRY": null,
+          "TARGET_TYPE_SERVICE": null,
+          "TARGET_TYPE_METHOD": null
+        }
+      },
+      "EditionDefault": {
+        "fields": {
+          "edition": {
+            "type": "Edition",
+            "id": 3,
+            "comment": null
+          },
+          "value": {
+            "type": "string",
+            "id": 2,
+            "comment": "Textproto value."
+          }
+        },
+        "comment": null
+      },
+      "FeatureSupport": {
+        "fields": {
+          "edition_introduced": {
+            "type": "Edition",
+            "id": 1,
+            "comment": "The edition that this feature was first available in.  In editions\nearlier than this one, the default assigned to EDITION_LEGACY will be\nused, and proto files will not be able to override it."
+          },
+          "edition_deprecated": {
+            "type": "Edition",
+            "id": 2,
+            "comment": "The edition this feature becomes deprecated in.  Using this after this\nedition may trigger warnings."
+          },
+          "deprecation_warning": {
+            "type": "string",
+            "id": 3,
+            "comment": "The deprecation warning text if this feature is used after the edition it\nwas marked deprecated in."
+          },
+          "edition_removed": {
+            "type": "Edition",
+            "id": 4,
+            "comment": "The edition this feature is no longer available in.  In editions after\nthis one, the last default assigned will be used, and proto files will\nnot be able to override it."
+          },
+          "removal_error": {
+            "type": "string",
+            "id": 5,
+            "comment": "The removal error text if this feature is used after the edition it was\nremoved in."
+          }
+        },
+        "comment": "Information about the support window of a feature."
+      }
+    },
+    "comment": null
+  }
+}

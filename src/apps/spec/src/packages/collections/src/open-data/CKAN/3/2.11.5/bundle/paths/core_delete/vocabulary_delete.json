@@ -1,0 +1,52 @@
+{
+  "post": {
+    "tags": [
+      "Vocabularys"
+    ],
+    "operationId": "vocabulary_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete a vocabulary",
+    "description": "Change the state of a vocabulary to 'deleted'. The vocabulary can be recovered by an admin. Use `vocabulary_purge` (if available) to permanently remove.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The id or name of the vocabulary to delete."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Deleted vocabulary dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

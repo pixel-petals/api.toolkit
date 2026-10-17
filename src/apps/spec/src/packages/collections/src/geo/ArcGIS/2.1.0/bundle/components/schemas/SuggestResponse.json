@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "magicKey": {
+            "type": "string"
+          },
+          "isCollection": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

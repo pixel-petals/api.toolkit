@@ -1,0 +1,23 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvesters_info_show",
+    "summary": "List available harvester plugins",
+    "description": "Return info about all registered harvester plugins (type name, title, description).",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "description": "List of harvester info dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

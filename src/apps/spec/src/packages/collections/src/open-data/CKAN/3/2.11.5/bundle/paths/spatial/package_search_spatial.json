@@ -1,0 +1,82 @@
+{
+  "get": {
+    "tags": [
+      "Spatial"
+    ],
+    "operationId": "package_search_spatial",
+    "summary": "Search datasets with spatial bounding box filter",
+    "description": "Extends the core `package_search` action with an `ext_bbox` parameter to filter datasets by spatial extent.\n\nRequires the `spatial_query` and `spatial_metadata` plugins.\n\n**This is not a separate action** \u2014 it extends `/api/3/action/package_search` with extra parameter `ext_bbox`.",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fq",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "rows",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      {
+        "name": "start",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "ext_bbox",
+        "in": "query",
+        "required": true,
+        "description": "Bounding box in the form `minx,miny,maxx,maxy` (WGS84 decimal degrees). Datasets whose `spatial` extra field overlaps this bbox are returned.",
+        "schema": {
+          "type": "string",
+          "example": "-7.535,49.208,3.890,57.372"
+        }
+      },
+      {
+        "name": "ext_prev_extent",
+        "in": "query",
+        "description": "Previous map extent `minx,miny,maxx,maxy` for spatial sorting relevance.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Standard package_search result with spatial filtering applied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid bbox format."
+      }
+    }
+  }
+}

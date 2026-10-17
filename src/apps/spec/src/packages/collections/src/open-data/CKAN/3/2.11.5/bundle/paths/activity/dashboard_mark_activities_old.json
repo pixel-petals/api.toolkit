@@ -1,0 +1,41 @@
+{
+  "post": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "dashboard_mark_activities_old",
+    "summary": "Mark dashboard activities as seen",
+    "description": "Mark all activities on the current user's dashboard as 'not new'.",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

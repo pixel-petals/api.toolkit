@@ -1,0 +1,22 @@
+{
+  "name": "@package/protobuf",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "protobuf": "src/bin/cmd.js"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "exports": {
+    "./*": "./src/schema/*"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "protobufjs": "^8.8.0",
+    "@util/api": "*"
+  },
+  "imports": {
+    "#lib/*": "./src/bin/lib/*.js"
+  }
+}

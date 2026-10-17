@@ -1,0 +1,74 @@
+{
+  "post": {
+    "tags": [
+      "Members"
+    ],
+    "operationId": "member_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Add a member to a group",
+    "description": "Make an object (dataset or user) a member of a group or organization.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Group/org id or name."
+              },
+              "object": {
+                "type": "string",
+                "description": "Id of the user or dataset to add."
+              },
+              "object_type": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "package"
+                ]
+              },
+              "capacity": {
+                "type": "string",
+                "enum": [
+                  "member",
+                  "editor",
+                  "admin"
+                ],
+                "default": "member"
+              }
+            },
+            "required": [
+              "id",
+              "object",
+              "object_type"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created membership dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

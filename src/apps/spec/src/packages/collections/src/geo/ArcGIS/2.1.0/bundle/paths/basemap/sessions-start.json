@@ -1,0 +1,38 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "basemapSessionStart",
+    "summary": "Start a basemap style session",
+    "description": "Initiates a new session and returns a session token for tile requests.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Session details.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sessionToken": {
+                  "type": "string"
+                },
+                "expiresIn": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

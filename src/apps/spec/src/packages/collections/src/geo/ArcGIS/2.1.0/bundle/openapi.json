@@ -1,0 +1,400 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ArcGIS REST APIs",
+    "version": "2025.1.0",
+    "description": "Comprehensive OpenAPI 3.1 specification for ArcGIS REST APIs, split into subfiles using JSON `$ref` references.\n\n## Directory structure\n\n```\nopenapi.json                          \u2190 this root file (entry point)\ncomponents/\n  schemas/          \u2190 shared data models (28 files)\n  parameters/       \u2190 shared query/path parameters (3 files)\n  responses/        \u2190 shared error responses (4 files)\n  securitySchemes/  \u2190 auth definitions (2 files)\npaths/\n  basemap/          \u2190 Basemap Styles Service (6 operations)\n  geocoding/        \u2190 Geocoding Service (4 operations)\n  places/           \u2190 Places Service (5 operations)\n  routing/          \u2190 Routing Service (10 operations)\n  geoenrichment/    \u2190 GeoEnrichment Service (3 operations)\n  elevation/        \u2190 Elevation Service (2 operations)\n  spatial_analysis/ \u2190 Spatial Analysis Service (6 operations)\n  portal/           \u2190 Portal / Sharing API (8 operations)\n  feature_service/  \u2190 Feature Service (8 operations)\n```\n\n**Authentication:** ArcGIS token (OAuth 2.0) or API key via `token` query param or `Authorization: Bearer` header. Required for all write operations and for ArcGIS Online / Location Platform services.\n\n**Official OpenAPI specs** (for Basemap and Elevation services) are available at the respective service `/specification/open-api-v3-0/` endpoints.",
+    "contact": {
+      "name": "Esri Developer Support",
+      "url": "https://developers.arcgis.com",
+      "email": "devsupport@esri.com"
+    },
+    "license": {
+      "name": "Esri Master License Agreement",
+      "url": "https://www.esri.com/en-us/legal/overview"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2",
+      "description": "Basemap Styles Service v2"
+    },
+    {
+      "url": "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+      "description": "Geocoding Service (standard \u2013 not-stored results)"
+    },
+    {
+      "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+      "description": "Geocoding Service (enhanced \u2013 stored results / batch)"
+    },
+    {
+      "url": "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1",
+      "description": "Places Service v1"
+    },
+    {
+      "url": "https://route-api.arcgis.com/arcgis/rest/services/World",
+      "description": "Routing Service \u2013 Direct requests"
+    },
+    {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World",
+      "description": "Routing Service \u2013 Async job requests (VRP, LMD)"
+    },
+    {
+      "url": "https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment",
+      "description": "GeoEnrichment Service"
+    },
+    {
+      "url": "https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1",
+      "description": "Elevation Service v1"
+    },
+    {
+      "url": "https://analysis6.arcgis.com/arcgis/rest/services/tasks/GPServer",
+      "description": "Spatial Analysis Service (ArcGIS Online)"
+    },
+    {
+      "url": "https://org.arcgis.com/sharing/rest",
+      "description": "Portal / Sharing API \u2013 ArcGIS Online"
+    },
+    {
+      "url": "https://organization.example.com/{webadaptor}/sharing/rest",
+      "description": "Portal / Sharing API \u2013 ArcGIS Enterprise",
+      "variables": {
+        "webadaptor": {
+          "default": "arcgis",
+          "description": "Web adaptor context or site name"
+        }
+      }
+    },
+    {
+      "url": "https://organization.example.com/{webadaptor}/rest/services",
+      "description": "ArcGIS Server Services Directory \u2013 ArcGIS Enterprise",
+      "variables": {
+        "webadaptor": {
+          "default": "arcgis"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "BearerToken": []
+    },
+    {
+      "TokenParam": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Basemap Styles Service",
+      "description": "Vector tile basemap styles (streets, imagery, terrain, creative).\n\n**Base URL:** `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2`\n\n**Official OpenAPI:** https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/specification/open-api-v3-0/\n\n**Docs:** https://developers.arcgis.com/rest/basemap-styles/"
+    },
+    {
+      "name": "Geocoding Service",
+      "description": "Address geocoding, reverse geocoding, batch geocoding, and autosuggest.\n\n**Standard:** `https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer`\n\n**Enhanced:** `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer`\n\n**Docs:** https://developers.arcgis.com/rest/geocode/\n\n**Pricing:** 20K free/month then $0.50/1K (not stored); $4/1K (stored)"
+    },
+    {
+      "name": "Places Service",
+      "description": "Find businesses and POIs by radius or bounding box. Get detailed place attributes.\n\n**Base URL:** `https://places-api.arcgis.com/arcgis/rest/services/places-service/v1`\n\n**Docs:** https://developers.arcgis.com/rest/places/\n\n**Pricing:** 500 free searches then $8/1K"
+    },
+    {
+      "name": "Routing Service",
+      "description": "Routes, directions, service areas, OD cost matrix, closest facility, VRP, last-mile delivery.\n\n**Direct:** `https://route-api.arcgis.com/arcgis/rest/services/World`\n\n**Async:** `https://logistics.arcgis.com/arcgis/rest/services/World`\n\n**Docs:** https://developers.arcgis.com/rest/routing/\n\n**Pricing:** 20K free routes/month then $0.50/1K"
+    },
+    {
+      "name": "GeoEnrichment Service",
+      "description": "Append demographic data and local facts to locations. Generate PDF/Excel reports. Query standard geographies.\n\n**Base URL:** `https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment`\n\n**Docs:** https://developers.arcgis.com/rest/geoenrichment/\n\n**Pricing:** $1/1K attributes (Location Platform); 10 credits/1K (ArcGIS Online)"
+    },
+    {
+      "name": "Elevation Service",
+      "description": "Topographic and bathymetric elevation at single or multiple points. Returns meters.\n\n**Base URL:** `https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1`\n\n**Official OpenAPI:** https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1/specification/open-api-v3-0/\n\n**Docs:** https://developers.arcgis.com/rest/elevation/\n\n**Pricing:** 50K free/month then $1/1K"
+    },
+    {
+      "name": "Spatial Analysis Service",
+      "description": "Hosted geoprocessing analysis. All tasks run asynchronously \u2013 submit a job, poll status, retrieve results.\n\n**Base URL:** `https://analysis6.arcgis.com/arcgis/rest/services/tasks/GPServer`\n\n**Docs:** https://developers.arcgis.com/rest/analysis/\n\n**Auth:** ArcGIS Online token + Publisher role required"
+    },
+    {
+      "name": "Portal Service",
+      "description": "Manage users, groups, items, search, sharing, and OAuth tokens.\n\n**ArcGIS Online:** `https://org.arcgis.com/sharing/rest`\n\n**Enterprise:** `https://organization.example.com/{webadaptor}/sharing/rest`\n\n**Docs:** https://developers.arcgis.com/rest/users-groups-and-items/"
+    },
+    {
+      "name": "Feature Service",
+      "description": "Query, add, update, delete, and sync hosted or enterprise feature layers.\n\n**URL pattern:** `https://{host}/{context}/rest/services/{folder}/{serviceName}/FeatureServer`\n\n**Docs:** https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerToken": {
+        "$ref": "components/securitySchemes/BearerToken.json"
+      },
+      "TokenParam": {
+        "$ref": "components/securitySchemes/TokenParam.json"
+      }
+    },
+    "parameters": {
+      "f": {
+        "$ref": "components/parameters/f.json"
+      },
+      "layerId": {
+        "$ref": "components/parameters/layerId.json"
+      },
+      "serviceName": {
+        "$ref": "components/parameters/serviceName.json"
+      }
+    },
+    "responses": {
+      "ArcGISError": {
+        "$ref": "components/responses/ArcGISError.json"
+      },
+      "Unauthorized": {
+        "$ref": "components/responses/Unauthorized.json"
+      },
+      "Forbidden": {
+        "$ref": "components/responses/Forbidden.json"
+      },
+      "NotFound": {
+        "$ref": "components/responses/NotFound.json"
+      }
+    },
+    "schemas": {
+      "SpatialReference": {
+        "$ref": "components/schemas/SpatialReference.json"
+      },
+      "Geometry": {
+        "$ref": "components/schemas/Geometry.json"
+      },
+      "Envelope": {
+        "$ref": "components/schemas/Envelope.json"
+      },
+      "Location": {
+        "$ref": "components/schemas/Location.json"
+      },
+      "Field": {
+        "$ref": "components/schemas/Field.json"
+      },
+      "Feature": {
+        "$ref": "components/schemas/Feature.json"
+      },
+      "FeatureSet": {
+        "$ref": "components/schemas/FeatureSet.json"
+      },
+      "ArcGISError": {
+        "$ref": "components/schemas/ArcGISError.json"
+      },
+      "JobStatus": {
+        "$ref": "components/schemas/JobStatus.json"
+      },
+      "JobRef": {
+        "$ref": "components/schemas/JobRef.json"
+      },
+      "EditResult": {
+        "$ref": "components/schemas/EditResult.json"
+      },
+      "ApplyEditsResponse": {
+        "$ref": "components/schemas/ApplyEditsResponse.json"
+      },
+      "BasemapStyleResponse": {
+        "$ref": "components/schemas/BasemapStyleResponse.json"
+      },
+      "GeocodeCandidatesResponse": {
+        "$ref": "components/schemas/GeocodeCandidatesResponse.json"
+      },
+      "ReverseGeocodeResponse": {
+        "$ref": "components/schemas/ReverseGeocodeResponse.json"
+      },
+      "SuggestResponse": {
+        "$ref": "components/schemas/SuggestResponse.json"
+      },
+      "PlaceResult": {
+        "$ref": "components/schemas/PlaceResult.json"
+      },
+      "PlaceSearchResponse": {
+        "$ref": "components/schemas/PlaceSearchResponse.json"
+      },
+      "PlaceDetails": {
+        "$ref": "components/schemas/PlaceDetails.json"
+      },
+      "ElevationAtPointResponse": {
+        "$ref": "components/schemas/ElevationAtPointResponse.json"
+      },
+      "ElevationAtManyPointsResponse": {
+        "$ref": "components/schemas/ElevationAtManyPointsResponse.json"
+      },
+      "PortalItem": {
+        "$ref": "components/schemas/PortalItem.json"
+      },
+      "PortalUser": {
+        "$ref": "components/schemas/PortalUser.json"
+      },
+      "PortalGroup": {
+        "$ref": "components/schemas/PortalGroup.json"
+      },
+      "PortalSelf": {
+        "$ref": "components/schemas/PortalSelf.json"
+      },
+      "SearchResponse": {
+        "$ref": "components/schemas/SearchResponse.json"
+      },
+      "OAuthTokenResponse": {
+        "$ref": "components/schemas/OAuthTokenResponse.json"
+      },
+      "FeatureServiceInfo": {
+        "$ref": "components/schemas/FeatureServiceInfo.json"
+      }
+    }
+  },
+  "paths": {
+    "/sessions/start": {
+      "$ref": "paths/basemap/sessions-start.json"
+    },
+    "/styles/arcgis/{styleName}": {
+      "$ref": "paths/basemap/styles-arcgis.json"
+    },
+    "/styles/open/{styleName}": {
+      "$ref": "paths/basemap/styles-open.json"
+    },
+    "/styles/items/{itemId}": {
+      "$ref": "paths/basemap/styles-items.json"
+    },
+    "/webmaps/arcgis/{styleName}": {
+      "$ref": "paths/basemap/webmaps-arcgis.json"
+    },
+    "/styles/self": {
+      "$ref": "paths/basemap/service-self.json"
+    },
+    "/findAddressCandidates": {
+      "$ref": "paths/geocoding/findAddressCandidates.json"
+    },
+    "/geocodeAddresses": {
+      "$ref": "paths/geocoding/geocodeAddresses.json"
+    },
+    "/reverseGeocode": {
+      "$ref": "paths/geocoding/reverseGeocode.json"
+    },
+    "/suggest": {
+      "$ref": "paths/geocoding/suggest.json"
+    },
+    "/places/near-point": {
+      "$ref": "paths/places/near-point.json"
+    },
+    "/places/within-extent": {
+      "$ref": "paths/places/within-extent.json"
+    },
+    "/places/{placeId}": {
+      "$ref": "paths/places/place-by-id.json"
+    },
+    "/categories": {
+      "$ref": "paths/places/categories.json"
+    },
+    "/categories/{categoryId}": {
+      "$ref": "paths/places/category-by-id.json"
+    },
+    "/Route/NAServer/Route_World/solve": {
+      "$ref": "paths/routing/route-solve-direct.json"
+    },
+    "/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea": {
+      "$ref": "paths/routing/service-area-direct.json"
+    },
+    "/ClosestFacility/NAServer/ClosestFacility_World/solveClosestFacility": {
+      "$ref": "paths/routing/closest-facility-direct.json"
+    },
+    "/OriginDestinationCostMatrix/NAServer/OriginDestinationCostMatrix_World/solveODCostMatrix": {
+      "$ref": "paths/routing/od-cost-matrix-direct.json"
+    },
+    "/SnapToRoadsSync/GPServer/SnapToRoads/execute": {
+      "$ref": "paths/routing/snap-to-roads-direct.json"
+    },
+    "/Route/GPServer/FindRoutes/submitJob": {
+      "$ref": "paths/routing/route-submit-job.json"
+    },
+    "/ServiceAreas/GPServer/GenerateServiceAreas/submitJob": {
+      "$ref": "paths/routing/service-area-submit-job.json"
+    },
+    "/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob": {
+      "$ref": "paths/routing/vrp-submit-job.json"
+    },
+    "/VehicleRoutingProblem/GPServer/SolveLastMileDelivery/submitJob": {
+      "$ref": "paths/routing/last-mile-delivery-submit-job.json"
+    },
+    "/Route/GPServer/FindRoutes/jobs/{jobId}": {
+      "$ref": "paths/routing/job-status.json"
+    },
+    "/Enrich": {
+      "$ref": "paths/geoenrichment/enrich.json"
+    },
+    "/createReport": {
+      "$ref": "paths/geoenrichment/createReport.json"
+    },
+    "/StandardGeographyQuery": {
+      "$ref": "paths/geoenrichment/standardGeographyQuery.json"
+    },
+    "/elevation/at-point": {
+      "$ref": "paths/elevation/at-point.json"
+    },
+    "/elevation/at-many-points": {
+      "$ref": "paths/elevation/at-many-points.json"
+    },
+    "/AggregatePoints/submitJob": {
+      "$ref": "paths/spatial_analysis/aggregate-points.json"
+    },
+    "/FindHotSpots/submitJob": {
+      "$ref": "paths/spatial_analysis/find-hotspots.json"
+    },
+    "/CreateBuffers/submitJob": {
+      "$ref": "paths/spatial_analysis/create-buffers.json"
+    },
+    "/OverlayLayers/submitJob": {
+      "$ref": "paths/spatial_analysis/overlay-layers.json"
+    },
+    "/SummarizeNearby/submitJob": {
+      "$ref": "paths/spatial_analysis/summarize-nearby.json"
+    },
+    "/{analysisTask}/jobs/{jobId}": {
+      "$ref": "paths/spatial_analysis/job-status.json"
+    },
+    "/portals/self": {
+      "$ref": "paths/portal/portal-self.json"
+    },
+    "/search": {
+      "$ref": "paths/portal/search.json"
+    },
+    "/community/users/{username}": {
+      "$ref": "paths/portal/user.json"
+    },
+    "/community/groups/{groupId}": {
+      "$ref": "paths/portal/group.json"
+    },
+    "/content/items/{itemId}": {
+      "$ref": "paths/portal/item.json"
+    },
+    "/content/users/{username}/addItem": {
+      "$ref": "paths/portal/add-item.json"
+    },
+    "/content/users/{username}/items/{itemId}/share": {
+      "$ref": "paths/portal/share-item.json"
+    },
+    "/oauth2/token": {
+      "$ref": "paths/portal/oauth2-token.json"
+    },
+    "/{serviceName}/FeatureServer": {
+      "$ref": "paths/feature_service/service-info.json"
+    },
+    "/{serviceName}/FeatureServer/{layerId}/query": {
+      "$ref": "paths/feature_service/query.json"
+    },
+    "/{serviceName}/FeatureServer/{layerId}/addFeatures": {
+      "$ref": "paths/feature_service/add-features.json"
+    },
+    "/{serviceName}/FeatureServer/{layerId}/updateFeatures": {
+      "$ref": "paths/feature_service/update-features.json"
+    },
+    "/{serviceName}/FeatureServer/{layerId}/deleteFeatures": {
+      "$ref": "paths/feature_service/delete-features.json"
+    },
+    "/{serviceName}/FeatureServer/applyEdits": {
+      "$ref": "paths/feature_service/apply-edits-service.json"
+    },
+    "/{serviceName}/FeatureServer/{layerId}/applyEdits": {
+      "$ref": "paths/feature_service/apply-edits-layer.json"
+    }
+  }
+}

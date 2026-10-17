@@ -1,0 +1,40 @@
+{
+  "get": {
+    "operationId": "getWayFull",
+    "summary": "Get a way and all its nodes",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Way plus all referenced nodes",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "410": {
+        "$ref": "../components/responses/410.json"
+      }
+    }
+  }
+}

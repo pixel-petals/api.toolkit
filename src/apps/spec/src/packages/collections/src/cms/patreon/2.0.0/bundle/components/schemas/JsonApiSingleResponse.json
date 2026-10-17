@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "description": "JSON:API response with a single primary resource.",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "object"
+    },
+    "included": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

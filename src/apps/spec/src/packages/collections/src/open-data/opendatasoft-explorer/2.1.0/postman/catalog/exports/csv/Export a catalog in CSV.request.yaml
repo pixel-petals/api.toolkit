@@ -1,0 +1,69 @@
+$kind: http-request
+description: Export a catalog in CSV (Comma Separated Values). Specific parameters are described here
+url: "{{baseUrl}}/catalog/exports/csv?delimiter=;&list_separator=,&quote_all=false&with_bom=true"
+method: GET
+headers:
+  Accept: application/json; charset=utf-8
+queryParams:
+  - key: delimiter
+    value: ;
+    description: Sets the field delimiter of the CSV export
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "default": ";",
+            "enum": [
+              ";",
+              ",",
+              "\t",
+              "|"
+            ]
+          }
+        }
+      }
+  - key: list_separator
+    value: ","
+    description: Sets the separator character used for multivalued strings
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "default": ","
+          }
+        }
+      }
+  - key: quote_all
+    value: "false"
+    description: Set it to true to force quoting all strings, i.e. surrounding all strings with quote characters
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+  - key: with_bom
+    value: "true"
+    description: |-
+      Set it to true to force the first characters of the CSV file to be a Unicode Byte Order Mask (0xFEFF). It usually makes Excel correctly open the output CSV file without warning.
+      **Warning:** the default value of this parameter is `false` in v2.0 and `true` starting with v2.1
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+examples: ./.resources/Export a catalog in CSV.resources/examples
+order: 1000

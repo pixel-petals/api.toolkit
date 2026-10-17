@@ -1,0 +1,100 @@
+{
+  "get": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "searchPortal",
+    "summary": "Search portal items, groups, or users",
+    "description": "Full-text search across portal items using Lucene-style query syntax for field-specific filtering.",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Lucene-style query. Example: `type:\"Feature Service\" AND tags:transportation`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "start",
+        "in": "query",
+        "description": "1-based index of first result (pagination).",
+        "schema": {
+          "type": "integer",
+          "default": 1,
+          "minimum": 1
+        }
+      },
+      {
+        "name": "num",
+        "in": "query",
+        "description": "Number of results (max 100).",
+        "schema": {
+          "type": "integer",
+          "default": 10,
+          "maximum": 100
+        }
+      },
+      {
+        "name": "sortField",
+        "in": "query",
+        "description": "Sort by: `title`, `created`, `modified`, `numViews`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "title",
+            "created",
+            "modified",
+            "numViews"
+          ]
+        }
+      },
+      {
+        "name": "sortOrder",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "default": "desc"
+        }
+      },
+      {
+        "name": "bbox",
+        "in": "query",
+        "description": "Bounding box filter as `xmin,ymin,xmax,ymax`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "categories",
+        "in": "query",
+        "description": "Comma-separated item category filters.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/SearchResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      }
+    }
+  }
+}

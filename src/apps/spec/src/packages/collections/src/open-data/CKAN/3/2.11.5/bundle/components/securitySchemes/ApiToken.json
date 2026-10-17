@@ -1,0 +1,6 @@
+{
+  "type": "apiKey",
+  "in": "header",
+  "name": "Authorization",
+  "description": "CKAN API token. Generate via User Profile \u2192 Manage \u2192 API Tokens or via `api_token_create`. Pass the raw token value (no prefix)."
+}

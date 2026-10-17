@@ -1,0 +1,60 @@
+{
+  "post": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "vocabulary_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update a vocabulary",
+    "description": "Update a tag vocabulary.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated vocabulary dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

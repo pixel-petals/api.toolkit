@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "location": {
+      "$ref": "./Location.json"
+    }
+  }
+}

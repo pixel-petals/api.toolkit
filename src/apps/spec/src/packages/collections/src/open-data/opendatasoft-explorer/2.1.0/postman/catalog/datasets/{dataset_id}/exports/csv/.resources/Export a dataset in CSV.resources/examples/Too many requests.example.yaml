@@ -1,0 +1,78 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/datasets/:dataset_id/exports/csv?delimiter=;&list_separator=,&quote_all=false&with_bom=true&apikey=<API Key>"
+  method: GET
+  headers:
+    Accept: application/json; charset=utf-8
+  queryParams:
+    - key: delimiter
+      value: ;
+      description: Sets the field delimiter of the CSV export
+    - key: list_separator
+      value: ","
+      description: Sets the separator character used for multivalued strings
+    - key: quote_all
+      value: "false"
+      description: Set it to true to force quoting all strings, i.e. surrounding all strings with quote characters
+    - key: with_bom
+      value: "true"
+      description: |-
+        Set it to true to force the first characters of the CSV file to be a Unicode Byte Order Mask (0xFEFF). It usually makes Excel correctly open the output CSV file without warning.
+        **Warning:** the default value of this parameter is `false` in v2.0 and `true` starting with v2.1
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: dataset_id
+      value: string
+      description: |-
+        The identifier of the dataset to be queried.
+
+        You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "errorcode": 10002,
+        "reset_time": "2021-01-26T00:00:00Z",
+        "limit_time_unit": "day",
+        "call_limit": 10000,
+        "error": "Too many requests on the domain. Please contact the domain administrator."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "errorcode": {
+            "type": "number"
+          },
+          "reset_time": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit_time_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "call_limit": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "errorcode",
+          "reset_time",
+          "limit_time_unit",
+          "call_limit",
+          "error"
+        ]
+      }
+order: 4000

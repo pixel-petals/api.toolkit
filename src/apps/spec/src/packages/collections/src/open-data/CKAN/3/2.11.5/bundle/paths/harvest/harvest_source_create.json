@@ -1,0 +1,86 @@
+{
+  "post": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_source_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a harvest source",
+    "description": "Create a new harvest source. Proxies through `package_create` creating a dataset of type `harvest`.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "source_type": {
+                "type": "string",
+                "description": "Harvester plugin name (e.g. `ckan`, `waf`, `csw`, `dcat_rdf`)."
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "owner_org": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string",
+                "enum": [
+                  "MANUAL",
+                  "DAILY",
+                  "WEEKLY",
+                  "BIWEEKLY",
+                  "MONTHLY",
+                  "ALWAYS"
+                ],
+                "default": "MANUAL"
+              },
+              "config": {
+                "type": "string",
+                "description": "JSON-encoded harvester-specific config options."
+              }
+            },
+            "required": [
+              "name",
+              "url",
+              "source_type"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created harvest source dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "get": {
+    "operationId": "getPermissions",
+    "summary": "Retrieve current OAuth permissions",
+    "description": "Returns the permissions granted to the current API connection. Returns an empty list if not authenticated.",
+    "tags": [
+      "Miscellaneous"
+    ],
+    "security": [
+      {},
+      {
+        "oauth2": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of permissions (prefixed with allow_)",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/Permissions.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

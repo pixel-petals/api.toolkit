@@ -1,0 +1,9 @@
+{
+  "name": "format",
+  "in": "path",
+  "required": true,
+  "schema": {
+    "$ref": "../schemas/enum-format-datasets.json"
+  },
+  "style": "simple"
+}

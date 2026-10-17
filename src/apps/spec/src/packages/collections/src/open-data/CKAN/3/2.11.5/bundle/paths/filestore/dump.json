@@ -1,0 +1,147 @@
+{
+  "get": {
+    "tags": [
+      "FileStore"
+    ],
+    "operationId": "datastoreDump",
+    "summary": "Download a DataStore resource",
+    "description": "Export a DataStore resource as a downloadable file. The resource must be in the DataStore. Supports filtering with most `datastore_search` parameters.\n\n**URL pattern:** `{ckan-host}/datastore/dump/{resource_id}`",
+    "parameters": [
+      {
+        "name": "resource_id",
+        "in": "path",
+        "required": true,
+        "description": "DataStore resource id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "format",
+        "in": "query",
+        "description": "Export format.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "csv",
+            "tsv",
+            "json",
+            "xml"
+          ],
+          "default": "csv"
+        }
+      },
+      {
+        "name": "bom",
+        "in": "query",
+        "description": "Prepend a UTF-8 byte-order mark (BOM) for Excel compatibility.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "description": "JSON filter dict.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Full-text search filter.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "distinct",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "plain",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "fields",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "File download in the requested format.",
+        "content": {
+          "text/csv": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "text/tab-separated-values": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

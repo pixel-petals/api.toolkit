@@ -1,0 +1,36 @@
+{
+  "get": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "getFeatureServiceInfo",
+    "summary": "Get feature service metadata",
+    "description": "Returns the root resource of a feature service including layer list, capabilities, spatial reference, sync settings, and supported operations.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Feature service metadata.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/FeatureServiceInfo.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

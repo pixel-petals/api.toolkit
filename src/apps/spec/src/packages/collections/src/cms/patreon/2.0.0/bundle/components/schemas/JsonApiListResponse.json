@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "description": "JSON:API response with a list of primary resources.",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "included": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "string"
+        }
+      }
+    },
+    "meta": {
+      "$ref": "../../components/schemas/PaginationMeta.json"
+    }
+  }
+}

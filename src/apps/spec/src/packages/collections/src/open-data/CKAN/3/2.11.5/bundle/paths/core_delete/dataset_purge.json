@@ -1,0 +1,51 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "dataset_purge",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Permanently purge a dataset",
+    "description": "Permanently delete a dataset and all associated resources, views, and metadata from the database. Sysadmin only. This action cannot be undone.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Empty result on success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

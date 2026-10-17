@@ -1,0 +1,101 @@
+{
+  "get": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "solveClosestFacility",
+    "summary": "Find closest facility to incidents (direct/sync)",
+    "description": "Finds one or more nearest facilities from incidents based on travel time or distance.",
+    "parameters": [
+      {
+        "name": "incidents",
+        "in": "query",
+        "required": true,
+        "description": "Incident locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "facilities",
+        "in": "query",
+        "required": true,
+        "description": "Candidate facility locations.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "defaultTargetFacilityCount",
+        "in": "query",
+        "description": "Nearest facilities to find per incident.",
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "travelMode",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "returnRoutes",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "returnDirections",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "travelDirection",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Closest facility routes.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "routes": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "facilities": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "incidents": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

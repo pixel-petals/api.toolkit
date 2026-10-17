@@ -1,0 +1,17 @@
+{
+  "description": "Authorization error \u2014 not authenticated or insufficient privileges.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ActionResponse.json"
+      },
+      "example": {
+        "success": false,
+        "error": {
+          "__type": "Authorization Error",
+          "message": "Access denied"
+        }
+      }
+    }
+  }
+}

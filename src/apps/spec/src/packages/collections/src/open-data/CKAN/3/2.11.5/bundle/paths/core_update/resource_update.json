@@ -1,0 +1,89 @@
+{
+  "post": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update a resource (full replace)",
+    "description": "Update a resource. For FileStore uploads, send as `multipart/form-data` with `upload` binary field. Full replace \u2014 all fields not provided are cleared.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "upload": {
+                "type": "string",
+                "format": "binary"
+              },
+              "name": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated resource dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

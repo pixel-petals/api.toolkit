@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "description": "Detailed attributes for a single place.",
+  "properties": {
+    "placeId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "$ref": "./Location.json"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "contactInfo": {
+      "type": "object"
+    },
+    "description": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "object"
+    },
+    "rating": {
+      "type": "object"
+    },
+    "socialMedia": {
+      "type": "object"
+    },
+    "chains": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

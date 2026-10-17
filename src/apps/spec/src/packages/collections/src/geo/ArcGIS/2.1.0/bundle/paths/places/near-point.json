@@ -1,0 +1,88 @@
+{
+  "get": {
+    "tags": [
+      "Places Service"
+    ],
+    "operationId": "placesNearPoint",
+    "summary": "Search for places near a point",
+    "description": "Returns places within a radius around a coordinate. Filter by category. Max 20 results per page.",
+    "parameters": [
+      {
+        "name": "x",
+        "in": "query",
+        "required": true,
+        "description": "Longitude.",
+        "schema": {
+          "type": "number",
+          "example": -117.196
+        }
+      },
+      {
+        "name": "y",
+        "in": "query",
+        "required": true,
+        "description": "Latitude.",
+        "schema": {
+          "type": "number",
+          "example": 34.057
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "description": "Search radius in meters (max 10,000). Default 1,000.",
+        "schema": {
+          "type": "number",
+          "default": 1000,
+          "maximum": 10000
+        }
+      },
+      {
+        "name": "categoryIds",
+        "in": "query",
+        "description": "Comma-separated category IDs.",
+        "schema": {
+          "type": "string",
+          "example": "17069,17070"
+        }
+      },
+      {
+        "name": "searchText",
+        "in": "query",
+        "description": "Free-text filter on place names.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "pageToken",
+        "in": "query",
+        "description": "Pagination token from a prior response.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Nearby places.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PlaceSearchResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

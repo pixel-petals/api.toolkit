@@ -1,0 +1,15 @@
+{
+  "name": "format",
+  "in": "path",
+  "required": true,
+  "description": "Response format. Use `.json` for JSON, `.geojson` for GeoJSON, `.csv` for CSV.",
+  "schema": {
+    "type": "string",
+    "enum": [
+      "json",
+      "geojson",
+      "csv"
+    ],
+    "default": "json"
+  }
+}

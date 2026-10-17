@@ -1,0 +1,77 @@
+{
+  "post": {
+    "tags": [
+      "Groups"
+    ],
+    "operationId": "group_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a group",
+    "description": "Create a new group.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string"
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Extra.json"
+                }
+              },
+              "packages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created group dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

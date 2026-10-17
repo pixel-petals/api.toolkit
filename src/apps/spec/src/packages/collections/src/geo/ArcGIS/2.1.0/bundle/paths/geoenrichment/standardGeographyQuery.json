@@ -1,0 +1,67 @@
+{
+  "post": {
+    "tags": [
+      "GeoEnrichment Service"
+    ],
+    "operationId": "standardGeographyQuery",
+    "summary": "Query standard geographies",
+    "description": "Returns standard geography features and IDs for different geographic levels (country, state, county, ZIP code, census tract, block group, etc.).",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "sourceCountry": {
+                "type": "string",
+                "example": "US"
+              },
+              "geographylayers": {
+                "type": "string",
+                "description": "JSON array of geography layer IDs. Example: `[{\"id\":\"US.States\"}]`."
+              },
+              "geographyids": {
+                "type": "string",
+                "description": "JSON array of geography feature IDs to retrieve."
+              },
+              "geographyquery": {
+                "type": "string",
+                "description": "Text to search within geography names."
+              },
+              "returnGeometry": {
+                "type": "boolean",
+                "default": false
+              },
+              "returnSubGeographyLayer": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Geography features.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

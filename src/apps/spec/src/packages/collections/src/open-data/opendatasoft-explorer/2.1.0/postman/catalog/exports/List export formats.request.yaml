@@ -1,0 +1,8 @@
+$kind: http-request
+description: List available export formats
+url: "{{baseUrl}}/catalog/exports"
+method: GET
+headers:
+  Accept: application/json; charset=utf-8
+examples: ./.resources/List export formats.resources/examples
+order: 4000

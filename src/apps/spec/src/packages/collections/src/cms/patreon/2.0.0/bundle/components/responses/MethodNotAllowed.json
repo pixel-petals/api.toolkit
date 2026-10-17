@@ -1,0 +1,10 @@
+{
+  "description": "405 Method Not Allowed \u2014 Invalid HTTP method for this endpoint.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

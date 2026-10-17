@@ -1,0 +1,10 @@
+{
+  "name": "layerId",
+  "in": "path",
+  "required": true,
+  "description": "Layer index within the service (0-based integer).",
+  "schema": {
+    "type": "integer",
+    "minimum": 0
+  }
+}

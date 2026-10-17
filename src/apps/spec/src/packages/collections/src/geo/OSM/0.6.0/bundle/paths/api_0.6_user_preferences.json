@@ -1,0 +1,77 @@
+{
+  "get": {
+    "operationId": "getUserPreferences",
+    "summary": "Get all preferences of the authenticated user",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_prefs"
+        ]
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User preferences as key-value pairs",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "preferences": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "setUserPreferences",
+    "summary": "Set all preferences for the authenticated user",
+    "description": "Replaces all existing preferences with the provided set.",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_prefs"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Preferences successfully updated"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

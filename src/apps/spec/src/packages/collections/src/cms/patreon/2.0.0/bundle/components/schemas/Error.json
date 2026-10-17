@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "description": "A single JSON:API error object.",
+  "properties": {
+    "code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "code_name": {
+      "type": "string",
+      "example": "RequestThrottled"
+    },
+    "detail": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "retry_after_seconds": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}

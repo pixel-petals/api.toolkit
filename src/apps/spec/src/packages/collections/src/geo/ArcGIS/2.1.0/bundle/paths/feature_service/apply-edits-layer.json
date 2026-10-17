@@ -1,0 +1,73 @@
+{
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "applyEditsLayer",
+    "summary": "Apply edits to a single layer",
+    "description": "Performs adds, updates, and deletes on a single feature layer in one atomic operation.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "adds": {
+                "type": "string",
+                "description": "JSON array of features to add."
+              },
+              "updates": {
+                "type": "string",
+                "description": "JSON array of features to update."
+              },
+              "deletes": {
+                "type": "string",
+                "description": "Comma-separated object IDs to delete."
+              },
+              "gdbVersion": {
+                "type": "string"
+              },
+              "rollbackOnFailure": {
+                "type": "boolean"
+              },
+              "useGlobalIds": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Layer edit results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ApplyEditsResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

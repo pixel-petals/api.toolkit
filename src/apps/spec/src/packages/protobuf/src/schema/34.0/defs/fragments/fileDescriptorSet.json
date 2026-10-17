@@ -1,0 +1,24 @@
+{
+  "name": "FileDescriptorSet",
+  "fullName": "google.protobuf.FileDescriptorSet",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FileDescriptorSet",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "file": {
+        "rule": "repeated",
+        "type": "FileDescriptorProto",
+        "id": 1,
+        "comment": null
+      }
+    },
+    "extensions": [
+      [
+        536000000,
+        536000000
+      ]
+    ],
+    "comment": "The protocol compiler can output a FileDescriptorSet containing the .proto\nfiles it parses."
+  }
+}

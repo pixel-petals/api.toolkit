@@ -1,0 +1,23 @@
+{
+  "get": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "license_list",
+    "summary": "List available licenses",
+    "description": "Return the list of licenses available for datasets on the site.",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "description": "List of license dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "get": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "getItem",
+    "summary": "Get portal item details",
+    "description": "Returns metadata for a portal item including title, type, description, URL, tags, and access level.",
+    "parameters": [
+      {
+        "name": "itemId",
+        "in": "path",
+        "required": true,
+        "description": "The unique item ID.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Item metadata.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PortalItem.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

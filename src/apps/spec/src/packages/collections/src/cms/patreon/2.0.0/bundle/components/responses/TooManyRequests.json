@@ -1,0 +1,10 @@
+{
+  "description": "429 Too Many Requests \u2014 Rate limit exceeded. Check `retry_after_seconds` in the response. Refreshing a token does not reset rate limits.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

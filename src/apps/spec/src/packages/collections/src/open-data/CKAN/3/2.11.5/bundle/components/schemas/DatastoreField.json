@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "description": "A DataStore table field/column definition.",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Column name."
+    },
+    "type": {
+      "type": "string",
+      "description": "PostgreSQL-compatible type. Examples: `text`, `int`, `float`, `bool`, `timestamp`, `json`."
+    },
+    "info": {
+      "type": "object",
+      "description": "Data Dictionary metadata for this field.",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "type_override": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

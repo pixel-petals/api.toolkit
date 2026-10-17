@@ -1,0 +1,58 @@
+{
+  "get": {
+    "tags": [
+      "Places Service"
+    ],
+    "operationId": "getPlaceCategories",
+    "summary": "List all place categories",
+    "description": "Returns all category IDs and labels, or a filtered subset. Category queries are free.",
+    "parameters": [
+      {
+        "name": "filter",
+        "in": "query",
+        "description": "Text to filter category names.",
+        "schema": {
+          "type": "string",
+          "example": "coffee"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Category list.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "categoryId": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "parents": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

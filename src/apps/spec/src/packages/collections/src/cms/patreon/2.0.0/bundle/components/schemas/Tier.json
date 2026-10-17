@@ -1,0 +1,117 @@
+{
+  "type": "object",
+  "description": "A membership tier on a campaign. v2 equivalent of v1 Reward. All fields must be requested via `fields[tier]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "tier"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "amount_cents": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "discord_role_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edited_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "patron_count": {
+          "type": "integer"
+        },
+        "post_count": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "remaining": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "requires_shipping": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unpublished_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        },
+        "user_limit": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "benefits": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "creator": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "tier_image": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

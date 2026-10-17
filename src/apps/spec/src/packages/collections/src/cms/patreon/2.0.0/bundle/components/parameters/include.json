@@ -1,0 +1,8 @@
+{
+  "name": "include",
+  "in": "query",
+  "description": "Comma-separated list of relationship paths to include as compound documents in the response.\n\n**Examples:**\n- `include=tiers,creator,benefits`\n- `include=currently_entitled_tiers,address,user`\n- `include=campaign,memberships`",
+  "schema": {
+    "type": "string"
+  }
+}

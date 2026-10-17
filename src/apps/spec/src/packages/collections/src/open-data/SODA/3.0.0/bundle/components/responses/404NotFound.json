@@ -1,0 +1,10 @@
+{
+  "description": "Not Found — dataset or row does not exist.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

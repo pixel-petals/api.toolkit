@@ -1,0 +1,190 @@
+{
+  "get": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_search",
+    "summary": "Search datasets with Solr",
+    "description": "Searches for packages satisfying a given search criteria. Backed by Solr. Supports full-text search, filters, faceting, sorting, and spatial filtering (via `ext_bbox` when ckanext-spatial is enabled).",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Solr full-text search query. Default `\"*:*\"`.",
+        "schema": {
+          "type": "string",
+          "example": "government spending"
+        }
+      },
+      {
+        "name": "fq",
+        "in": "query",
+        "description": "Solr filter query. Can be repeated. E.g. `tags:economy` or `organization:my-org`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fq_list",
+        "in": "query",
+        "description": "JSON array of filter queries.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Sort expression. Default `score desc, metadata_modified desc`.",
+        "schema": {
+          "type": "string",
+          "example": "metadata_modified desc"
+        }
+      },
+      {
+        "name": "rows",
+        "in": "query",
+        "description": "Number of results to return (default 10).",
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      {
+        "name": "start",
+        "in": "query",
+        "description": "Offset into result set.",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "facet.field",
+        "in": "query",
+        "description": "JSON array of fields to facet on. E.g. `[\"tags\",\"organization\"]`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "facet.limit",
+        "in": "query",
+        "description": "Max facet values returned.",
+        "schema": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      {
+        "name": "facet.mincount",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "include_drafts",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "include_deleted",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "include_private",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "ext_bbox",
+        "in": "query",
+        "description": "(ckanext-spatial) Bounding box filter `minx,miny,maxx,maxy`.",
+        "schema": {
+          "type": "string",
+          "example": "-7.5,49.2,3.9,57.4"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_search_post",
+    "summary": "Search datasets with Solr (POST)",
+    "description": "Same as GET. POST is preferred for complex or long queries.",
+    "requestBody": {
+      "required": false,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "q": {
+                "type": "string"
+              },
+              "fq": {
+                "type": "string"
+              },
+              "sort": {
+                "type": "string"
+              },
+              "rows": {
+                "type": "integer"
+              },
+              "start": {
+                "type": "integer"
+              },
+              "facet.field": {
+                "type": "string"
+              },
+              "ext_bbox": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

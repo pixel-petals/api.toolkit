@@ -1,0 +1,6 @@
+{
+  "type": "http",
+  "scheme": "bearer",
+  "bearerFormat": "ArcGIS Token or OAuth2 JWT",
+  "description": "ArcGIS token or OAuth 2.0 access token passed in the Authorization header."
+}

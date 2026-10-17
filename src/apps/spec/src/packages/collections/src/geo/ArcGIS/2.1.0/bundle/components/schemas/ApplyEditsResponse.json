@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "addResults": {
+      "type": "array",
+      "items": {
+        "$ref": "./EditResult.json"
+      }
+    },
+    "updateResults": {
+      "type": "array",
+      "items": {
+        "$ref": "./EditResult.json"
+      }
+    },
+    "deleteResults": {
+      "type": "array",
+      "items": {
+        "$ref": "./EditResult.json"
+      }
+    }
+  }
+}

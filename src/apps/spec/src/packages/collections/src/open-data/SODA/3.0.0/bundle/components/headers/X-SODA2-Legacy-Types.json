@@ -1,0 +1,6 @@
+{
+  "description": "Presence of `true` indicates a legacy SODA 2.0 API (case-insensitive text comparisons, Location-only geo).",
+  "schema": {
+    "type": "boolean"
+  }
+}

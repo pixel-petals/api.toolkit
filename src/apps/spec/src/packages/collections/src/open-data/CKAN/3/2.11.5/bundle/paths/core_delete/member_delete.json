@@ -1,0 +1,61 @@
+{
+  "post": {
+    "tags": [
+      "Members"
+    ],
+    "operationId": "member_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Remove a member from a group",
+    "description": "Remove an object (user or dataset) from a group or organization.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Group/org id."
+              },
+              "object": {
+                "type": "string"
+              },
+              "object_type": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "package"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "object",
+              "object_type"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

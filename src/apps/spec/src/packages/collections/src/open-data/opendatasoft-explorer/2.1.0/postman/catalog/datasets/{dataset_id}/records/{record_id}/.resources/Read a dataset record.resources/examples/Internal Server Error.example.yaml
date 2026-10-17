@@ -1,0 +1,52 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/datasets/:dataset_id/records/:record_id?select=string&lang=pt&timezone=UTC&apikey=<API Key>"
+  method: GET
+  queryParams:
+    - key: select
+      value: string
+      description: |-
+        Examples:
+        - `select=size` - Example of select, which only return the "size" field.
+        - `select=size * 2 as bigger_size` - Example of a complex expression with a label, which returns a new field named "bigger_size" and containing the double of size field value.
+        - `select=dataset_id, fields` - Example of a select in catalog ODSQL query to only retrieve dataset_id and schema of datasets.
+
+        A select expression can be used to add, remove or change the fields to return.
+        An expression can be:
+          - a wildcard ('*'): all fields are returned.
+          - A field name: only the specified field is returned.
+          - An include/exclude function: All fields matching the include or exclude expression are included or excluded. This expression can contain wildcard.
+          - A complex expression. The result of the expression is returned. A label can be set for this expression, and in that case, the field will be named after this label.
+    - key: lang
+      value: pt
+      description: |-
+        A language value.
+
+        If specified, the `lang` value override the default language, which is "fr".
+        The language is used to format string, for example in the `date_format` function.
+    - key: timezone
+      value: UTC
+      description: |-
+        Set the timezone for datetime fields.
+
+        Timezone IDs are defined by the [Unicode CLDR project](https://github.com/unicode-org/cldr). The list of timezone IDs is available in [timezone.xml](https://github.com/unicode-org/cldr/blob/master/common/bcp47/timezone.xml).
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: dataset_id
+      value: string
+      description: |-
+        The identifier of the dataset to be queried.
+
+        You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+    - key: record_id
+      value: string
+      description: Record identifier
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: text
+    content: ""
+order: 5000

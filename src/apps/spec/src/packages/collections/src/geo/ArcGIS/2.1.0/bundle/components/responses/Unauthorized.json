@@ -1,0 +1,17 @@
+{
+  "description": "Authentication required or token invalid/expired.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ArcGISError.json"
+      },
+      "example": {
+        "error": {
+          "code": 498,
+          "message": "Invalid token.",
+          "details": []
+        }
+      }
+    }
+  }
+}

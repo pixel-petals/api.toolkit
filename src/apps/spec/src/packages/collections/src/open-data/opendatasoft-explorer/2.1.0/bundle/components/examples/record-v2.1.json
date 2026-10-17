@@ -1,0 +1,29 @@
+{
+  "value": {
+    "timezone": "Europe/Brussels",
+    "elevation": null,
+    "name": "Fraire",
+    "modification_date": "2020-04-05",
+    "dem": 238,
+    "cou_name_en": "Belgium",
+    "feature_class": "P",
+    "admin3_code": "93",
+    "alternate_names": [
+      "Fraire"
+    ],
+    "coordinates": {
+      "lat": 50.26127,
+      "lon": 4.5076
+    },
+    "country_code_2": null,
+    "geoname_id": "2798031",
+    "feature_code": "PPL",
+    "label_en": "Belgium",
+    "admin4_code": "93088",
+    "country_code": "BE",
+    "ascii_name": "Fraire",
+    "admin1_code": "WAL",
+    "admin2_code": "WNA",
+    "population": 1492
+  }
+}

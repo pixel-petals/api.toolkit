@@ -1,0 +1,57 @@
+{
+  "post": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_view_reorder",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Reorder resource views",
+    "description": "Reorder the views of a resource.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Resource id."
+              },
+              "order": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Ordered list of view ids."
+              }
+            },
+            "required": [
+              "id",
+              "order"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Resource views in new order",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

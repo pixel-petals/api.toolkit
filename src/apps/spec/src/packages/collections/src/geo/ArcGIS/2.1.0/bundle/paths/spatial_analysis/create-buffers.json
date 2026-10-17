@@ -1,0 +1,102 @@
+{
+  "post": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "createBuffers",
+    "summary": "Create buffers around features (async)",
+    "description": "Creates buffer polygons around input features at specified distances. Supports multiple ring distances, dissolve options, and distance units.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "inputLayer",
+              "distances"
+            ],
+            "properties": {
+              "outputName": {
+                "type": "string",
+                "description": "Name for the output hosted feature layer."
+              },
+              "context": {
+                "type": "string",
+                "description": "JSON context: `{extent, outSR}`."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              },
+              "inputLayer": {
+                "type": "string",
+                "description": "Input feature layer."
+              },
+              "distances": {
+                "type": "string",
+                "description": "JSON array of buffer distances."
+              },
+              "field": {
+                "type": "string",
+                "description": "Field whose values define per-feature buffer distances."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "Meters",
+                  "Kilometers",
+                  "Feet",
+                  "Miles",
+                  "NauticalMiles",
+                  "Yards"
+                ]
+              },
+              "dissolveType": {
+                "type": "string",
+                "enum": [
+                  "None",
+                  "Dissolve"
+                ]
+              },
+              "ringType": {
+                "type": "string",
+                "enum": [
+                  "Disks",
+                  "Rings"
+                ],
+                "description": "`Disks` (filled) or `Rings` (donut shapes) for multiple distances."
+              },
+              "sideType": {
+                "type": "string",
+                "enum": [
+                  "Full",
+                  "Left",
+                  "Right"
+                ],
+                "description": "Which side of a line to buffer."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Analysis job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

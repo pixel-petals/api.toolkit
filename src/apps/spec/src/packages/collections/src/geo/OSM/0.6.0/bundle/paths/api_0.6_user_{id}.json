@@ -1,0 +1,45 @@
+{
+  "get": {
+    "operationId": "getUserById",
+    "summary": "Get details of a user by ID",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User details",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "user": {
+                  "$ref": "../components/schemas/User.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

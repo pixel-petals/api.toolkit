@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "./DatastoreField.json"
+      }
+    },
+    "offset": {
+      "type": "integer"
+    },
+    "limit": {
+      "type": "integer"
+    },
+    "filters": {
+      "type": "object"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "total_was_estimated": {
+      "type": "boolean"
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "next_page": {
+      "type": "object"
+    }
+  }
+}

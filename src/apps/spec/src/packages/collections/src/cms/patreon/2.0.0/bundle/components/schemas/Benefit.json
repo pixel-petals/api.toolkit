@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "description": "A benefit added to the campaign, assignable to tiers. Request fields via `fields[benefit]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "benefit"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "app_external_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "app_meta": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "benefit_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "example": "custom"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deliverables_due_today_count": {
+          "type": "integer"
+        },
+        "delivered_deliverables_count": {
+          "type": "integer"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_deleted": {
+          "type": "boolean"
+        },
+        "is_ended": {
+          "type": "boolean"
+        },
+        "is_published": {
+          "type": "boolean"
+        },
+        "next_deliverable_due_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "not_delivered_deliverables_count": {
+          "type": "integer"
+        },
+        "rule_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "e.g. eom_monthly or one_time_immediate"
+        },
+        "tiers_count": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "deliverables": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "tiers": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

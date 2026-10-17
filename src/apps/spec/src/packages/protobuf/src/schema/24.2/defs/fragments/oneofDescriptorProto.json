@@ -1,0 +1,22 @@
+{
+  "name": "OneofDescriptorProto",
+  "fullName": "google.protobuf.OneofDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/OneofDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "options": {
+        "type": "OneofOptions",
+        "id": 2,
+        "comment": null
+      }
+    },
+    "comment": "Describes a oneof."
+  }
+}

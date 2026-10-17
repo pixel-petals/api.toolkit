@@ -1,0 +1,66 @@
+{
+  "get": {
+    "tags": [
+      "Identity"
+    ],
+    "operationId": "getCurrentUser",
+    "summary": "Get the current user",
+    "description": "Fetch the current user's profile, including their campaign and pledges (if scopes permit). Requires the `users` scope for full profile data. The `pledges-to-me` scope is needed to read pledges made to your campaign.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/includes.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The current user resource with optional includes.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            },
+            "example": {
+              "data": {
+                "attributes": {
+                  "email": "user@example.com",
+                  "full_name": "Jane Creator"
+                },
+                "id": "123456",
+                "type": "user"
+              },
+              "links": {
+                "self": "https://www.patreon.com/api/oauth2/api/current_user"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

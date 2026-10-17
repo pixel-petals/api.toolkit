@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "description": "An activity stream entry recording a change made in CKAN.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "object_id": {
+      "type": "string"
+    },
+    "activity_type": {
+      "type": "string",
+      "example": "changed package"
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

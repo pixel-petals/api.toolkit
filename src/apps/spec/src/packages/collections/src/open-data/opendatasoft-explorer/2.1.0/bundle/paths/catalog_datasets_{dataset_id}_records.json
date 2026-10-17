@@ -1,0 +1,83 @@
+{
+  "get": {
+    "summary": "Query dataset records",
+    "operationId": "getRecords",
+    "tags": [
+      "Dataset"
+    ],
+    "description": "Perform a query on dataset records.",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      },
+      {
+        "$ref": "../components/parameters/select.json"
+      },
+      {
+        "$ref": "../components/parameters/where.json"
+      },
+      {
+        "$ref": "../components/parameters/group_by.json"
+      },
+      {
+        "$ref": "../components/parameters/order_by.json"
+      },
+      {
+        "$ref": "../components/parameters/limit.json"
+      },
+      {
+        "$ref": "../components/parameters/offset.json"
+      },
+      {
+        "$ref": "../components/parameters/refine.json"
+      },
+      {
+        "$ref": "../components/parameters/exclude.json"
+      },
+      {
+        "$ref": "../components/parameters/lang.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      },
+      {
+        "$ref": "../components/parameters/include_links.json"
+      },
+      {
+        "$ref": "../components/parameters/include_app_metas.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Records",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "$ref": "../components/schemas/records.json"
+            },
+            "examples": {
+              "records": {
+                "$ref": "../components/examples/records-v2.1.json"
+              },
+              "group_by_country": {
+                "$ref": "../components/examples/group_by_country-v2.1.json"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

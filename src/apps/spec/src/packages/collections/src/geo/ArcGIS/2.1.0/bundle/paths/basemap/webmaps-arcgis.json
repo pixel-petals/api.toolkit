@@ -1,0 +1,52 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "getArcGISBasemapWebmap",
+    "summary": "Get an ArcGIS basemap as web map JSON",
+    "description": "Returns a web map JSON document for the requested ArcGIS basemap style. Use this to set a basemap in a web map.",
+    "parameters": [
+      {
+        "name": "styleName",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "worldview",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Web map JSON.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

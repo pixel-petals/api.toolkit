@@ -1,0 +1,41 @@
+{
+  "get": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_autocomplete",
+    "summary": "Autocomplete dataset names",
+    "description": "Return a list of datasets (packages) that match a string.",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "description": "Partial dataset name or title to search for.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Matching dataset names",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

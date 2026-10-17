@@ -1,0 +1,92 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_upsert",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Insert or update records in a DataStore table",
+    "description": "Insert, update, or upsert records into an existing DataStore table.\n\n**Methods:**\n- `upsert` (default) \u2014 update if key exists, otherwise insert. Requires primary key.\n- `insert` \u2014 fast insert only; fails on duplicates.\n- `update` \u2014 update only; fails if key not found. Requires primary key.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string"
+              },
+              "records": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                },
+                "description": "Records to insert/update."
+              },
+              "include_records": {
+                "type": "boolean",
+                "default": false
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "upsert",
+                  "insert",
+                  "update"
+                ],
+                "default": "upsert"
+              },
+              "force": {
+                "type": "boolean",
+                "default": false
+              },
+              "dry_run": {
+                "type": "boolean",
+                "default": false,
+                "description": "Abort transaction to check for validation errors without committing."
+              },
+              "calculate_record_count": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "default": "background"
+              }
+            },
+            "required": [
+              "resource_id",
+              "records"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Modified data dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

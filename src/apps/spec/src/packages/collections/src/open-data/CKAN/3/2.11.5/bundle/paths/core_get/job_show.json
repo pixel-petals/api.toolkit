@@ -1,0 +1,44 @@
+{
+  "get": {
+    "tags": [
+      "Jobs"
+    ],
+    "operationId": "job_show",
+    "summary": "Get a background job",
+    "description": "Return information about a background job. Sysadmin only.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Job id.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Job dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

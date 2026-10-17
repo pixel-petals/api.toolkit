@@ -1,0 +1,9 @@
+{
+  "name": "include_app_metas",
+  "in": "query",
+  "description": "If set to `true`, this parameter will add application metadata to the response.\n",
+  "schema": {
+    "type": "boolean",
+    "default": false
+  }
+}

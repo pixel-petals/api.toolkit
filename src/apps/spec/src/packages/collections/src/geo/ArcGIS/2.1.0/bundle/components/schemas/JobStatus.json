@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "description": "Async job status returned from submitJob operations.",
+  "properties": {
+    "jobId": {
+      "type": "string"
+    },
+    "jobStatus": {
+      "type": "string",
+      "enum": [
+        "esriJobNew",
+        "esriJobWaiting",
+        "esriJobExecuting",
+        "esriJobSucceeded",
+        "esriJobFailed",
+        "esriJobTimedOut",
+        "esriJobCancelling",
+        "esriJobCancelled",
+        "esriJobDeleting",
+        "esriJobDeleted"
+      ]
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}

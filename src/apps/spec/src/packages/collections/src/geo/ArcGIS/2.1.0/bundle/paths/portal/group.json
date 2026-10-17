@@ -1,0 +1,41 @@
+{
+  "get": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "getGroup",
+    "summary": "Get group details",
+    "description": "Returns details about a portal group including description, members, and content sharing settings.",
+    "parameters": [
+      {
+        "name": "groupId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Group details.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PortalGroup.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

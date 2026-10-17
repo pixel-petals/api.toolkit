@@ -1,0 +1,36 @@
+{
+  "get": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_view_list",
+    "summary": "List resource views",
+    "description": "Return the list of resource views for a given resource.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Resource id.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of resource view dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "get": {
+    "tags": [
+      "Groups"
+    ],
+    "operationId": "group_list",
+    "summary": "List groups",
+    "description": "Return a list of the names of the site's groups.",
+    "parameters": [
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Sort field and order. Allowed: `name`, `package_count`, `title`. Default `title asc`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 1000
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "all_fields",
+        "in": "query",
+        "description": "Return full group dicts instead of just names.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_extras",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_users",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_groups",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_dataset_count",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "groups",
+        "in": "query",
+        "description": "Comma-separated or repeated list of group names to filter.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Group names or dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

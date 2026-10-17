@@ -1,0 +1,9 @@
+{
+  "name": "include_links",
+  "in": "query",
+  "description": "If set to `true`, this parameter will add HATEOAS links in the response.\n",
+  "schema": {
+    "type": "boolean",
+    "default": false
+  }
+}

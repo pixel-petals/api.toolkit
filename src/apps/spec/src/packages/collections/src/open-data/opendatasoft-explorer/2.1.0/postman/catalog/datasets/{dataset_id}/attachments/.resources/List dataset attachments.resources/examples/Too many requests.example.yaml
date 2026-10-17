@@ -1,0 +1,64 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/datasets/:dataset_id/attachments?apikey=<API Key>"
+  method: GET
+  headers:
+    Accept: application/json; charset=utf-8
+  queryParams:
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: dataset_id
+      value: string
+      description: |-
+        The identifier of the dataset to be queried.
+
+        You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "errorcode": 10002,
+        "reset_time": "2021-01-26T00:00:00Z",
+        "limit_time_unit": "day",
+        "call_limit": 10000,
+        "error": "Too many requests on the domain. Please contact the domain administrator."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "errorcode": {
+            "type": "number"
+          },
+          "reset_time": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit_time_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "call_limit": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "errorcode",
+          "reset_time",
+          "limit_time_unit",
+          "call_limit",
+          "error"
+        ]
+      }
+order: 4000

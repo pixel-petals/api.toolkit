@@ -1,0 +1,51 @@
+{
+  "post": {
+    "tags": [
+      "Groups"
+    ],
+    "operationId": "group_purge",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Permanently purge a group",
+    "description": "Permanently remove a group from the database. Sysadmin only.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Empty result",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

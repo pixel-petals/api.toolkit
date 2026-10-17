@@ -1,0 +1,60 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_revise",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Revise a dataset (selective field update)",
+    "description": "Update a dataset with precise field-level control using `update`, `filter`, and `match` keys. Allows adding/removing list entries (tags, resources, extras) by index without fetching the whole record.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "match": {
+                "type": "object",
+                "description": "Dict of field/value pairs that must match the current dataset state."
+              },
+              "filter": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "JSON Pointer paths to remove."
+              },
+              "update": {
+                "type": "object",
+                "description": "Field/value pairs to set (merged into existing). Use `+` prefix to append to lists."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Revised dataset dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

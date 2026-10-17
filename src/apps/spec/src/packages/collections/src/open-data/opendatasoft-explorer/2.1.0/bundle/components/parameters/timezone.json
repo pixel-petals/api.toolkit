@@ -1,0 +1,31 @@
+{
+  "name": "timezone",
+  "in": "query",
+  "description": "Set the timezone for datetime fields.\n\nTimezone IDs are defined by the [Unicode CLDR project](https://github.com/unicode-org/cldr). The list of timezone IDs is available in [timezone.xml](https://github.com/unicode-org/cldr/blob/master/common/bcp47/timezone.xml).",
+  "schema": {
+    "type": "string",
+    "default": "UTC"
+  },
+  "examples": {
+    "UTC": {
+      "summary": "UTC timezone",
+      "value": "UTC"
+    },
+    "Europe/Paris": {
+      "summary": "Paris timezone",
+      "value": "Europe/Paris"
+    },
+    "US/Eastern": {
+      "summary": "Eastern timezone",
+      "value": "US/Eastern"
+    },
+    "Europe/London": {
+      "summary": "London timezone",
+      "value": "Europe/London"
+    },
+    "Europe/Berlin": {
+      "summary": "Berlin timezone",
+      "value": "Europe/Berlin"
+    }
+  }
+}

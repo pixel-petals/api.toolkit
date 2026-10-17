@@ -1,0 +1,84 @@
+{
+  "post": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "findHotSpots",
+    "summary": "Find hot spots (Gi* spatial clustering, async)",
+    "description": "Uses the Getis-Ord Gi* statistic to identify statistically significant spatial clusters of high values (hot spots) and low values (cold spots).",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "analysisLayer"
+            ],
+            "properties": {
+              "outputName": {
+                "type": "string",
+                "description": "Name for the output hosted feature layer."
+              },
+              "context": {
+                "type": "string",
+                "description": "JSON context: `{extent, outSR}`."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              },
+              "analysisLayer": {
+                "type": "string",
+                "description": "Input feature layer URL or JSON."
+              },
+              "analysisField": {
+                "type": "string",
+                "description": "Numeric field to evaluate for clustering."
+              },
+              "dividedByField": {
+                "type": "string"
+              },
+              "boundingPolygonLayer": {
+                "type": "string"
+              },
+              "aggregationPolygonLayer": {
+                "type": "string"
+              },
+              "shapeType": {
+                "type": "string",
+                "enum": [
+                  "Fishnet",
+                  "Hexagon"
+                ]
+              },
+              "cellSize": {
+                "type": "number"
+              },
+              "cellSizeUnits": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Analysis job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

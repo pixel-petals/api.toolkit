@@ -1,0 +1,106 @@
+{
+  "get": {
+    "tags": [
+      "Campaigns"
+    ],
+    "operationId": "getCampaigns",
+    "summary": "List the current user's campaigns",
+    "description": "Returns all campaigns owned by the authorized user.\n\n**Scope:** `campaigns`\n\n**Top-level includes:** `tiers`, `creator`, `benefits`, `goals`\n\nAll attributes must be explicitly requested via `fields[campaign]=...`",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[campaign]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Campaign attributes. E.g. `created_at,patron_count,is_monthly,pledge_url,summary`."
+      },
+      {
+        "name": "fields[tier]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Tier attributes when tiers are included."
+      },
+      {
+        "name": "fields[benefit]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Benefit attributes when benefits are included."
+      },
+      {
+        "name": "fields[goal]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Goal attributes when goals are included."
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of the authenticated user's campaigns.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            },
+            "example": {
+              "data": [
+                {
+                  "attributes": {
+                    "patron_count": 1000,
+                    "is_monthly": true,
+                    "summary": "Creating great content"
+                  },
+                  "id": "12345",
+                  "type": "campaign"
+                }
+              ],
+              "meta": {
+                "pagination": {
+                  "total": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

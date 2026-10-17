@@ -1,0 +1,10 @@
+{
+  "description": "Internal Server Error — something went wrong on Socrata's platform.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

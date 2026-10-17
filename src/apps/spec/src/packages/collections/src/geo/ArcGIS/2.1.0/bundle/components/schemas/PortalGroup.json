@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "access": {
+      "type": "string",
+      "enum": [
+        "private",
+        "org",
+        "public"
+      ]
+    },
+    "isInvitationOnly": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created": {
+      "type": "integer"
+    },
+    "modified": {
+      "type": "integer"
+    }
+  }
+}

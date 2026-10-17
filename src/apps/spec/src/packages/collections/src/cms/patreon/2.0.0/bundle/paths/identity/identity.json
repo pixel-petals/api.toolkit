@@ -1,0 +1,114 @@
+{
+  "get": {
+    "tags": [
+      "Identity"
+    ],
+    "operationId": "getIdentity",
+    "summary": "Get the current user (identity)",
+    "description": "Fetch the current user resource corresponding to the OAuth access token.\n\n**Scopes:** `identity` (required for public profile). `identity[email]` required for the `email` attribute.\n\n**Top-level includes:** `memberships`, `campaign`\n\n**In v2, all fields must be explicitly requested** via `fields[user]=...` and `fields[campaign]=...` etc. Without `fields`, only `id` and `type` are returned.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[user]",
+        "in": "query",
+        "description": "Comma-separated User attributes to return. E.g. `about,email,full_name,image_url,url,vanity`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fields[campaign]",
+        "in": "query",
+        "description": "Comma-separated Campaign attributes to return when campaign is included.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fields[membership]",
+        "in": "query",
+        "description": "Comma-separated Member attributes when memberships are included.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The current user resource with optional includes.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            },
+            "example": {
+              "data": {
+                "attributes": {
+                  "email": "user@example.com",
+                  "full_name": "Platform Team"
+                },
+                "id": "123",
+                "relationships": {
+                  "campaign": {
+                    "data": {
+                      "id": "456",
+                      "type": "campaign"
+                    },
+                    "links": {
+                      "related": "https://www.patreon.com/api/oauth2/v2/campaigns/456"
+                    }
+                  }
+                },
+                "type": "user"
+              },
+              "included": [
+                {
+                  "attributes": {
+                    "is_monthly": true,
+                    "summary": "Hi there"
+                  },
+                  "id": "456",
+                  "type": "campaign"
+                }
+              ],
+              "links": {
+                "self": "https://www.patreon.com/api/oauth2/v2/user/123"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

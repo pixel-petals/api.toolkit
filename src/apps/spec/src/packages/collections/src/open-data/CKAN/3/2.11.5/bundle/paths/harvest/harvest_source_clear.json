@@ -1,0 +1,51 @@
+{
+  "post": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_source_clear",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Clear all datasets from a harvest source",
+    "description": "Remove all datasets harvested by a source, and reset its harvest objects. The source itself is not deleted.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

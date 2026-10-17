@@ -1,0 +1,10 @@
+{
+  "description": "404 Not Found \u2014 the resource does not exist.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

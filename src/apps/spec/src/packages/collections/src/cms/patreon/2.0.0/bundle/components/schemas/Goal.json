@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "description": "A funding goal on a campaign. [DEPRECATED] Goals relationship on Campaign will always be empty.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "goal"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "amount_cents": {
+          "type": "integer"
+        },
+        "completed_percentage": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reached_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

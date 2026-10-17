@@ -1,0 +1,146 @@
+{
+  "type": "object",
+  "description": "The record of a user's membership to a campaign. Replaces the v1 Pledge resource. All fields must be explicitly requested via `fields[member]=...`",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "member"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Request individual attributes via `fields[member]=full_name,patron_status,...`",
+      "properties": {
+        "campaign_lifetime_support_cents": {
+          "type": "integer",
+          "description": "Total lifetime support in campaign's currency cents."
+        },
+        "currently_entitled_amount_cents": {
+          "type": "integer",
+          "description": "Amount in cents the member is currently entitled to."
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "description": "Requires `campaigns.members[email]` scope."
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "is_follower": {
+          "type": "boolean",
+          "deprecated": true,
+          "description": "Deprecated. Always false \u2014 following replaced by free membership."
+        },
+        "is_free_trial": {
+          "type": "boolean"
+        },
+        "is_gifted": {
+          "type": "boolean",
+          "description": "True if membership is from a gift."
+        },
+        "last_charge_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "last_charge_status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "Paid",
+            "Declined",
+            "Deleted",
+            "Pending",
+            "Refunded",
+            "Fraud",
+            "Refunded by Patreon",
+            "Other",
+            "Partially Refunded",
+            "Free Trial",
+            null
+          ],
+          "description": "Result of last charge attempt. Only `Paid` indicates a successful payment."
+        },
+        "lifetime_support_cents": {
+          "type": "integer",
+          "deprecated": true,
+          "description": "Deprecated \u2014 use `campaign_lifetime_support_cents`."
+        },
+        "next_charge_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "note": {
+          "type": "string",
+          "description": "Creator's private notes on the member."
+        },
+        "patron_status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "active_patron",
+            "declined_patron",
+            "former_patron",
+            null
+          ],
+          "description": "Null indicates the member has never pledged."
+        },
+        "pledge_cadence": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of months between charges."
+        },
+        "pledge_relationship_start": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "will_pay_amount_cents": {
+          "type": "integer"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "currently_entitled_tiers": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "pledge_history": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "user": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

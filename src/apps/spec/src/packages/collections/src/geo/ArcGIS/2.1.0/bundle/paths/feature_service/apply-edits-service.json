@@ -1,0 +1,92 @@
+{
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "applyEditsFeatureService",
+    "summary": "Apply edits across multiple layers in a single transaction",
+    "description": "Performs adds, updates, and deletes across multiple layers atomically. The `edits` parameter specifies layer-level edit objects. Supports rollback on failure.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "edits"
+            ],
+            "properties": {
+              "edits": {
+                "type": "string",
+                "description": "JSON array of edit objects per layer. Each has `id` (layer ID), `adds`, `updates`, `deletes`."
+              },
+              "honorSequenceOfEdits": {
+                "type": "boolean"
+              },
+              "rollbackOnFailure": {
+                "type": "boolean",
+                "default": true
+              },
+              "useGlobalIds": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Apply edits results per layer.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "addResults": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../components/schemas/EditResult.json"
+                    }
+                  },
+                  "updateResults": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../components/schemas/EditResult.json"
+                    }
+                  },
+                  "deleteResults": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../components/schemas/EditResult.json"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

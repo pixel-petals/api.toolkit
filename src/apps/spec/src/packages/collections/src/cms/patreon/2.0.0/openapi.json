@@ -1,0 +1,2584 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Patreon API v2",
+    "version": "2.0.0",
+    "description": "OpenAPI 3.1 specification for the Patreon API v2, split into subfiles using JSON `$ref` references.\n\n## What's new in v2 vs v1\n\n| Change | Details |\n|--------|----------|\n| **Members replace Pledges** | The `Member` resource replaces the v1 `Pledge`. Members return richer data including charge status and membership lifetime. |\n| **Explicit fields required** | No attributes or relationships are returned by default. All desired fields must be requested via `fields[{type}]=...` |\n| **Improved scopes** | Finer-grained OAuth scopes for better security and developer control. |\n| **Webhook management** | Clients can create and manage webhooks on campaigns on behalf of creators. |\n| **Cursor pagination** | Member and post endpoints use cursor-based pagination via `page[cursor]`. |\n\n## Authentication\n\nAll requests require an OAuth 2.0 Bearer token. Complete the authorization flow:\n1. Redirect user to `GET https://www.patreon.com/oauth2/authorize`\n2. Exchange the authorization code: `POST /api/oauth2/token`\n3. Include `Authorization: Bearer {access_token}` on all API requests.\n\n## OAuth Scopes\n\n| Scope | Access granted |\n|-------|----------------|\n| `identity` | User public profile |\n| `identity[email]` | User email address |\n| `identity.memberships` | User's own memberships |\n| `campaigns` | Campaign data |\n| `w:campaigns.webhook` | Create/manage webhooks |\n| `campaigns.members` | Campaign member data |\n| `campaigns.members[email]` | Member email |\n| `campaigns.members.address` | Member shipping address |\n| `campaigns.posts` | Campaign posts |\n\n## Requesting Fields\n\nAll attributes must be explicitly requested. URL-encode square brackets:\n\n```\nGET /api/oauth2/v2/campaigns?fields%5Bcampaign%5D=patron_count,is_monthly\n```\n\n## Cursor Pagination\n\nUse `meta.pagination.cursors.next` from a response as the `page[cursor]` parameter to fetch the next page. A null `next` cursor means no further pages.\n\n## Rate Limits\n\nRate-limited at both client and token level. HTTP 429 responses include `retry_after_seconds`. Refreshing a token does **not** reset rate limits. After 2,000+ bad requests in 10 minutes, a 30-minute block is applied.\n\n## Directory structure\n\n```\nopenapi.json                          ← root entry point\ncomponents/\n  schemas/          (19 files)         ← Error, User, Campaign, Member, Tier, Benefit,\n  |                                       Address, Post, Webhook, Goal, PaginationMeta,\n  |                                       ResourceLinkage, Relationship, JSON:API envelopes\n  parameters/       (4 files)           ← fields, include, page[cursor], page[count]\n  responses/        (7 files)           ← shared HTTP error responses\n  securitySchemes/  (2 files)           ← OAuth2, BearerToken\npaths/\n  oauth/            (2 files)           ← token exchange + refresh\n  identity/         (1 file)            ← GET /identity\n  campaigns/        (4 files)           ← campaigns list, single, members, posts\n  members/          (1 file)            ← GET /members/{id}\n  posts/            (1 file)            ← GET /posts/{id}\n  webhooks/         (2 files)           ← webhook CRUD\n```",
+    "contact": {
+      "name": "Patreon Developer Support",
+      "url": "https://www.patreondevelopers.com"
+    },
+    "termsOfService": "https://www.patreon.com/policy/legal",
+    "license": {
+      "name": "Patreon Platform Usage Policy",
+      "url": "https://www.patreon.com/policy/legal"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.patreon.com",
+      "description": "Patreon production API"
+    }
+  ],
+  "security": [
+    {
+      "OAuth2": []
+    },
+    {
+      "BearerToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth",
+      "description": "OAuth 2.0 token exchange and refresh. No authentication required on these endpoints."
+    },
+    {
+      "name": "Identity",
+      "description": "Fetch data about the current authenticated user via their OAuth token."
+    },
+    {
+      "name": "Campaigns",
+      "description": "Access campaign data — list, single campaign, campaign members, and campaign posts."
+    },
+    {
+      "name": "Members",
+      "description": "Access individual member records. Members replace v1 Pledges and provide richer data about patron relationships."
+    },
+    {
+      "name": "Posts",
+      "description": "Access individual post records on campaigns."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Manage webhooks for real-time campaign event delivery. Supports member lifecycle events and post events."
+    }
+  ],
+  "paths": {
+    "/api/oauth2/token": {
+      "post": {
+        "tags": [
+          "OAuth"
+        ],
+        "operationId": "exchangeOAuthCode",
+        "summary": "Exchange authorization code for tokens",
+        "description": "Exchange a single-use authorization code for an OAuth 2.0 access token + refresh token pair. Requires `Content-Type: application/x-www-form-urlencoded`.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "grant_type",
+                  "client_id",
+                  "client_secret",
+                  "redirect_uri"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code"
+                    ]
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token pair issued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/oauth2/token#refresh": {
+      "post": {
+        "tags": [
+          "OAuth"
+        ],
+        "operationId": "refreshOAuthToken",
+        "summary": "Refresh an OAuth access token",
+        "description": "Issue a new access token + refresh token pair using a valid refresh token. Refreshing does **not** reset rate limits.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "grant_type",
+                  "refresh_token",
+                  "client_id",
+                  "client_secret"
+                ],
+                "properties": {
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "refresh_token"
+                    ]
+                  },
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New token pair.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/identity": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "operationId": "getIdentity",
+        "summary": "Get the current user (identity)",
+        "description": "Fetch the current user resource corresponding to the OAuth access token.\n\n**Scopes:** `identity` (required for public profile). `identity[email]` required for the `email` attribute.\n\n**Top-level includes:** `memberships`, `campaign`\n\n**In v2, all fields must be explicitly requested** via `fields[user]=...` and `fields[campaign]=...` etc. Without `fields`, only `id` and `type` are returned.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[user]",
+            "in": "query",
+            "description": "Comma-separated User attributes to return. E.g. `about,email,full_name,image_url,url,vanity`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[campaign]",
+            "in": "query",
+            "description": "Comma-separated Campaign attributes to return when campaign is included.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[membership]",
+            "in": "query",
+            "description": "Comma-separated Member attributes when memberships are included.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current user resource with optional includes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                },
+                "example": {
+                  "data": {
+                    "attributes": {
+                      "email": "user@example.com",
+                      "full_name": "Platform Team"
+                    },
+                    "id": "123",
+                    "relationships": {
+                      "campaign": {
+                        "data": {
+                          "id": "456",
+                          "type": "campaign"
+                        },
+                        "links": {
+                          "related": "https://www.patreon.com/api/oauth2/v2/campaigns/456"
+                        }
+                      }
+                    },
+                    "type": "user"
+                  },
+                  "included": [
+                    {
+                      "attributes": {
+                        "is_monthly": true,
+                        "summary": "Hi there"
+                      },
+                      "id": "456",
+                      "type": "campaign"
+                    }
+                  ],
+                  "links": {
+                    "self": "https://www.patreon.com/api/oauth2/v2/user/123"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/campaigns": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCampaigns",
+        "summary": "List the current user's campaigns",
+        "description": "Returns all campaigns owned by the authorized user.\n\n**Scope:** `campaigns`\n\n**Top-level includes:** `tiers`, `creator`, `benefits`, `goals`\n\nAll attributes must be explicitly requested via `fields[campaign]=...`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[campaign]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Campaign attributes. E.g. `created_at,patron_count,is_monthly,pledge_url,summary`."
+          },
+          {
+            "name": "fields[tier]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tier attributes when tiers are included."
+          },
+          {
+            "name": "fields[benefit]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Benefit attributes when benefits are included."
+          },
+          {
+            "name": "fields[goal]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Goal attributes when goals are included."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of the authenticated user's campaigns.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "attributes": {
+                        "patron_count": 1000,
+                        "is_monthly": true,
+                        "summary": "Creating great content"
+                      },
+                      "id": "12345",
+                      "type": "campaign"
+                    }
+                  ],
+                  "meta": {
+                    "pagination": {
+                      "total": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCampaign",
+        "summary": "Get a campaign by ID",
+        "description": "Fetch a single Campaign by its ID.\n\n**Scope:** `campaigns`\n\n**Top-level includes:** `tiers`, `creator`, `benefits`, `goals`\n\nAll attributes must be explicitly requested via `fields[campaign]=...`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[campaign]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[tier]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[benefit]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[goal]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The campaign resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}/members": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCampaignMembers",
+        "summary": "List members for a campaign",
+        "description": "Returns all Members for a given Campaign.\n\n**Scope:** `campaigns.members` (required). `campaigns.members[email]` for email. `campaigns.members.address` for shipping address.\n\n**Top-level includes:** `address`, `campaign`, `currently_entitled_tiers`, `user`, `pledge_history`\n\n**Pagination:** Default 1000 results per page (500 if `pledge_history` is included). Use `page[cursor]` from `meta.pagination.cursors.next`.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[member]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Member attributes. E.g. `full_name,patron_status,last_charge_status,currently_entitled_amount_cents,lifetime_support_cents`."
+          },
+          {
+            "name": "fields[tier]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tier attributes when currently_entitled_tiers is included."
+          },
+          {
+            "name": "fields[address]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Address attributes. Requires `campaigns.members.address` scope."
+          },
+          {
+            "name": "fields[user]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/pageCursor"
+          },
+          {
+            "$ref": "#/components/parameters/pageCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of campaign members.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "attributes": {
+                        "full_name": "A Patron",
+                        "patron_status": "active_patron",
+                        "last_charge_status": "Paid",
+                        "currently_entitled_amount_cents": 500
+                      },
+                      "id": "member-uuid",
+                      "type": "member"
+                    }
+                  ],
+                  "meta": {
+                    "pagination": {
+                      "cursors": {
+                        "next": "cursor_string"
+                      },
+                      "total": 500
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}/posts": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCampaignPosts",
+        "summary": "List posts for a campaign",
+        "description": "Returns all posts on a given Campaign.\n\n**Scope:** `campaigns.posts`\n\nAll post attributes must be requested via `fields[post]=...`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[post]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Post attributes. E.g. `title,content,url,published_at,is_public,is_paid`."
+          },
+          {
+            "$ref": "#/components/parameters/pageCursor"
+          },
+          {
+            "$ref": "#/components/parameters/pageCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of campaign posts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/members/{member_id}": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "getMember",
+        "summary": "Get a member by ID",
+        "description": "Fetch a single Member by its UUID.\n\n**Scope:** `campaigns.members`\n\n**Top-level includes:** `address`, `campaign`, `currently_entitled_tiers`, `user`\n\nWe recommend including `currently_entitled_tiers` to know exactly what a member is entitled to.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "description": "The UUID of the member.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[member]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[tier]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields[address]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Requires `campaigns.members.address` scope."
+          },
+          {
+            "name": "fields[user]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The member resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                },
+                "example": {
+                  "data": {
+                    "attributes": {
+                      "full_name": "A Patron",
+                      "is_follower": false,
+                      "last_charge_date": "2020-10-01T11:18:36.000+00:00"
+                    },
+                    "id": "123-456-789",
+                    "type": "member"
+                  },
+                  "links": {
+                    "self": "https://www.patreon.com/api/oauth2/v2/members/123-456-789"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/posts/{post_id}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "operationId": "getPost",
+        "summary": "Get a post by ID",
+        "description": "Fetch a single Post by its ID.\n\n**Scope:** `campaigns.posts`\n\nPost content is only available for posts the token holder has access to.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[post]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Post attributes. E.g. `title,content,url,published_at,is_public,is_paid`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The post resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/webhooks": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "listWebhooks",
+        "summary": "List webhooks",
+        "description": "Returns all webhooks created by the current client for the authorized user's campaign. Only webhooks created by your client are visible.\n\n**Scope:** `w:campaigns.webhook`\n\n**Top-level includes:** `client`, `campaign`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/fields"
+          },
+          {
+            "$ref": "#/components/parameters/include"
+          },
+          {
+            "name": "fields[webhook]",
+            "in": "query",
+            "description": "Webhook attributes. E.g. `last_attempted_at,num_consecutive_times_failed,paused,secret,triggers,uri`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of webhooks.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "attributes": {
+                        "last_attempted_at": "2018-04-01T20:09:18+00:00",
+                        "num_consecutive_times_failed": 0,
+                        "paused": false,
+                        "secret": "hereisaverycomplexsecret",
+                        "triggers": [
+                          "members:create",
+                          "members:delete",
+                          "members:update"
+                        ],
+                        "uri": "https://example.com/patreon-webhook"
+                      },
+                      "id": "2793",
+                      "type": "webhook"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "createWebhook",
+        "summary": "Create a webhook",
+        "description": "Create a new webhook on the current user's campaign.\n\n**Scope:** `w:campaigns.webhook`\n\nWebhook payloads are signed: verify the `X-Patreon-Signature` header (HMAC-MD5 hex digest of the body using the webhook secret).\n\n**Available triggers:**\n- `members:create` / `members:update` / `members:delete`\n- `members:pledge:create` / `members:pledge:update` / `members:pledge:delete`\n- `posts:publish` / `posts:update` / `posts:delete`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "attributes",
+                      "relationships"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "webhook"
+                        ]
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "required": [
+                          "triggers",
+                          "uri"
+                        ],
+                        "properties": {
+                          "triggers": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "members:create",
+                                "members:update",
+                                "members:delete",
+                                "members:pledge:create",
+                                "members:pledge:update",
+                                "members:pledge:delete",
+                                "posts:publish",
+                                "posts:update",
+                                "posts:delete"
+                              ]
+                            }
+                          },
+                          "uri": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      },
+                      "relationships": {
+                        "type": "object",
+                        "required": [
+                          "campaign"
+                        ],
+                        "properties": {
+                          "campaign": {
+                            "type": "object",
+                            "properties": {
+                              "data": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "campaign"
+                                    ]
+                                  },
+                                  "id": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "data": {
+                  "type": "webhook",
+                  "attributes": {
+                    "triggers": [
+                      "members:create",
+                      "members:update",
+                      "members:delete"
+                    ],
+                    "uri": "https://example.com/hooks/patreon"
+                  },
+                  "relationships": {
+                    "campaign": {
+                      "data": {
+                        "type": "campaign",
+                        "id": "12345"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created webhook resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                },
+                "example": {
+                  "data": {
+                    "attributes": {
+                      "last_attempted_at": null,
+                      "paused": false,
+                      "num_consecutive_times_failed": 0,
+                      "secret": "abcdefghiklmnopqrstuvwyz",
+                      "triggers": [
+                        "members:create",
+                        "members:update",
+                        "members:delete"
+                      ],
+                      "uri": "https://example.com/hooks/patreon"
+                    },
+                    "id": "3955",
+                    "type": "webhook"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/v2/webhooks/{webhook_id}": {
+      "patch": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "updateWebhook",
+        "summary": "Update a webhook",
+        "description": "Update a webhook's triggers, URI, or paused state. Only webhooks created by your client can be updated.\n\n**Scope:** `w:campaigns.webhook`\n\n**Replaying missed events:** If your webhook was down and `num_consecutive_times_failed > 0`, PATCH with `paused: false` to replay all queued missed events.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "webhook"
+                        ]
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "properties": {
+                          "paused": {
+                            "type": "boolean",
+                            "description": "Set false to resume and replay missed events."
+                          },
+                          "triggers": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "members:create",
+                                "members:update",
+                                "members:delete",
+                                "members:pledge:create",
+                                "members:pledge:update",
+                                "members:pledge:delete",
+                                "posts:publish",
+                                "posts:update",
+                                "posts:delete"
+                              ]
+                            }
+                          },
+                          "uri": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "data": {
+                  "id": "1234567",
+                  "type": "webhook",
+                  "attributes": {
+                    "triggers": [
+                      "members:create",
+                      "members:delete"
+                    ],
+                    "uri": "https://www.example2.com",
+                    "paused": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "deleteWebhook",
+        "summary": "Delete a webhook",
+        "description": "Permanently delete a webhook. Only webhooks created by your client can be deleted.\n\n**Scope:** `w:campaigns.webhook`",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Webhook deleted successfully."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "Patreon OAuth 2.0. Complete the flow at https://www.patreon.com/oauth2/authorize and exchange the code at POST /api/oauth2/token.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://www.patreon.com/oauth2/authorize",
+            "tokenUrl": "https://www.patreon.com/api/oauth2/token",
+            "scopes": {
+              "identity": "Read access to the user's public profile information.",
+              "identity[email]": "Read access to the user's email address.",
+              "identity.memberships": "Read access to the user's memberships.",
+              "campaigns": "Read access to campaign data.",
+              "w:campaigns.webhook": "Read, write, update, and delete access to campaign webhooks created by your client.",
+              "campaigns.members": "Read access to data about a campaign's members. Also enables webhook delivery of member data.",
+              "campaigns.members[email]": "Read access to member email addresses. Also enables webhook delivery.",
+              "campaigns.members.address": "Read access to member shipping addresses. Also enables webhook delivery.",
+              "campaigns.posts": "Read access to posts on a campaign."
+            }
+          }
+        }
+      },
+      "BearerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "OAuth2 access token",
+        "description": "Creator's Access Token from the Patreon developer portal, or an OAuth2 access token with the required v2 scopes."
+      }
+    },
+    "parameters": {
+      "fields": {
+        "name": "fields[{resource_type}]",
+        "in": "query",
+        "description": "Comma-separated list of attributes to return for a given resource type. **In v2, no attributes are returned by default** — all desired fields must be explicitly requested.\n\nEncode brackets: `fields%5Bcampaign%5D=patron_count,created_at`\n\n**Examples:**\n- `fields[campaign]=patron_count,created_at,is_monthly`\n- `fields[member]=full_name,patron_status,last_charge_status`\n- `fields[tier]=amount_cents,title,patron_count`\n- `fields[address]=city,line_1,postal_code`",
+        "schema": {
+          "type": "string"
+        },
+        "style": "deepObject",
+        "explode": true
+      },
+      "include": {
+        "name": "include",
+        "in": "query",
+        "description": "Comma-separated list of relationship paths to include as compound documents in the response.\n\n**Examples:**\n- `include=tiers,creator,benefits`\n- `include=currently_entitled_tiers,address,user`\n- `include=campaign,memberships`",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "pageCursor": {
+        "name": "page[cursor]",
+        "in": "query",
+        "description": "Opaque cursor for cursor-based pagination. Obtain from `meta.pagination.cursors.next` in a prior response.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "pageCount": {
+        "name": "page[count]",
+        "in": "query",
+        "description": "Number of results per page. Default 1000 for most endpoints; 500 if `pledge_history` is included.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "400 Bad Request — Malformed request syntax or invalid parameters.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "401 Unauthorized — Invalid, expired, or missing OAuth access token.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "403 Forbidden — Authenticated but missing required scope or insufficient privileges.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "404 Not Found — The requested resource does not exist.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "405 Method Not Allowed — Invalid HTTP method for this endpoint.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "429 Too Many Requests — Rate limit exceeded. Check `retry_after_seconds` in the response. Refreshing a token does not reset rate limits.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "500 Internal Server Error — Unexpected server-side failure. Retry with exponential backoff.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "description": "A single JSON:API error object.",
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code_name": {
+            "type": "string",
+            "example": "RequestThrottled"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retry_after_seconds": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "OAuthTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "integer"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type"
+        ]
+      },
+      "ResourceLinkage": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ]
+      },
+      "Relationship": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResourceLinkage"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResourceLinkage"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "related": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "description": "Pagination metadata returned in JSON:API `meta` object.",
+        "properties": {
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "cursors": {
+                "type": "object",
+                "properties": {
+                  "next": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Pass as `page[cursor]` to retrieve the next page. Null when no further pages."
+                  }
+                }
+              },
+              "total": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "JsonApiSingleResponse": {
+        "type": "object",
+        "description": "JSON:API response with a single primary resource.",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "JsonApiListResponse": {
+        "type": "object",
+        "description": "JSON:API response with a list of primary resources.",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "next": {
+                "type": "string"
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "description": "A Patreon user (API v2). All fields must be explicitly requested via `fields[user]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "user"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Request individual attributes via `fields[user]=about,email,...`",
+            "properties": {
+              "about": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Requires `identity[email]` scope."
+              },
+              "first_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "full_name": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "last_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "social_connections": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Map of connected social accounts."
+              },
+              "thumb_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "vanity": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "memberships": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Campaign": {
+        "type": "object",
+        "description": "A creator's Patreon campaign (API v2). All fields must be explicitly requested via `fields[campaign]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "campaign"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Request individual attributes via `fields[campaign]=created_at,patron_count,...`",
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "creation_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "discord_server_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "google_analytics_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "has_rss": {
+                "type": "boolean"
+              },
+              "has_sent_rss_notify": {
+                "type": "boolean"
+              },
+              "image_small_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "image_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "is_charged_immediately": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "is_monthly": {
+                "type": "boolean"
+              },
+              "is_nsfw": {
+                "type": "boolean"
+              },
+              "main_video_embed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "main_video_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "one_liner": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "patron_count": {
+                "type": "integer"
+              },
+              "pay_per_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "pledge_url": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "rss_artwork_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "rss_feed_title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "show_earnings": {
+                "type": "boolean"
+              },
+              "summary": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_embed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_msg": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_video_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "vanity": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "benefits": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "categories": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "creator": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "goals": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "tiers": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Member": {
+        "type": "object",
+        "description": "The record of a user's membership to a campaign. Replaces the v1 Pledge resource. All fields must be explicitly requested via `fields[member]=...`",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "member"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Request individual attributes via `fields[member]=full_name,patron_status,...`",
+            "properties": {
+              "campaign_lifetime_support_cents": {
+                "type": "integer",
+                "description": "Total lifetime support in campaign's currency cents."
+              },
+              "currently_entitled_amount_cents": {
+                "type": "integer",
+                "description": "Amount in cents the member is currently entitled to."
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "email",
+                "description": "Requires `campaigns.members[email]` scope."
+              },
+              "full_name": {
+                "type": "string"
+              },
+              "is_follower": {
+                "type": "boolean",
+                "deprecated": true,
+                "description": "Deprecated. Always false — following replaced by free membership."
+              },
+              "is_free_trial": {
+                "type": "boolean"
+              },
+              "is_gifted": {
+                "type": "boolean",
+                "description": "True if membership is from a gift."
+              },
+              "last_charge_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_charge_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "Paid",
+                  "Declined",
+                  "Deleted",
+                  "Pending",
+                  "Refunded",
+                  "Fraud",
+                  "Refunded by Patreon",
+                  "Other",
+                  "Partially Refunded",
+                  "Free Trial",
+                  null
+                ],
+                "description": "Result of last charge attempt. Only `Paid` indicates a successful payment."
+              },
+              "lifetime_support_cents": {
+                "type": "integer",
+                "deprecated": true,
+                "description": "Deprecated — use `campaign_lifetime_support_cents`."
+              },
+              "next_charge_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "note": {
+                "type": "string",
+                "description": "Creator's private notes on the member."
+              },
+              "patron_status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "active_patron",
+                  "declined_patron",
+                  "former_patron",
+                  null
+                ],
+                "description": "Null indicates the member has never pledged."
+              },
+              "pledge_cadence": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Number of months between charges."
+              },
+              "pledge_relationship_start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "will_pay_amount_cents": {
+                "type": "integer"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "currently_entitled_tiers": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "pledge_history": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "user": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Tier": {
+        "type": "object",
+        "description": "A membership tier on a campaign. v2 equivalent of v1 Reward. All fields must be requested via `fields[tier]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "tier"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount_cents": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "discord_role_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "edited_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "image_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "patron_count": {
+                "type": "integer"
+              },
+              "post_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "remaining": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "requires_shipping": {
+                "type": "boolean"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "unpublished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "url": {
+                "type": "string"
+              },
+              "user_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "benefits": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "creator": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "tier_image": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Benefit": {
+        "type": "object",
+        "description": "A benefit added to the campaign, assignable to tiers. Request fields via `fields[benefit]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "benefit"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "app_external_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "app_meta": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "benefit_type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "example": "custom"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "deliverables_due_today_count": {
+                "type": "integer"
+              },
+              "delivered_deliverables_count": {
+                "type": "integer"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_deleted": {
+                "type": "boolean"
+              },
+              "is_ended": {
+                "type": "boolean"
+              },
+              "is_published": {
+                "type": "boolean"
+              },
+              "next_deliverable_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "not_delivered_deliverables_count": {
+                "type": "integer"
+              },
+              "rule_type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "e.g. eom_monthly or one_time_immediate"
+              },
+              "tiers_count": {
+                "type": "integer"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "deliverables": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "tiers": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Goal": {
+        "type": "object",
+        "description": "A funding goal on a campaign. [DEPRECATED] Goals relationship on Campaign will always be empty.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "goal"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount_cents": {
+                "type": "integer"
+              },
+              "completed_percentage": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reached_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "description": "A patron's shipping address. Requires `campaigns.members.address` scope. Request fields via `fields[address]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "address"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "addressee": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string",
+                "description": "ISO 3166-1 alpha-2 country code."
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "line_1": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "line_2": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "postal_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaigns": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "user": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "description": "A post published on a campaign. Requires `campaigns.posts` scope. Request fields via `fields[post]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "post"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "app_status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "content": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "HTML content of the post. Only available for posts the token holder can access."
+              },
+              "embed_data": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "embed_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "is_paid": {
+                "type": "boolean",
+                "description": "True if the post was paid for by patrons."
+              },
+              "is_public": {
+                "type": "boolean"
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "was_posted_by_campaign_owner": {
+                "type": "boolean"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "user_defined_tags": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "description": "A v2 webhook on a campaign. Created per-client. Requires `w:campaigns.webhook` scope. Request fields via `fields[webhook]=...`",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "webhook"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "last_attempted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "num_consecutive_times_failed": {
+                "type": "integer"
+              },
+              "paused": {
+                "type": "boolean",
+                "description": "If true, webhook will not fire. PATCH with `paused: false` to resume and replay missed events."
+              },
+              "secret": {
+                "type": "string",
+                "description": "HMAC-MD5 secret for verifying X-Patreon-Signature header on incoming payloads."
+              },
+              "triggers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "members:create",
+                    "members:update",
+                    "members:delete",
+                    "members:pledge:create",
+                    "members:pledge:update",
+                    "members:pledge:delete",
+                    "posts:publish",
+                    "posts:update",
+                    "posts:delete"
+                  ]
+                }
+              },
+              "uri": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "client": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

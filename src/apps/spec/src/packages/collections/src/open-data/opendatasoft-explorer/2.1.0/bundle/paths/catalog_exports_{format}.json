@@ -1,0 +1,62 @@
+{
+  "get": {
+    "summary": "Export a catalog",
+    "operationId": "exportDatasets",
+    "tags": [
+      "Catalog"
+    ],
+    "description": "Export a catalog in the desired format.",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/format-catalog.json"
+      },
+      {
+        "$ref": "../components/parameters/select.json"
+      },
+      {
+        "$ref": "../components/parameters/where.json"
+      },
+      {
+        "$ref": "../components/parameters/order_by.json"
+      },
+      {
+        "$ref": "../components/parameters/group_by.json"
+      },
+      {
+        "$ref": "../components/parameters/limit_export.json"
+      },
+      {
+        "$ref": "../components/parameters/offset.json"
+      },
+      {
+        "$ref": "../components/parameters/refine.json"
+      },
+      {
+        "$ref": "../components/parameters/exclude.json"
+      },
+      {
+        "$ref": "../components/parameters/lang.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Return a file"
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

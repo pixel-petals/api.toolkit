@@ -1,0 +1,74 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete DataStore table or records",
+    "description": "Delete records from a DataStore table using filters, OR drop the entire table if no filters are provided.\n\n\u26a0\ufe0f Omitting `filters` permanently drops the table and its data dictionary.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string"
+              },
+              "filters": {
+                "type": "object",
+                "description": "Row filters. If omitted, the entire table is deleted."
+              },
+              "force": {
+                "type": "boolean",
+                "default": false
+              },
+              "include_deleted_records": {
+                "type": "boolean",
+                "default": false
+              },
+              "calculate_record_count": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "default": "background"
+              }
+            },
+            "required": [
+              "resource_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Original filters and deleted records list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

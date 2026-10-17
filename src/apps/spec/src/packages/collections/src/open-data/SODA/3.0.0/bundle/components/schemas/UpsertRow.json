@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "description": "A single row payload for upsert/create. Include `:deleted: true` to delete a row by its identifier. Include `:id` (or the dataset's row identifier column) to target an existing row for update. Omit both to create a new row.",
+  "additionalProperties": true,
+  "properties": {
+    ":id": {
+      "type": "string",
+      "description": "Internal Socrata row ID to target for update/delete.",
+      "example": "row-evac~sxbs~gm8t"
+    },
+    ":deleted": {
+      "type": "boolean",
+      "description": "Set to `true` to delete the row matching this row's identifier.",
+      "example": true
+    }
+  }
+}

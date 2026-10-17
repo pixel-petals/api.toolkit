@@ -1,0 +1,357 @@
+{
+  "get": {
+    "operationId": "getRows",
+    "summary": "Query rows (SODA 2.x GET)",
+    "description": "Read rows from a dataset using legacy SODA 2.x SoQL query parameters. Results can be filtered, sorted, paginated, and aggregated via query string parameters.\n\nSoQL clauses map to `$select`, `$where`, `$order`, `$group`, `$having`, `$limit`, `$offset`, `$q` (full-text search), and `$search` parameters.\n\nSystem fields can be included by adding them to `$select` (SODA 2.1) or by adding `$$exclude_system_fields=false` (SODA 2.0).",
+    "tags": [
+      "Read Rows (SODA 2.x)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      },
+      {
+        "name": "$select",
+        "in": "query",
+        "description": "Comma-separated list of columns or SoQL expressions to return. Use `*` for all columns. Include `:*` to include system fields. E.g. `$select=:id,:updated_at,name,amount`.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "region, count(*) AS count"
+      },
+      {
+        "name": "$where",
+        "in": "query",
+        "description": "SoQL WHERE clause filter. E.g. `magnitude > 3.0 AND region = 'Northern California'`.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "magnitude > 3.0"
+      },
+      {
+        "name": "$order",
+        "in": "query",
+        "description": "Sort expression. E.g. `magnitude DESC`, `region ASC, datetime DESC`.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "magnitude DESC"
+      },
+      {
+        "name": "$group",
+        "in": "query",
+        "description": "GROUP BY expression. E.g. `region`.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "region"
+      },
+      {
+        "name": "$having",
+        "in": "query",
+        "description": "HAVING clause to filter groups after aggregation. Requires `$group`.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "count > 5"
+      },
+      {
+        "name": "$limit",
+        "in": "query",
+        "description": "Maximum number of rows to return. Default is 1000. Use with `$offset` for pagination.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "example": 100
+      },
+      {
+        "name": "$offset",
+        "in": "query",
+        "description": "Number of rows to skip before returning results. Default is 0.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "example": 1000
+      },
+      {
+        "name": "$q",
+        "in": "query",
+        "description": "Full-text search across all text columns.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "chicago taxi"
+      },
+      {
+        "name": "$search",
+        "in": "query",
+        "description": "Alternative full-text search parameter.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "$$exclude_system_fields",
+        "in": "query",
+        "description": "SODA 2.0 only. Set to `false` to include system fields (`:id`, `:created_at`, `:updated_at`) in the response.",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "$$app_token",
+        "in": "query",
+        "description": "Application token as a query parameter (alternative to the `X-App-Token` header).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "$jsonp",
+        "in": "query",
+        "description": "JSONP callback function name (wraps the JSON response for cross-origin browser use).",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Array of rows matching the query.",
+        "headers": {
+          "X-Socrata-RequestId": {
+            "$ref": "../components/headers/X-Socrata-RequestId.json"
+          },
+          "X-SODA2-Fields": {
+            "$ref": "../components/headers/X-SODA2-Fields.json"
+          },
+          "X-SODA2-Types": {
+            "$ref": "../components/headers/X-SODA2-Types.json"
+          },
+          "X-SODA2-Legacy-Types": {
+            "$ref": "../components/headers/X-SODA2-Legacy-Types.json"
+          },
+          "Last-Modified": {
+            "$ref": "../components/headers/Last-Modified.json"
+          },
+          "ETag": {
+            "$ref": "../components/headers/ETag.json"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "../components/schemas/DataRow.json"
+              }
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object"
+            }
+          },
+          "text/csv": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "202": {
+        "description": "Accepted — retry for 200."
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "upsertRows",
+    "summary": "Upsert rows (create / update / delete in bulk)",
+    "description": "Upsert (insert + update + delete) rows in a dataset in a single operation. The payload is a JSON array or CSV data.\n\n**Logic:**\n- A row without a matching row identifier → **created**.\n- A row with a matching row identifier → **updated**.\n- A row with `\":deleted\": true` → **deleted** by its row identifier.\n\nThis operation is idempotent when a row identifier is configured on the dataset. Requires authentication.",
+    "tags": [
+      "Write Rows (SODA Producer)"
+    ],
+    "security": [
+      {
+        "BasicAuth": []
+      },
+      {
+        "OAuth2": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "description": "Array of rows to upsert. Use JSON or CSV. To delete a row include `\":deleted\": true` alongside its row identifier.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "../components/schemas/UpsertRow.json"
+            }
+          },
+          "example": [
+            {
+              "earthquake_id": "demo1234",
+              "region": "Washington",
+              "magnitude": 1.2
+            },
+            {
+              "earthquake_id": "71842370",
+              "region": "Northern California",
+              "magnitude": 1.4
+            },
+            {
+              "earthquake_id": "00388609",
+              ":deleted": true
+            }
+          ]
+        },
+        "text/csv": {
+          "schema": {
+            "type": "string",
+            "description": "RFC 4180 CSV with a header row containing API field names. Add a `:deleted` column to mark rows for deletion."
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Upsert summary.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/UpsertResult.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "replaceRows",
+    "summary": "Replace all rows in a dataset",
+    "description": "Completely replaces the contents of the dataset with the provided rows. All existing rows are deleted and the new rows are inserted atomically. Requires authentication.\n\nUse this for full dataset refreshes. For incremental updates, use the upsert (POST) operation instead.",
+    "tags": [
+      "Write Rows (SODA Producer)"
+    ],
+    "security": [
+      {
+        "BasicAuth": []
+      },
+      {
+        "OAuth2": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "description": "Full replacement dataset as a JSON array or CSV.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "../components/schemas/DataRow.json"
+            }
+          }
+        },
+        "text/csv": {
+          "schema": {
+            "type": "string",
+            "description": "RFC 4180 CSV with header row"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Replace summary.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/UpsertResult.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  }
+}

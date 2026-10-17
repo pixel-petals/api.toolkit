@@ -1,0 +1,106 @@
+{
+  "post": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "summarizeNearby",
+    "summary": "Summarize features near each input feature (async)",
+    "description": "Calculates statistics on features within a specified distance or travel time of each input feature. Useful for site analysis, proximity queries, and service area summaries.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "sumNearbyLayer",
+              "summaryLayer"
+            ],
+            "properties": {
+              "outputName": {
+                "type": "string",
+                "description": "Name for the output hosted feature layer."
+              },
+              "context": {
+                "type": "string",
+                "description": "JSON context: `{extent, outSR}`."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              },
+              "sumNearbyLayer": {
+                "type": "string",
+                "description": "Features to summarize around."
+              },
+              "summaryLayer": {
+                "type": "string",
+                "description": "Features to count and summarize."
+              },
+              "nearType": {
+                "type": "string",
+                "enum": [
+                  "StraightLine",
+                  "DrivingTime",
+                  "DrivingDistance"
+                ],
+                "default": "StraightLine"
+              },
+              "distances": {
+                "type": "string",
+                "description": "JSON array of distance values."
+              },
+              "units": {
+                "type": "string"
+              },
+              "timeOfDay": {
+                "type": "string"
+              },
+              "timeZoneForTimeOfDay": {
+                "type": "string"
+              },
+              "returnBoundaries": {
+                "type": "boolean"
+              },
+              "sumShape": {
+                "type": "boolean"
+              },
+              "shapeUnits": {
+                "type": "string"
+              },
+              "summaryFields": {
+                "type": "string"
+              },
+              "groupByField": {
+                "type": "string"
+              },
+              "minorityMajority": {
+                "type": "boolean"
+              },
+              "percentShape": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Analysis job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

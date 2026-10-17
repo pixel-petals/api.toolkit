@@ -1,0 +1,65 @@
+{
+  "post": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "submitLastMileDeliveryJob",
+    "summary": "Submit last-mile delivery async job",
+    "description": "Determines the most effective routes for a fleet to minimize operating cost for a last-mile delivery scenario.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "Orders",
+              "Depots",
+              "Routes"
+            ],
+            "properties": {
+              "Orders": {
+                "type": "string"
+              },
+              "Depots": {
+                "type": "string"
+              },
+              "Routes": {
+                "type": "string"
+              },
+              "Time_Units": {
+                "type": "string",
+                "default": "Minutes"
+              },
+              "Distance_Units": {
+                "type": "string",
+                "default": "Kilometers"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

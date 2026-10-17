@@ -1,0 +1,29 @@
+{
+  "name": "OneofOptions",
+  "fullName": "google.protobuf.OneofOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/OneofOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "features": {
+        "type": "FeatureSet",
+        "id": 1,
+        "comment": "Any features defined in the specific edition.\nWARNING: This field should only be used by protobuf plugins or special\ncases like the proto compiler. Other uses are discouraged and\ndevelopers should rely on the protoreflect APIs for their client language."
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "comment": null
+  }
+}

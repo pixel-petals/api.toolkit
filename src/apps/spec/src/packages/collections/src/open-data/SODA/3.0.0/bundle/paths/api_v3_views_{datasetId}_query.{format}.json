@@ -1,0 +1,274 @@
+{
+  "post": {
+    "operationId": "queryDatasetPost",
+    "summary": "Query a dataset (POST, preferred)",
+    "description": "Execute a SoQL query against a dataset using an HTTP POST body. POST is preferred over GET for SODA3 because it supports longer queries and clearer options. Requires an app token or user authentication.",
+    "tags": [
+      "Query (SODA3)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "requestBody": {
+      "required": false,
+      "description": "Query options. All fields are optional; omitting the body returns all rows with defaults.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../components/schemas/QueryRequest.json"
+          },
+          "examples": {
+            "simpleSelect": {
+              "summary": "First 100 rows",
+              "value": {
+                "query": "SELECT *",
+                "page": {
+                  "pageNumber": 1,
+                  "pageSize": 100
+                },
+                "includeSynthetic": false
+              }
+            },
+            "aggregation": {
+              "summary": "Count by region where magnitude > 3",
+              "value": {
+                "query": "SELECT region, count(*) AS quake_count WHERE magnitude > 3.0 GROUP BY region ORDER BY quake_count DESC",
+                "page": {
+                  "pageNumber": 1,
+                  "pageSize": 50
+                }
+              }
+            },
+            "withSystemFields": {
+              "summary": "Include system fields",
+              "value": {
+                "query": "SELECT :id, :created_at, :updated_at, *",
+                "includeSystem": true
+              }
+            },
+            "fastNoOrder": {
+              "summary": "Discard ordering for performance",
+              "value": {
+                "query": "SELECT *",
+                "orderingSpecifier": "discard"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Query results in the requested format.",
+        "headers": {
+          "X-Socrata-RequestId": {
+            "$ref": "../components/headers/X-Socrata-RequestId.json"
+          },
+          "X-SODA2-Fields": {
+            "$ref": "../components/headers/X-SODA2-Fields.json"
+          },
+          "X-SODA2-Types": {
+            "$ref": "../components/headers/X-SODA2-Types.json"
+          },
+          "Last-Modified": {
+            "$ref": "../components/headers/Last-Modified.json"
+          },
+          "ETag": {
+            "$ref": "../components/headers/ETag.json"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "../components/schemas/DataRow.json"
+              }
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object",
+              "description": "GeoJSON FeatureCollection"
+            }
+          },
+          "text/csv": {
+            "schema": {
+              "type": "string",
+              "description": "RFC 4180-compliant CSV with header row"
+            }
+          }
+        }
+      },
+      "202": {
+        "description": "Accepted — request is still processing. Retry to get a 200 response."
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "get": {
+    "operationId": "queryDatasetGet",
+    "summary": "Query a dataset (GET)",
+    "description": "Execute a SoQL query via a GET request. The query body is passed as a JSON-encoded `body` query parameter (or individual parameters). POST is preferred for longer queries. Requires an app token or user authentication.",
+    "tags": [
+      "Query (SODA3)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "description": "SoQL query string (e.g. `SELECT * WHERE magnitude > 3`). Alternatively pass the full JSON body as the `body` parameter.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "SELECT region, count(*) GROUP BY region"
+      },
+      {
+        "name": "pageNumber",
+        "in": "query",
+        "description": "1-indexed page number.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Rows per page.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1000
+        }
+      },
+      {
+        "name": "includeSystem",
+        "in": "query",
+        "description": "Include system columns (:id, :created_at, :updated_at). Default true.",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "includeSynthetic",
+        "in": "query",
+        "description": "Include synthetic/computed columns not explicitly requested. Default true.",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "orderingSpecifier",
+        "in": "query",
+        "description": "Set to `discard` to skip ordering and improve performance.",
+        "schema": {
+          "$ref": "../components/schemas/OrderingSpecifier.json"
+        }
+      },
+      {
+        "name": "timeout",
+        "in": "query",
+        "description": "Timeout in seconds (default 600).",
+        "schema": {
+          "type": "integer",
+          "default": 600
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Query results.",
+        "headers": {
+          "X-Socrata-RequestId": {
+            "$ref": "../components/headers/X-Socrata-RequestId.json"
+          },
+          "X-SODA2-Fields": {
+            "$ref": "../components/headers/X-SODA2-Fields.json"
+          },
+          "X-SODA2-Types": {
+            "$ref": "../components/headers/X-SODA2-Types.json"
+          },
+          "Last-Modified": {
+            "$ref": "../components/headers/Last-Modified.json"
+          },
+          "ETag": {
+            "$ref": "../components/headers/ETag.json"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "../components/schemas/DataRow.json"
+              }
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object"
+            }
+          },
+          "text/csv": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "202": {
+        "description": "Accepted — retry to get a 200."
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "type": "object",
+  "description": "A v2 webhook on a campaign. Created per-client. Requires `w:campaigns.webhook` scope. Request fields via `fields[webhook]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "webhook"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "last_attempted_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "num_consecutive_times_failed": {
+          "type": "integer"
+        },
+        "paused": {
+          "type": "boolean",
+          "description": "If true, webhook will not fire. PATCH with `paused: false` to resume and replay missed events."
+        },
+        "secret": {
+          "type": "string",
+          "description": "HMAC-MD5 secret for verifying X-Patreon-Signature header on incoming payloads."
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "members:create",
+              "members:update",
+              "members:delete",
+              "members:pledge:create",
+              "members:pledge:update",
+              "members:pledge:delete",
+              "posts:publish",
+              "posts:update",
+              "posts:delete"
+            ]
+          }
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "client": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Too Many Requests — client is being rate-limited. Use an app token to raise your limit.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

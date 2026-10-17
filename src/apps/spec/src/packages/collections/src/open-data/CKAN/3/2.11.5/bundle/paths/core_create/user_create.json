@@ -1,0 +1,69 @@
+{
+  "post": {
+    "tags": [
+      "Users"
+    ],
+    "operationId": "user_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a user",
+    "description": "Create a new user account. Requires sysadmin or appropriate privilege.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "password": {
+                "type": "string"
+              },
+              "fullname": {
+                "type": "string"
+              },
+              "about": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "email",
+              "password"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created user dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

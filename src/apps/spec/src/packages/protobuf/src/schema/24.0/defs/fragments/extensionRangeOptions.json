@@ -1,0 +1,95 @@
+{
+  "name": "ExtensionRangeOptions",
+  "fullName": "google.protobuf.ExtensionRangeOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/ExtensionRangeOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      },
+      "declaration": {
+        "rule": "repeated",
+        "type": "Declaration",
+        "id": 2,
+        "options": {
+          "retention": "RETENTION_SOURCE"
+        },
+        "comment": "For external users: DO NOT USE. We are in the process of open sourcing\nextension declaration and executing internal cleanups before it can be\nused externally."
+      },
+      "features": {
+        "type": "FeatureSet",
+        "id": 50,
+        "comment": "Any features defined in the specific edition."
+      },
+      "verification": {
+        "type": "VerificationState",
+        "id": 3,
+        "options": {
+          "default": "UNVERIFIED"
+        },
+        "comment": "The verification state of the range.\nTODO(b/278783756): flip the default to DECLARATION once all empty ranges\nare marked as UNVERIFIED."
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "nested": {
+      "Declaration": {
+        "fields": {
+          "number": {
+            "type": "int32",
+            "id": 1,
+            "comment": "The extension number declared within the extension range."
+          },
+          "full_name": {
+            "type": "string",
+            "id": 2,
+            "comment": "The fully-qualified name of the extension field. There must be a leading\ndot in front of the full name."
+          },
+          "type": {
+            "type": "string",
+            "id": 3,
+            "comment": "The fully-qualified type name of the extension field. Unlike\nMetadata.type, Declaration.type must have a leading dot for messages\nand enums."
+          },
+          "reserved": {
+            "type": "bool",
+            "id": 5,
+            "comment": "If true, indicates that the number is reserved in the extension range,\nand any extension field with the number will fail to compile. Set this\nwhen a declared extension field is deleted."
+          },
+          "repeated": {
+            "type": "bool",
+            "id": 6,
+            "comment": "If true, indicates that the extension must be defined as repeated.\nOtherwise the extension must be defined as optional."
+          }
+        },
+        "reserved": [
+          [
+            4,
+            4
+          ]
+        ],
+        "comment": null
+      },
+      "VerificationState": {
+        "values": {
+          "DECLARATION": 0,
+          "UNVERIFIED": 1
+        },
+        "comment": "The verification state of the extension range.",
+        "comments": {
+          "DECLARATION": "All the extensions of the range must be declared.",
+          "UNVERIFIED": null
+        }
+      }
+    },
+    "comment": null
+  }
+}

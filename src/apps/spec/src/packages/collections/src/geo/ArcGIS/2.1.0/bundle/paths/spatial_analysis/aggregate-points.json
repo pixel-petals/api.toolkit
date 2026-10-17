@@ -1,0 +1,78 @@
+{
+  "post": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "aggregatePoints",
+    "summary": "Aggregate points into polygon bins (async)",
+    "description": "Groups point features into polygon bins using a fishnet, hexagon grid, or custom polygons. Calculates counts and optional statistics per bin. Runs asynchronously.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "pointLayer"
+            ],
+            "properties": {
+              "outputName": {
+                "type": "string",
+                "description": "Name for the output hosted feature layer."
+              },
+              "context": {
+                "type": "string",
+                "description": "JSON context: `{extent, outSR}`."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              },
+              "pointLayer": {
+                "type": "string",
+                "description": "Input point layer as JSON FeatureCollection, item URL, or feature service URL."
+              },
+              "polygonLayer": {
+                "type": "string",
+                "description": "Polygon layer to aggregate into. If omitted a grid is generated."
+              },
+              "keepBoundariesWithNoPoints": {
+                "type": "boolean"
+              },
+              "summaryFields": {
+                "type": "string",
+                "description": "JSON array of statistic definitions."
+              },
+              "groupByField": {
+                "type": "string"
+              },
+              "minorityMajority": {
+                "type": "boolean"
+              },
+              "percentPoints": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Analysis job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

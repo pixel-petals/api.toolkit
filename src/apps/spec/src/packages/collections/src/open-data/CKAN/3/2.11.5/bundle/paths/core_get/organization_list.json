@@ -1,0 +1,82 @@
+{
+  "get": {
+    "tags": [
+      "Organizations"
+    ],
+    "operationId": "organization_list",
+    "summary": "List organizations",
+    "description": "Return a list of the names of the site's organizations.",
+    "parameters": [
+      {
+        "name": "sort",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 1000
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "all_fields",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_extras",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_users",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_dataset_count",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Organization names or dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

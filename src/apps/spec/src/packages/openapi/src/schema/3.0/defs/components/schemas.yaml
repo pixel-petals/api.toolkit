@@ -1,0 +1,4 @@
+$schema: http://json-schema.org/draft-04/schema#
+oneOf:
+  - $ref: ../../schema.yaml#/definitions/Reference
+  - $ref: ../../schema.yaml#/definitions/Schema

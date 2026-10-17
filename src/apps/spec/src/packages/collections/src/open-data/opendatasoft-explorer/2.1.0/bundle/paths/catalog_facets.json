@@ -1,0 +1,70 @@
+{
+  "get": {
+    "summary": "List facet values",
+    "operationId": "getDatasetsFacets",
+    "tags": [
+      "Catalog"
+    ],
+    "description": "Enumerate facet values for datasets and returns a list of values for each facet.\nCan be used to implement guided navigation in large result sets.",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/facet.json"
+      },
+      {
+        "$ref": "../components/parameters/refine.json"
+      },
+      {
+        "$ref": "../components/parameters/exclude.json"
+      },
+      {
+        "$ref": "../components/parameters/where.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "An enumeration of facets",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../components/schemas/links.json"
+                  }
+                },
+                "facets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../components/schemas/facet_enumeration.json"
+                  }
+                }
+              }
+            },
+            "examples": {
+              "catalog_facets": {
+                "$ref": "../components/examples/catalog_facets.json"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

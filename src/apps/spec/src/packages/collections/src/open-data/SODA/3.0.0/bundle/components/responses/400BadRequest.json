@@ -1,0 +1,10 @@
+{
+  "description": "Bad Request — malformed query, invalid parameters, or unparseable body.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

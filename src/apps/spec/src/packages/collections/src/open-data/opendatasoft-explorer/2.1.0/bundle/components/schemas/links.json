@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "href": {
+      "type": "string",
+      "format": "uri"
+    },
+    "rel": {
+      "type": "string",
+      "enum": [
+        "self",
+        "first",
+        "last",
+        "next",
+        "dataset",
+        "catalog"
+      ]
+    }
+  }
+}

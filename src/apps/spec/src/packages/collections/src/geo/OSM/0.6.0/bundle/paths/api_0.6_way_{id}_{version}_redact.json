@@ -1,0 +1,43 @@
+{
+  "post": {
+    "operationId": "redactWayVersion",
+    "summary": "Redact a specific version of a way (moderator only)",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_redactions"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      },
+      {
+        "$ref": "../components/parameters/versionNumber.json"
+      },
+      {
+        "name": "redaction",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Version successfully redacted"
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      }
+    }
+  }
+}

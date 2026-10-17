@@ -1,0 +1,61 @@
+{
+  "post": {
+    "operationId": "addNoteComment",
+    "summary": "Add a comment to a note",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {},
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated note",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "409": {
+        "description": "Note is already closed"
+      }
+    }
+  }
+}

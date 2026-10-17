@@ -1,0 +1,94 @@
+{
+  "get": {
+    "tags": [
+      "Pledges"
+    ],
+    "operationId": "getCampaignPledges",
+    "summary": "List pledges for a campaign",
+    "description": "Returns the list of pledges for a given campaign. Results are paginated (up to 20 per page). Requires the `pledges-to-me` scope. Use the `page[count]` and `sort` query params for pagination control.\n\n**Note:** Pledges are the v1 equivalent of Members in v2.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "campaign_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/includes.json"
+      },
+      {
+        "name": "page[count]",
+        "in": "query",
+        "description": "Number of pledges to return per page (max 20).",
+        "schema": {
+          "type": "integer",
+          "maximum": 20,
+          "default": 20
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Field to sort by. Prefix with `-` for descending. E.g. `created` or `-created`.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Paginated pledge list with patron info included.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            },
+            "example": {
+              "data": [
+                {
+                  "attributes": {
+                    "amount_cents": 500,
+                    "created_at": "2023-01-01T00:00:00+00:00"
+                  },
+                  "id": "pledge-123",
+                  "type": "pledge"
+                }
+              ],
+              "links": {
+                "next": "https://www.patreon.com/api/oauth2/api/campaigns/12345/pledges?page%5Bcursor%5D=xyz"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

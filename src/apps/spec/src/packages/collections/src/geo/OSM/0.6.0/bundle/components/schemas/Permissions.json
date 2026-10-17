@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "example": [
+        "allow_read_prefs",
+        "allow_write_api",
+        "allow_read_gpx"
+      ]
+    }
+  }
+}

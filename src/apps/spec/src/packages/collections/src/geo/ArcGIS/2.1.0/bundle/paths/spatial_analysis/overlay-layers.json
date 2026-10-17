@@ -1,0 +1,79 @@
+{
+  "post": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "overlayLayers",
+    "summary": "Overlay two feature layers (async)",
+    "description": "Combines two feature layers using a geometric overlay (Intersect, Union, Erase). Returns a new layer with combined attributes.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "inputLayer",
+              "overlayLayer"
+            ],
+            "properties": {
+              "outputName": {
+                "type": "string",
+                "description": "Name for the output hosted feature layer."
+              },
+              "context": {
+                "type": "string",
+                "description": "JSON context: `{extent, outSR}`."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              },
+              "inputLayer": {
+                "type": "string"
+              },
+              "overlayLayer": {
+                "type": "string"
+              },
+              "overlayType": {
+                "type": "string",
+                "enum": [
+                  "Intersect",
+                  "Union",
+                  "Erase"
+                ],
+                "default": "Intersect"
+              },
+              "snapToInput": {
+                "type": "boolean"
+              },
+              "outputType": {
+                "type": "string"
+              },
+              "tolerance": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Analysis job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

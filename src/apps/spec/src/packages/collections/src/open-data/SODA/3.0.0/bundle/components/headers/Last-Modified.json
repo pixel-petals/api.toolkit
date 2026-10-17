@@ -1,0 +1,7 @@
+{
+  "description": "When the underlying dataset was last updated. Useful for caching.",
+  "schema": {
+    "type": "string",
+    "format": "date-time"
+  }
+}

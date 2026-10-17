@@ -1,0 +1,74 @@
+{
+  "post": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "submitVRPJob",
+    "summary": "Submit Vehicle Routing Problem (VRP) async job",
+    "description": "Determines effective route assignments for a fleet visiting multiple stops. Supports time windows, capacities, depots, and break schedules.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "Orders",
+              "Depots",
+              "Routes"
+            ],
+            "properties": {
+              "Orders": {
+                "type": "string",
+                "description": "JSON FeatureSet of orders/deliveries."
+              },
+              "Depots": {
+                "type": "string",
+                "description": "JSON FeatureSet of depot locations."
+              },
+              "Routes": {
+                "type": "string",
+                "description": "JSON FeatureSet of vehicles/routes."
+              },
+              "Breaks": {
+                "type": "string"
+              },
+              "Time_Units": {
+                "type": "string",
+                "default": "Minutes"
+              },
+              "Distance_Units": {
+                "type": "string",
+                "default": "Kilometers"
+              },
+              "Populate_Route_Lines": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "VRP job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

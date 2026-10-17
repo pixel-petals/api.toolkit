@@ -1,0 +1,59 @@
+{
+  "get": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_search",
+    "summary": "Search resources",
+    "description": "Return a list of resources matching the query.",
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "description": "Field match query as `field:value`. Multiple allowed, separated by `+`.",
+        "schema": {
+          "type": "string",
+          "example": "name:District Names"
+        }
+      },
+      {
+        "name": "order_by",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Matching resources",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "get": {
+    "summary": "Show dataset information",
+    "operationId": "getDataset",
+    "tags": [
+      "Catalog"
+    ],
+    "description": "Returns a list of available endpoints for the specified dataset, with metadata and endpoints.\n\nThe response includes the following links:\n* the attachments endpoint\n* the files endpoint\n* the records endpoint\n* the catalog endpoint.",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      },
+      {
+        "$ref": "../components/parameters/select.json"
+      },
+      {
+        "$ref": "../components/parameters/lang.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      },
+      {
+        "$ref": "../components/parameters/include_links.json"
+      },
+      {
+        "$ref": "../components/parameters/include_app_metas.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The dataset",
+        "content": {
+          "application/json; charset=utf-8json": {
+            "schema": {
+              "$ref": "../components/schemas/dataset.json"
+            },
+            "examples": {
+              "dataset": {
+                "$ref": "../components/examples/dataset-v2.1.json"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

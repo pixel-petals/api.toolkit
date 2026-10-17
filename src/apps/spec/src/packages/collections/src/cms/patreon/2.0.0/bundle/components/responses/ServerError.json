@@ -1,0 +1,10 @@
+{
+  "description": "500 Internal Server Error \u2014 Unexpected server-side failure. Retry with exponential backoff.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

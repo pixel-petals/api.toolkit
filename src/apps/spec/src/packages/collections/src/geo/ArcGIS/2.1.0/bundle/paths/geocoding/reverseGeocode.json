@@ -1,0 +1,86 @@
+{
+  "get": {
+    "tags": [
+      "Geocoding Service"
+    ],
+    "operationId": "reverseGeocode",
+    "summary": "Reverse geocode a coordinate to an address",
+    "description": "Converts a longitude/latitude coordinate to the nearest address or place.",
+    "parameters": [
+      {
+        "name": "location",
+        "in": "query",
+        "required": true,
+        "description": "Point as JSON `{x, y, spatialReference}` or `lon,lat`.",
+        "schema": {
+          "type": "string",
+          "example": "{\"x\":-117.196,\"y\":34.057}"
+        }
+      },
+      {
+        "name": "distance",
+        "in": "query",
+        "description": "Search radius in meters (default 100).",
+        "schema": {
+          "type": "number",
+          "default": 100
+        }
+      },
+      {
+        "name": "outSR",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 4326
+        }
+      },
+      {
+        "name": "langCode",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "featureTypes",
+        "in": "query",
+        "description": "Restrict address type: `StreetAddress`, `StreetName`, `Locality`, `PostalLoc`, `PointAddress`, `Subaddress`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "locationtype",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rooftop",
+            "street"
+          ]
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Reverse geocode result.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ReverseGeocodeResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

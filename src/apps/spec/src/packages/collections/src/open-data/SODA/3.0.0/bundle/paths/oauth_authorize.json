@@ -1,0 +1,57 @@
+{
+  "get": {
+    "operationId": "oauthAuthorize",
+    "summary": "OAuth 2.0 authorization endpoint",
+    "description": "Redirect the user here to begin the OAuth 2.0 authorization code flow. After the user logs in and approves your application, they are redirected to your `redirect_uri` with a `code` parameter.",
+    "tags": [
+      "Authentication"
+    ],
+    "security": [],
+    "parameters": [
+      {
+        "name": "client_id",
+        "in": "query",
+        "required": true,
+        "description": "Your application's app token (client ID).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "response_type",
+        "in": "query",
+        "required": true,
+        "description": "Must be `code`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "code"
+          ]
+        }
+      },
+      {
+        "name": "redirect_uri",
+        "in": "query",
+        "required": true,
+        "description": "Absolute HTTPS URI that must start with the Callback Prefix registered for your application.",
+        "schema": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      {
+        "name": "state",
+        "in": "query",
+        "description": "Optional opaque value preserved through the redirect for CSRF protection.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "302": {
+        "description": "Redirect to `redirect_uri?code=CODE` on user approval, or an error page on failure."
+      }
+    }
+  }
+}

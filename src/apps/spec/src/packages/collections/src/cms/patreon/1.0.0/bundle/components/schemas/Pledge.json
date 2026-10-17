@@ -1,0 +1,72 @@
+{
+  "type": "object",
+  "description": "A patron's pledge to a campaign (API v1). Replaced by Member in API v2.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "pledge"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "amount_cents": {
+          "type": "integer",
+          "description": "Pledge amount in cents."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 currency code."
+        },
+        "declined_since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "If charge declined, when the most recent charge attempt was. Can be null."
+        },
+        "has_shipping_address": {
+          "type": "boolean"
+        },
+        "is_paused": {
+          "type": "boolean"
+        },
+        "is_twitch_pledge": {
+          "type": "boolean"
+        },
+        "pledge_cap_cents": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "total_historical_amount_cents": {
+          "type": "integer"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "$ref": "./Relationship.json"
+        },
+        "patron": {
+          "$ref": "./Relationship.json"
+        },
+        "reward": {
+          "$ref": "./Relationship.json"
+        }
+      }
+    }
+  }
+}

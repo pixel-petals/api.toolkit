@@ -1,0 +1,63 @@
+{
+  "get": {
+    "tags": [
+      "Users"
+    ],
+    "operationId": "user_list",
+    "summary": "List users",
+    "description": "Return a list of the site's user accounts. Requires authentication. Sysadmin sees all users; editors see only users in shared orgs.",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Search query on username and full name.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "order_by",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "name",
+            "openid",
+            "fullname",
+            "about",
+            "created"
+          ],
+          "default": "name"
+        }
+      },
+      {
+        "name": "all_fields",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    ],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

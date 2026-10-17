@@ -1,0 +1,158 @@
+{
+  "type": "object",
+  "description": "A creator's Patreon campaign (API v1).",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "campaign"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "creation_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "discord_server_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_patron_goals": {
+          "type": "boolean"
+        },
+        "earnings_visibility": {
+          "type": "string"
+        },
+        "image_small_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "is_charged_immediately": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "is_monthly": {
+          "type": "boolean"
+        },
+        "is_nsfw": {
+          "type": "boolean"
+        },
+        "is_plural": {
+          "type": "boolean"
+        },
+        "main_video_embed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "main_video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "one_liner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "outstanding_payment_amount_cents": {
+          "type": "integer"
+        },
+        "patron_count": {
+          "type": "integer"
+        },
+        "pay_per_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pledge_sum": {
+          "type": "integer",
+          "description": "Total pledge sum in cents (cents of campaign's currency)."
+        },
+        "pledge_url": {
+          "type": "string"
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_embed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_msg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "$ref": "./Relationship.json"
+        },
+        "goals": {
+          "$ref": "./Relationship.json"
+        },
+        "pledges": {
+          "$ref": "./Relationship.json"
+        },
+        "rewards": {
+          "$ref": "./Relationship.json"
+        }
+      }
+    }
+  }
+}

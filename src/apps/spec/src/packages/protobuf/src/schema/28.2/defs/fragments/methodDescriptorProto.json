@@ -1,0 +1,48 @@
+{
+  "name": "MethodDescriptorProto",
+  "fullName": "google.protobuf.MethodDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/MethodDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "input_type": {
+        "type": "string",
+        "id": 2,
+        "comment": "Input and output type names.  These are resolved in the same way as\nFieldDescriptorProto.type_name, but must refer to a message type."
+      },
+      "output_type": {
+        "type": "string",
+        "id": 3,
+        "comment": null
+      },
+      "options": {
+        "type": "MethodOptions",
+        "id": 4,
+        "comment": null
+      },
+      "client_streaming": {
+        "type": "bool",
+        "id": 5,
+        "options": {
+          "default": false
+        },
+        "comment": "Identifies if client streams multiple client messages"
+      },
+      "server_streaming": {
+        "type": "bool",
+        "id": 6,
+        "options": {
+          "default": false
+        },
+        "comment": "Identifies if server streams multiple server messages"
+      }
+    },
+    "comment": "Describes a method of a service."
+  }
+}

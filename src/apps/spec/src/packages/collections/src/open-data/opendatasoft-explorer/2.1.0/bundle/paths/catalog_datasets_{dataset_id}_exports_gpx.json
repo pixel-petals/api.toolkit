@@ -1,0 +1,60 @@
+{
+  "get": {
+    "summary": "Export a dataset in GPX",
+    "operationId": "exportRecordsGPX",
+    "tags": [
+      "Dataset"
+    ],
+    "description": "Export a dataset in GPX. Specific parameters are described here",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      },
+      {
+        "name": "name_field",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Sets the field that is used as the 'name' attribute in the GPX output"
+      },
+      {
+        "name": "description_field_list",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Sets the fields to use in the 'description' attribute of the GPX output"
+      },
+      {
+        "name": "use_extension",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": true
+        },
+        "description": "Set it to true to use the `<extension>` tag for attributes (as GDAL does). Set it to false to use the `<desc>` tag for attributes.\n**Warning:** the default value of this parameter is `false` in v2.0 and `true` starting with v2.1"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Return a file"
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

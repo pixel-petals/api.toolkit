@@ -1,0 +1,48 @@
+{
+  "get": {
+    "operationId": "getApiVersions",
+    "summary": "Get supported API versions",
+    "tags": [
+      "Miscellaneous"
+    ],
+    "security": [
+      {}
+    ],
+    "responses": {
+      "200": {
+        "description": "List of supported API versions",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "generator": {
+                  "type": "string"
+                },
+                "api": {
+                  "type": "object",
+                  "properties": {
+                    "versions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

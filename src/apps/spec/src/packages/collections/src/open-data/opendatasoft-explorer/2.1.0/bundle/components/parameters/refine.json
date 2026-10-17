@@ -1,0 +1,10 @@
+{
+  "name": "refine",
+  "in": "query",
+  "description": "Example: `refine=modified:2020` - Return only the value `2020` from the `modified` facet.\n\nA facet filter used to limit the result set.\nUsing this parameter, you can refine your query to display only the selected facet value in the response.\n\nRefinement uses the following syntax: `refine=<FACETNAME>:<FACETVALUE>`\n\nFor date, and other hierarchical facets, when refining on one value, all second-level values related to that entry will appear in facets enumeration. For example, after refining on the year 2019, the related second-level month will appear. And when refining on August 2019, the third-level day will appear.\n\n**`refine` must not be confused with a `where` filter. Refining with a facet is equivalent to selecting an entry in the left navigation panel.**",
+  "style": "form",
+  "explode": true,
+  "schema": {
+    "type": "string"
+  }
+}

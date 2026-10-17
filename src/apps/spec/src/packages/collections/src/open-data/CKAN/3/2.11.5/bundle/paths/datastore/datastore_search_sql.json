@@ -1,0 +1,45 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_search_sql",
+    "summary": "Execute SQL on the DataStore",
+    "description": "Run a raw PostgreSQL SELECT query across DataStore tables. Allows JOINs between resources.\n\nMust be enabled with `ckan.datastore.sqlsearch.enabled = True` in CKAN config. Subject to a query timeout. Results capped at 32000 rows (configurable). Requires read access to all referenced resources.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "sql": {
+                "type": "string",
+                "description": "A single SQL SELECT statement.",
+                "example": "SELECT * FROM \"my-resource-id\" WHERE value > 100"
+              }
+            },
+            "required": [
+              "sql"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Query results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

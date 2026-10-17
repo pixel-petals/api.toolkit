@@ -1,0 +1,69 @@
+{
+  "post": {
+    "tags": [
+      "Organizations"
+    ],
+    "operationId": "organization_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update an organization",
+    "description": "Update an organization. Full replace semantics.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string"
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Extra.json"
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated organization dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

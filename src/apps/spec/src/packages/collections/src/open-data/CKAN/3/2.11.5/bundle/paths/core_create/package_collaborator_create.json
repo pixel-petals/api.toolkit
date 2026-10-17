@@ -1,0 +1,64 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_collaborator_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Add a dataset collaborator",
+    "description": "Add a user as a collaborator on a dataset. Requires `ckan.auth.allow_dataset_collaborators = True`.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Dataset id or name."
+              },
+              "user_id": {
+                "type": "string"
+              },
+              "capacity": {
+                "type": "string",
+                "enum": [
+                  "editor",
+                  "member"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "user_id",
+              "capacity"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Collaborator dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "post": {
+    "tags": [
+      "Users"
+    ],
+    "operationId": "user_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update a user",
+    "description": "Update a user. Users can update their own account; sysadmins can update any user.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "fullname": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "about": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated user dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

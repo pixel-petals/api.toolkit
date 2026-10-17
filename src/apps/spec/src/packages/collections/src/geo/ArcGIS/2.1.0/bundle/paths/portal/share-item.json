@@ -1,0 +1,85 @@
+{
+  "post": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "shareItem",
+    "summary": "Share a portal item",
+    "description": "Changes the sharing level of an item. Can share publicly, to the organization, or to specific groups.",
+    "parameters": [
+      {
+        "name": "username",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "itemId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "everyone": {
+                "type": "boolean",
+                "description": "Share publicly."
+              },
+              "org": {
+                "type": "boolean",
+                "description": "Share within the organization."
+              },
+              "groups": {
+                "type": "string",
+                "description": "Comma-separated group IDs to share with."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Sharing result.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "type": "string"
+                },
+                "notSharedWith": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

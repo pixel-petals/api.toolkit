@@ -1,0 +1,49 @@
+{
+  "put": {
+    "operationId": "createChangeset",
+    "summary": "Create a new changeset",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "description": "OSM XML containing one or more <changeset> elements with tags",
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "ID of the newly created changeset",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "405": {
+        "$ref": "../components/responses/405.json"
+      }
+    }
+  }
+}

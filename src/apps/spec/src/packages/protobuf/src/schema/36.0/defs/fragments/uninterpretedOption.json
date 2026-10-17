@@ -1,0 +1,67 @@
+{
+  "name": "UninterpretedOption",
+  "fullName": "google.protobuf.UninterpretedOption",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/UninterpretedOption",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "rule": "repeated",
+        "type": "NamePart",
+        "id": 2,
+        "comment": null
+      },
+      "identifier_value": {
+        "type": "string",
+        "id": 3,
+        "comment": "The value of the uninterpreted option, in whatever type the tokenizer\nidentified it as during parsing. Exactly one of these should be set."
+      },
+      "positive_int_value": {
+        "type": "uint64",
+        "id": 4,
+        "comment": null
+      },
+      "negative_int_value": {
+        "type": "int64",
+        "id": 5,
+        "comment": null
+      },
+      "double_value": {
+        "type": "double",
+        "id": 6,
+        "comment": null
+      },
+      "string_value": {
+        "type": "bytes",
+        "id": 7,
+        "comment": null
+      },
+      "aggregate_value": {
+        "type": "string",
+        "id": 8,
+        "comment": null
+      }
+    },
+    "nested": {
+      "NamePart": {
+        "fields": {
+          "name_part": {
+            "rule": "required",
+            "type": "string",
+            "id": 1,
+            "comment": null
+          },
+          "is_extension": {
+            "rule": "required",
+            "type": "bool",
+            "id": 2,
+            "comment": null
+          }
+        },
+        "comment": "The name of the uninterpreted option.  Each string represents a segment in\na dot-separated name.  is_extension is true iff a segment represents an\nextension (denoted with parentheses in options specs in .proto files).\nE.g.,{ [\"foo\", false], [\"bar.baz\", true], [\"moo\", false] } represents\n\"foo.(bar.baz).moo\"."
+      }
+    },
+    "comment": "A message representing a option the parser does not recognize. This only\nappears in options protos created by the compiler::Parser class.\nDescriptorPool resolves these when building Descriptor objects. Therefore,\noptions protos in descriptor objects (e.g. returned by Descriptor::options(),\nor produced by Descriptor::CopyTo()) will never have UninterpretedOptions\nin them."
+  }
+}

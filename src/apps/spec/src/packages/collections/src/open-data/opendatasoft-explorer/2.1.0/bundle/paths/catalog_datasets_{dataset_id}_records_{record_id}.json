@@ -1,0 +1,56 @@
+{
+  "get": {
+    "summary": "Read a dataset record",
+    "operationId": "getRecord",
+    "tags": [
+      "Dataset"
+    ],
+    "description": "Reads a single dataset record based on its identifier.\n",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      },
+      {
+        "$ref": "../components/parameters/record_id.json"
+      },
+      {
+        "$ref": "../components/parameters/select.json"
+      },
+      {
+        "$ref": "../components/parameters/lang.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "A single record",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "$ref": "../components/schemas/record.json"
+            },
+            "examples": {
+              "record": {
+                "$ref": "../components/examples/record-v2.1.json"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

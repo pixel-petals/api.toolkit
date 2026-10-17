@@ -1,0 +1,137 @@
+{
+  "get": {
+    "operationId": "queryChangesets",
+    "summary": "Query changesets",
+    "description": "Returns changesets matching the given filters, ordered by creation time (newest first by default). Returns at most 100 results.",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "bbox",
+        "in": "query",
+        "description": "Bounding box as min_lon,min_lat,max_lon,max_lat",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "user",
+        "in": "query",
+        "description": "Filter by user ID. Cannot be combined with display_name.",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "display_name",
+        "in": "query",
+        "description": "Filter by user display name. Cannot be combined with user.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "time",
+        "in": "query",
+        "description": "T1 to find changesets closed after T1, or T1,T2 to find changesets open during that interval",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "description": "Find changesets created at or after this time",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "description": "Find changesets created before this time (requires from)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "open",
+        "in": "query",
+        "description": "If true, return only open changesets",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "closed",
+        "in": "query",
+        "description": "If true, return only closed changesets",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "changesets",
+        "in": "query",
+        "description": "Comma-separated list of changeset IDs to return",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order (newest or oldest)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "newest",
+            "oldest"
+          ],
+          "default": "newest"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Maximum number of results (1–100, default 100)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of matching changesets",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

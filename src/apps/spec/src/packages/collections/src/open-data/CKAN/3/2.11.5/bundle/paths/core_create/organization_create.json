@@ -1,0 +1,66 @@
+{
+  "post": {
+    "tags": [
+      "Organizations"
+    ],
+    "operationId": "organization_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create an organization",
+    "description": "Create a new organization.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "image_url": {
+                "type": "string"
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Extra.json"
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created organization dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

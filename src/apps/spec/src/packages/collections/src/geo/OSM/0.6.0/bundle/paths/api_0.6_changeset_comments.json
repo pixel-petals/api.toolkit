@@ -1,0 +1,70 @@
+{
+  "get": {
+    "operationId": "searchChangesetComments",
+    "summary": "Search changeset comments",
+    "description": "Returns changeset comments matching the query. If no query is provided, returns the most recent comments.",
+    "tags": [
+      "Changeset Discussion"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "display_name",
+        "in": "query",
+        "description": "Filter by user display name",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "user",
+        "in": "query",
+        "description": "Filter by user ID. display_name takes priority if both are supplied.",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "description": "Beginning of date range (ISO 8601 preferred)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "description": "End of date range (ISO 8601 preferred). Requires from.",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of matching changeset comments",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      }
+    }
+  }
+}

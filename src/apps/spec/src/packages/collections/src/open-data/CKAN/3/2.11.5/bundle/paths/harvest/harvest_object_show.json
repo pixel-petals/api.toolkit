@@ -1,0 +1,36 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_object_show",
+    "summary": "Get a harvest object",
+    "description": "Return details for a single harvest object (a fetched remote record), including errors.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Harvest object id.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Harvest object dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

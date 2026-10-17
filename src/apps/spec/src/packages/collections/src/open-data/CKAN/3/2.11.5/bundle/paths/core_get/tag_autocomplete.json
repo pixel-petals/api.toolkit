@@ -1,0 +1,47 @@
+{
+  "get": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "tag_autocomplete",
+    "summary": "Autocomplete tags",
+    "description": "Return a list of tags whose names match a string.",
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "vocabulary_id",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Matching tag names",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

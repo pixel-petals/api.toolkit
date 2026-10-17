@@ -1,0 +1,35 @@
+{
+  "get": {
+    "tags": [
+      "DCAT"
+    ],
+    "operationId": "googleDatasetSearch",
+    "summary": "Get a dataset as Schema.org JSON-LD for Google Dataset Search",
+    "description": "Returns Schema.org structured data for a dataset as JSON-LD. Embedded in the dataset page HTML when `structured_data` plugin is enabled. Improves Google Dataset Search indexing.\n\n**URL:** `{ckan-host}/api/3/action/package_show?id={id}` \u2014 same as `package_show`, but when the `structured_data` plugin is enabled, a `<script type='application/ld+json'>` tag is injected on the dataset page with schema.org metadata.\n\nThis endpoint documents the data format \u2014 not a separate API endpoint.",
+    "parameters": [
+      {
+        "name": "dataset_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Schema.org JSON-LD document.",
+        "content": {
+          "application/ld+json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

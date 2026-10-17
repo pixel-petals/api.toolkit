@@ -1,0 +1,98 @@
+{
+  "get": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "solveServiceArea",
+    "summary": "Generate service areas \u2013 isochrones (direct/sync)",
+    "description": "Creates polygons representing areas reachable within specified time or distance thresholds from one or more facilities.",
+    "parameters": [
+      {
+        "name": "facilities",
+        "in": "query",
+        "required": true,
+        "description": "Facility locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "defaultBreaks",
+        "in": "query",
+        "description": "Space-delimited break values (minutes or distance). Example: `5 10 15`.",
+        "schema": {
+          "type": "string",
+          "example": "5 10 15"
+        }
+      },
+      {
+        "name": "travelMode",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "default": "Driving Time"
+        }
+      },
+      {
+        "name": "travelDirection",
+        "in": "query",
+        "description": "`esriNATravelDirectionFromFacility` or `esriNATravelDirectionToFacility`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "outputType",
+        "in": "query",
+        "description": "`esriNAOutputPolygonSimplified` or `esriNAOutputPolygonDetailed`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "polygonOverlapType",
+        "in": "query",
+        "description": "`esriNAOutputPolygonRings`, `esriNAOutputPolygonDisks`, or `esriNAOutputPolygonOverlap`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "outSR",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Service area polygons.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "saPolygons": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "facilities": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

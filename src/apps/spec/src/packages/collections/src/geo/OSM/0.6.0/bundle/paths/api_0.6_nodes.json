@@ -1,0 +1,103 @@
+{
+  "get": {
+    "operationId": "getNodes",
+    "summary": "Fetch multiple nodes",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "nodes",
+        "in": "query",
+        "required": true,
+        "description": "Comma-separated list of node IDs, optionally versioned (e.g. 123,456v2)",
+        "schema": {
+          "type": "string"
+        },
+        "example": "123,456,789"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OSM XML or JSON with requested nodes",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "414": {
+        "$ref": "../components/responses/414.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "createNode",
+    "summary": "Create a new node",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "description": "OSM XML with a <node> element including changeset, lat, lon and optional tags",
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "ID of the newly created node",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      },
+      "412": {
+        "$ref": "../components/responses/412.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "description": "Summary returned after a POST (upsert) or PUT (replace) write operation.",
+  "properties": {
+    "Rows Created": {
+      "type": "integer",
+      "description": "Number of net-new rows inserted.",
+      "example": 1
+    },
+    "Rows Updated": {
+      "type": "integer",
+      "description": "Number of rows matched and updated.",
+      "example": 1
+    },
+    "Rows Deleted": {
+      "type": "integer",
+      "description": "Number of rows deleted (upsert only, via `:deleted: true`).",
+      "example": 1
+    },
+    "Errors": {
+      "type": "integer",
+      "description": "Number of rows that could not be processed.",
+      "example": 0
+    }
+  },
+  "required": [
+    "Rows Created",
+    "Rows Updated",
+    "Rows Deleted"
+  ]
+}

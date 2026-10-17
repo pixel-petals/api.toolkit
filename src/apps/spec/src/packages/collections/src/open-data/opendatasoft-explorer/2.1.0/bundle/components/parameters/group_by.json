@@ -1,0 +1,10 @@
+{
+  "name": "group_by",
+  "in": "query",
+  "description": "Example: `group_by=city_field as city`\n\nA group by expression defines a grouping function for an aggregation.\nIt can be:\n - a field name: group result by each value of this field\n - a range function: group result by range\n - a date function: group result by date\n\nIt is possible to specify a custom name with the 'as name' notation.",
+  "style": "form",
+  "explode": false,
+  "schema": {
+    "type": "string"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "get": {
+    "tags": [
+      "Places Service"
+    ],
+    "operationId": "placesWithinExtent",
+    "summary": "Search for places within a bounding box",
+    "description": "Returns places within min/max longitude/latitude extent. Filter by category. Max 20 results per page.",
+    "parameters": [
+      {
+        "name": "xmin",
+        "in": "query",
+        "required": true,
+        "description": "Minimum longitude (western boundary).",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "ymin",
+        "in": "query",
+        "required": true,
+        "description": "Minimum latitude (southern boundary).",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "xmax",
+        "in": "query",
+        "required": true,
+        "description": "Maximum longitude (eastern boundary).",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "ymax",
+        "in": "query",
+        "required": true,
+        "description": "Maximum latitude (northern boundary).",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "categoryIds",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "searchText",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "pageToken",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Places within extent.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PlaceSearchResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

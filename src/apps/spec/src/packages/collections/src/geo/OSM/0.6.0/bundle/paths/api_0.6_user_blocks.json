@@ -1,0 +1,68 @@
+{
+  "post": {
+    "operationId": "createUserBlock",
+    "summary": "Create a user block (moderator only)",
+    "tags": [
+      "User Blocks"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_blocks"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "user",
+              "reason",
+              "period"
+            ],
+            "properties": {
+              "user": {
+                "type": "integer",
+                "format": "int64",
+                "description": "ID of user to block"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Reason for the block (displayed to the user)"
+              },
+              "period": {
+                "type": "integer",
+                "description": "Duration of the block in hours"
+              },
+              "needs_view": {
+                "type": "boolean",
+                "description": "If true, user must view the block before they can edit"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Block created",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      }
+    }
+  }
+}

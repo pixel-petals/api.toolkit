@@ -1,0 +1,10 @@
+{
+  "name": "serviceName",
+  "in": "path",
+  "required": true,
+  "description": "Name of the ArcGIS service.",
+  "schema": {
+    "type": "string",
+    "example": "USA_Demographics"
+  }
+}

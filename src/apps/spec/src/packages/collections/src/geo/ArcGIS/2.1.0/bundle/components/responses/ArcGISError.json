@@ -1,0 +1,10 @@
+{
+  "description": "ArcGIS service error.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ArcGISError.json"
+      }
+    }
+  }
+}

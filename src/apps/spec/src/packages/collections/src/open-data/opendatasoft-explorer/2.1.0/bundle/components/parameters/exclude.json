@@ -1,0 +1,10 @@
+{
+  "name": "exclude",
+  "in": "query",
+  "description": "Examples:\n- `exclude=city:Paris` - Exclude the value `Paris` from the `city` facet. Facets enumeration will display `Paris` as `excluded` without any count information.\n- `exclude=modified:2019/12` - Exclude the value `2019/12` from the `modified` facet. Facets enumeration will display `2020` as `excluded` without any count information.\n\nA facet filter used to exclude a facet value from the result set.\nUsing this parameter, you can filter your query to exclude the selected facet value in the response.\n\n`exclude` uses the following syntax: `exclude=<FACETNAME>:<FACETVALUE>`\n\n**`exclude` must not be confused with a `where` filter. Excluding a facet value is equivalent to removing an entry in the left navigation panel.**",
+  "style": "form",
+  "explode": true,
+  "schema": {
+    "type": "string"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "description": "500 Internal Server Error \u2014 unexpected server-side failure.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

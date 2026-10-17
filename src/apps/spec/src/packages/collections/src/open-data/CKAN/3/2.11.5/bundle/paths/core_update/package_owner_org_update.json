@@ -1,0 +1,53 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_owner_org_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Transfer a dataset to another organization",
+    "description": "Change the owning organization of a dataset.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Dataset id or name."
+              },
+              "organization_id": {
+                "type": "string",
+                "description": "Target organization id. Pass empty string to remove org affiliation."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated dataset dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

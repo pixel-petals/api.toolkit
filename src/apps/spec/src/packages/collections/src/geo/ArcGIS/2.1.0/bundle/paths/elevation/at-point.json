@@ -1,0 +1,66 @@
+{
+  "get": {
+    "tags": [
+      "Elevation Service"
+    ],
+    "operationId": "getElevationAtPoint",
+    "summary": "Get elevation at a single coordinate",
+    "description": "Returns TopoBathy elevation (land topography + ocean bathymetry) for a single coordinate. Values are in meters.",
+    "parameters": [
+      {
+        "name": "x",
+        "in": "query",
+        "required": true,
+        "description": "Longitude in decimal degrees (WGS84).",
+        "schema": {
+          "type": "number",
+          "example": -117.196
+        }
+      },
+      {
+        "name": "y",
+        "in": "query",
+        "required": true,
+        "description": "Latitude in decimal degrees (WGS84).",
+        "schema": {
+          "type": "number",
+          "example": 34.057
+        }
+      },
+      {
+        "name": "relativeTo",
+        "in": "query",
+        "description": "Vertical datum: `ellipsoidalHeight` (default) or `meanSeaLevel`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ellipsoidalHeight",
+            "meanSeaLevel"
+          ],
+          "default": "ellipsoidalHeight"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Elevation at the coordinate.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ElevationAtPointResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

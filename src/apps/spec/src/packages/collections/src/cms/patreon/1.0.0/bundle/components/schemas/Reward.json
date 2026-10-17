@@ -1,0 +1,123 @@
+{
+  "type": "object",
+  "description": "A reward tier on a v1 campaign.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "reward"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "Reward amount in cents."
+        },
+        "amount_cents": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "discord_role_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edited_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "patron_count": {
+          "type": "integer"
+        },
+        "post_count": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "remaining": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Remaining number of available slots. Null if unlimited."
+        },
+        "requires_shipping": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unpublished_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        },
+        "user_limit": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "./Relationship.json"
+        },
+        "creator": {
+          "$ref": "./Relationship.json"
+        }
+      }
+    }
+  }
+}

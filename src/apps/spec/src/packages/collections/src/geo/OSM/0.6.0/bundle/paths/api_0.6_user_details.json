@@ -1,0 +1,44 @@
+{
+  "get": {
+    "operationId": "getCurrentUserDetails",
+    "summary": "Get details of the authenticated user",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_prefs"
+        ]
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Authenticated user details",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "user": {
+                  "$ref": "../components/schemas/User.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

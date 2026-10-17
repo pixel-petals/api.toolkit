@@ -1,0 +1,62 @@
+{
+  "name": "EnumDescriptorProto",
+  "fullName": "google.protobuf.EnumDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/EnumDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "value": {
+        "rule": "repeated",
+        "type": "EnumValueDescriptorProto",
+        "id": 2,
+        "comment": null
+      },
+      "options": {
+        "type": "EnumOptions",
+        "id": 3,
+        "comment": null
+      },
+      "reserved_range": {
+        "rule": "repeated",
+        "type": "EnumReservedRange",
+        "id": 4,
+        "comment": "Range of reserved numeric values. Reserved numeric values may not be used\nby enum values in the same enum declaration. Reserved ranges may not\noverlap."
+      },
+      "reserved_name": {
+        "rule": "repeated",
+        "type": "string",
+        "id": 5,
+        "comment": "Reserved enum value names, which may not be reused. A given name may only\nbe reserved once."
+      },
+      "visibility": {
+        "type": "SymbolVisibility",
+        "id": 6,
+        "comment": "Support for `export` and `local` keywords on enums."
+      }
+    },
+    "nested": {
+      "EnumReservedRange": {
+        "fields": {
+          "start": {
+            "type": "int32",
+            "id": 1,
+            "comment": "Inclusive."
+          },
+          "end": {
+            "type": "int32",
+            "id": 2,
+            "comment": "Inclusive."
+          }
+        },
+        "comment": "Range of reserved numeric values. Reserved values may not be used by\nentries in the same enum. Reserved ranges may not overlap.\n\nNote that this is distinct from DescriptorProto.ReservedRange in that it\nis inclusive such that it can appropriately represent the entire int32\ndomain."
+      }
+    },
+    "comment": "Describes an enum type."
+  }
+}

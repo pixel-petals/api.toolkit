@@ -1,0 +1,95 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/datasets/:dataset_id/attachments?apikey=<API Key>"
+  method: GET
+  headers:
+    Accept: application/json; charset=utf-8
+  queryParams:
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: dataset_id
+      value: string
+      description: |-
+        The identifier of the dataset to be queried.
+
+        You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "links": [],
+        "attachments": [
+          {
+            "href": "https://documentation-resources.opendatasoft.com/api/v2/catalog/datasets/geonames-all-cities-with-a-population-1000/attachments/cities1000_zip",
+            "metas": {
+              "mime-type": "application/zip",
+              "title": "cities1000.zip"
+            }
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "href": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "rel": {
+                  "type": "string",
+                  "enum": [
+                    "self",
+                    "first",
+                    "last",
+                    "next",
+                    "dataset",
+                    "catalog"
+                  ]
+                }
+              }
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "href": {
+                  "type": "string"
+                },
+                "metas": {
+                  "type": "object",
+                  "properties": {
+                    "mime-type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

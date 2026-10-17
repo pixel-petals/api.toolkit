@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "description": "Spatial reference specified as a well-known ID or well-known text.",
+  "properties": {
+    "wkid": {
+      "type": "integer",
+      "example": 4326
+    },
+    "latestWkid": {
+      "type": "integer"
+    },
+    "wkt": {
+      "type": "string"
+    }
+  }
+}

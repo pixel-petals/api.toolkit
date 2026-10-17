@@ -1,0 +1,63 @@
+{
+  "get": {
+    "tags": [
+      "Users"
+    ],
+    "operationId": "user_show",
+    "summary": "Get a user",
+    "description": "Return a user account.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "description": "User id or name.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_datasets",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_num_followers",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_password_hash",
+        "in": "query",
+        "description": "Sysadmin only.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User dict.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

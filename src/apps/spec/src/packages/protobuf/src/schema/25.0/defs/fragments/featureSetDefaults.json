@@ -1,0 +1,45 @@
+{
+  "name": "FeatureSetDefaults",
+  "fullName": "google.protobuf.FeatureSetDefaults",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FeatureSetDefaults",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "defaults": {
+        "rule": "repeated",
+        "type": "FeatureSetEditionDefault",
+        "id": 1,
+        "comment": null
+      },
+      "minimum_edition": {
+        "type": "Edition",
+        "id": 4,
+        "comment": "The minimum supported edition (inclusive) when this was constructed.\nEditions before this will not have defaults."
+      },
+      "maximum_edition": {
+        "type": "Edition",
+        "id": 5,
+        "comment": "The maximum known edition (inclusive) when this was constructed. Editions\nafter this will not have reliable defaults."
+      }
+    },
+    "nested": {
+      "FeatureSetEditionDefault": {
+        "fields": {
+          "edition": {
+            "type": "Edition",
+            "id": 3,
+            "comment": null
+          },
+          "features": {
+            "type": "FeatureSet",
+            "id": 2,
+            "comment": null
+          }
+        },
+        "comment": "A map from every known edition with a unique set of defaults to its\ndefaults. Not all editions may be contained here.  For a given edition,\nthe defaults at the closest matching edition ordered at or before it should\nbe used.  This field must be in strict ascending order by edition."
+      }
+    },
+    "comment": "A compiled specification for the defaults of a set of features.  These\nmessages are generated from FeatureSet extensions and can be used to seed\nfeature resolution. The resolution with this object becomes a simple search\nfor the closest matching edition, followed by proto merges."
+  }
+}

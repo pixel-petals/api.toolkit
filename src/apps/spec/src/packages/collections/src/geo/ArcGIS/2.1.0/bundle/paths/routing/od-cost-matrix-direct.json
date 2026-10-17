@@ -1,0 +1,92 @@
+{
+  "get": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "solveODCostMatrix",
+    "summary": "Solve OD cost matrix (direct/sync)",
+    "description": "Calculates travel cost between every origin and every destination. Returns a cost table.",
+    "parameters": [
+      {
+        "name": "origins",
+        "in": "query",
+        "required": true,
+        "description": "Origin locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "destinations",
+        "in": "query",
+        "required": true,
+        "description": "Destination locations.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "travelMode",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "defaultTargetDestinationCount",
+        "in": "query",
+        "description": "Limit destinations returned per origin.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "defaultImpedanceCutoff",
+        "in": "query",
+        "description": "Maximum travel cost cutoff.",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "returnODLines",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OD cost matrix result.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "odLines": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "origins": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                },
+                "destinations": {
+                  "$ref": "../../components/schemas/FeatureSet.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

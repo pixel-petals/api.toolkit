@@ -1,0 +1,10 @@
+{
+  "description": "Forbidden — authenticated but not authorized to access this resource (e.g. private dataset).",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

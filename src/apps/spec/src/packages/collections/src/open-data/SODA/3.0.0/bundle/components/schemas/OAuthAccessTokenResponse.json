@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "type": "string",
+      "description": "The OAuth 2.0 access token to use in subsequent `Authorization: OAuth <token>` headers."
+    }
+  },
+  "required": [
+    "access_token"
+  ]
+}

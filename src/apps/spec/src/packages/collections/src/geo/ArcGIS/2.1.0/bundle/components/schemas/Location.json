@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "description": "Longitude / latitude coordinate pair.",
+  "required": [
+    "x",
+    "y"
+  ],
+  "properties": {
+    "x": {
+      "type": "number",
+      "description": "Longitude"
+    },
+    "y": {
+      "type": "number",
+      "description": "Latitude"
+    }
+  }
+}

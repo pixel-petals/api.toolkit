@@ -1,0 +1,10 @@
+{
+  "description": "403 Forbidden \u2014 authenticated but insufficient privileges.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

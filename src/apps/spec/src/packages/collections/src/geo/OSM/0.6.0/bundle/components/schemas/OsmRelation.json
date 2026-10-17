@@ -1,0 +1,19 @@
+{
+  "allOf": [
+    {
+      "$ref": "./OsmElement.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "./RelationMember.json"
+          },
+          "description": "Ordered list of members (max 32000)"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "vocabulary_id": {
+      "type": "string",
+      "description": "Present if the tag belongs to a vocabulary. Null for free tags."
+    }
+  }
+}

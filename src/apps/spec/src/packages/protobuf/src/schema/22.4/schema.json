@@ -1,0 +1,1251 @@
+{
+  "nested": {
+    "google": {
+      "nested": {
+        "protobuf": {
+          "options": {
+            "go_package": "google.golang.org/protobuf/types/descriptorpb",
+            "java_package": "com.google.protobuf",
+            "java_outer_classname": "DescriptorProtos",
+            "csharp_namespace": "Google.Protobuf.Reflection",
+            "objc_class_prefix": "GPB",
+            "cc_enable_arenas": true,
+            "optimize_for": "SPEED"
+          },
+          "nested": {
+            "FileDescriptorSet": {
+              "edition": "proto2",
+              "fields": {
+                "file": {
+                  "rule": "repeated",
+                  "type": "FileDescriptorProto",
+                  "id": 1,
+                  "comment": null
+                }
+              },
+              "comment": "The protocol compiler can output a FileDescriptorSet containing the .proto\nfiles it parses."
+            },
+            "FileDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": "file name, relative to root of source tree"
+                },
+                "package": {
+                  "type": "string",
+                  "id": 2,
+                  "comment": "e.g. \"foo\", \"foo.bar\", etc."
+                },
+                "dependency": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 3,
+                  "comment": "Names of files imported by this file."
+                },
+                "public_dependency": {
+                  "rule": "repeated",
+                  "type": "int32",
+                  "id": 10,
+                  "comment": "Indexes of the public imported files in the dependency list above."
+                },
+                "weak_dependency": {
+                  "rule": "repeated",
+                  "type": "int32",
+                  "id": 11,
+                  "comment": "Indexes of the weak imported files in the dependency list.\nFor Google-internal migration only. Do not use."
+                },
+                "message_type": {
+                  "rule": "repeated",
+                  "type": "DescriptorProto",
+                  "id": 4,
+                  "comment": "All top-level definitions in this file."
+                },
+                "enum_type": {
+                  "rule": "repeated",
+                  "type": "EnumDescriptorProto",
+                  "id": 5,
+                  "comment": null
+                },
+                "service": {
+                  "rule": "repeated",
+                  "type": "ServiceDescriptorProto",
+                  "id": 6,
+                  "comment": null
+                },
+                "extension": {
+                  "rule": "repeated",
+                  "type": "FieldDescriptorProto",
+                  "id": 7,
+                  "comment": null
+                },
+                "options": {
+                  "type": "FileOptions",
+                  "id": 8,
+                  "comment": null
+                },
+                "source_code_info": {
+                  "type": "SourceCodeInfo",
+                  "id": 9,
+                  "comment": "This field contains optional information about the original source code.\nYou may safely remove this entire field without harming runtime\nfunctionality of the descriptors -- the information is needed only by\ndevelopment tools."
+                },
+                "syntax": {
+                  "type": "string",
+                  "id": 12,
+                  "comment": "The syntax of the proto file.\nThe supported values are \"proto2\", \"proto3\", and \"editions\".\n\nIf `edition` is present, this value must be \"editions\"."
+                },
+                "edition": {
+                  "type": "string",
+                  "id": 13,
+                  "comment": "The edition of the proto file, which is an opaque string."
+                }
+              },
+              "comment": "Describes a complete .proto file."
+            },
+            "DescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "field": {
+                  "rule": "repeated",
+                  "type": "FieldDescriptorProto",
+                  "id": 2,
+                  "comment": null
+                },
+                "extension": {
+                  "rule": "repeated",
+                  "type": "FieldDescriptorProto",
+                  "id": 6,
+                  "comment": null
+                },
+                "nested_type": {
+                  "rule": "repeated",
+                  "type": "DescriptorProto",
+                  "id": 3,
+                  "comment": null
+                },
+                "enum_type": {
+                  "rule": "repeated",
+                  "type": "EnumDescriptorProto",
+                  "id": 4,
+                  "comment": null
+                },
+                "extension_range": {
+                  "rule": "repeated",
+                  "type": "ExtensionRange",
+                  "id": 5,
+                  "comment": null
+                },
+                "oneof_decl": {
+                  "rule": "repeated",
+                  "type": "OneofDescriptorProto",
+                  "id": 8,
+                  "comment": null
+                },
+                "options": {
+                  "type": "MessageOptions",
+                  "id": 7,
+                  "comment": null
+                },
+                "reserved_range": {
+                  "rule": "repeated",
+                  "type": "ReservedRange",
+                  "id": 9,
+                  "comment": null
+                },
+                "reserved_name": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 10,
+                  "comment": "Reserved field names, which may not be used by fields in the same message.\nA given name may only be reserved once."
+                }
+              },
+              "nested": {
+                "ExtensionRange": {
+                  "fields": {
+                    "start": {
+                      "type": "int32",
+                      "id": 1,
+                      "comment": "Inclusive."
+                    },
+                    "end": {
+                      "type": "int32",
+                      "id": 2,
+                      "comment": "Exclusive."
+                    },
+                    "options": {
+                      "type": "ExtensionRangeOptions",
+                      "id": 3,
+                      "comment": null
+                    }
+                  },
+                  "comment": null
+                },
+                "ReservedRange": {
+                  "fields": {
+                    "start": {
+                      "type": "int32",
+                      "id": 1,
+                      "comment": "Inclusive."
+                    },
+                    "end": {
+                      "type": "int32",
+                      "id": 2,
+                      "comment": "Exclusive."
+                    }
+                  },
+                  "comment": "Range of reserved tag numbers. Reserved tag numbers may not be used by\nfields or extension ranges in the same message. Reserved ranges may\nnot overlap."
+                }
+              },
+              "comment": "Describes a message type."
+            },
+            "ExtensionRangeOptions": {
+              "edition": "proto2",
+              "fields": {
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "comment": null
+            },
+            "FieldDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "number": {
+                  "type": "int32",
+                  "id": 3,
+                  "comment": null
+                },
+                "label": {
+                  "type": "Label",
+                  "id": 4,
+                  "comment": null
+                },
+                "type": {
+                  "type": "Type",
+                  "id": 5,
+                  "comment": "If type_name is set, this need not be set.  If both this and type_name\nare set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP."
+                },
+                "type_name": {
+                  "type": "string",
+                  "id": 6,
+                  "comment": "For message and enum types, this is the name of the type.  If the name\nstarts with a '.', it is fully-qualified.  Otherwise, C++-like scoping\nrules are used to find the type (i.e. first the nested types within this\nmessage are searched, then within the parent, on up to the root\nnamespace)."
+                },
+                "extendee": {
+                  "type": "string",
+                  "id": 2,
+                  "comment": "For extensions, this is the name of the type being extended.  It is\nresolved in the same manner as type_name."
+                },
+                "default_value": {
+                  "type": "string",
+                  "id": 7,
+                  "comment": "For numeric types, contains the original text representation of the value.\nFor booleans, \"true\" or \"false\".\nFor strings, contains the default text contents (not escaped in any way).\nFor bytes, contains the C escaped value.  All bytes >= 128 are escaped."
+                },
+                "oneof_index": {
+                  "type": "int32",
+                  "id": 9,
+                  "comment": "If set, gives the index of a oneof in the containing type's oneof_decl\nlist.  This field is a member of that oneof."
+                },
+                "json_name": {
+                  "type": "string",
+                  "id": 10,
+                  "comment": "JSON name of this field. The value is set by protocol compiler. If the\nuser has set a \"json_name\" option on this field, that option's value\nwill be used. Otherwise, it's deduced from the field's name by converting\nit to camelCase."
+                },
+                "options": {
+                  "type": "FieldOptions",
+                  "id": 8,
+                  "comment": null
+                },
+                "proto3_optional": {
+                  "type": "bool",
+                  "id": 17,
+                  "comment": "If true, this is a proto3 \"optional\". When a proto3 field is optional, it\ntracks presence regardless of field type.\n\nWhen proto3_optional is true, this field must be belong to a oneof to\nsignal to old proto3 clients that presence is tracked for this field. This\noneof is known as a \"synthetic\" oneof, and this field must be its sole\nmember (each proto3 optional field gets its own synthetic oneof). Synthetic\noneofs exist in the descriptor only, and do not generate any API. Synthetic\noneofs must be ordered after all \"real\" oneofs.\n\nFor message fields, proto3_optional doesn't create any semantic change,\nsince non-repeated message fields always track presence. However it still\nindicates the semantic detail of whether the user wrote \"optional\" or not.\nThis can be useful for round-tripping the .proto file. For consistency we\ngive message fields a synthetic oneof also, even though it is not required\nto track presence. This is especially important because the parser can't\ntell if a field is a message or an enum, so it must always create a\nsynthetic oneof.\n\nProto2 optional fields do not set this flag, because they already indicate\noptional with `LABEL_OPTIONAL`."
+                }
+              },
+              "nested": {
+                "Type": {
+                  "values": {
+                    "TYPE_DOUBLE": 1,
+                    "TYPE_FLOAT": 2,
+                    "TYPE_INT64": 3,
+                    "TYPE_UINT64": 4,
+                    "TYPE_INT32": 5,
+                    "TYPE_FIXED64": 6,
+                    "TYPE_FIXED32": 7,
+                    "TYPE_BOOL": 8,
+                    "TYPE_STRING": 9,
+                    "TYPE_GROUP": 10,
+                    "TYPE_MESSAGE": 11,
+                    "TYPE_BYTES": 12,
+                    "TYPE_UINT32": 13,
+                    "TYPE_ENUM": 14,
+                    "TYPE_SFIXED32": 15,
+                    "TYPE_SFIXED64": 16,
+                    "TYPE_SINT32": 17,
+                    "TYPE_SINT64": 18
+                  },
+                  "comment": null,
+                  "comments": {
+                    "TYPE_DOUBLE": "0 is reserved for errors.\nOrder is weird for historical reasons.",
+                    "TYPE_FLOAT": null,
+                    "TYPE_INT64": "Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT64 if\nnegative values are likely.",
+                    "TYPE_UINT64": null,
+                    "TYPE_INT32": "Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT32 if\nnegative values are likely.",
+                    "TYPE_FIXED64": null,
+                    "TYPE_FIXED32": null,
+                    "TYPE_BOOL": null,
+                    "TYPE_STRING": null,
+                    "TYPE_GROUP": "Tag-delimited aggregate.\nGroup type is deprecated and not supported in proto3. However, Proto3\nimplementations should still be able to parse the group wire format and\ntreat group fields as unknown fields.",
+                    "TYPE_MESSAGE": "Length-delimited aggregate.",
+                    "TYPE_BYTES": "New in version 2.",
+                    "TYPE_UINT32": null,
+                    "TYPE_ENUM": null,
+                    "TYPE_SFIXED32": null,
+                    "TYPE_SFIXED64": null,
+                    "TYPE_SINT32": "Uses ZigZag encoding.",
+                    "TYPE_SINT64": "Uses ZigZag encoding."
+                  }
+                },
+                "Label": {
+                  "values": {
+                    "LABEL_OPTIONAL": 1,
+                    "LABEL_REQUIRED": 2,
+                    "LABEL_REPEATED": 3
+                  },
+                  "comment": null,
+                  "comments": {
+                    "LABEL_OPTIONAL": "0 is reserved for errors",
+                    "LABEL_REQUIRED": null,
+                    "LABEL_REPEATED": null
+                  }
+                }
+              },
+              "comment": "Describes a field within a message."
+            },
+            "OneofDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "options": {
+                  "type": "OneofOptions",
+                  "id": 2,
+                  "comment": null
+                }
+              },
+              "comment": "Describes a oneof."
+            },
+            "EnumDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "value": {
+                  "rule": "repeated",
+                  "type": "EnumValueDescriptorProto",
+                  "id": 2,
+                  "comment": null
+                },
+                "options": {
+                  "type": "EnumOptions",
+                  "id": 3,
+                  "comment": null
+                },
+                "reserved_range": {
+                  "rule": "repeated",
+                  "type": "EnumReservedRange",
+                  "id": 4,
+                  "comment": "Range of reserved numeric values. Reserved numeric values may not be used\nby enum values in the same enum declaration. Reserved ranges may not\noverlap."
+                },
+                "reserved_name": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 5,
+                  "comment": "Reserved enum value names, which may not be reused. A given name may only\nbe reserved once."
+                }
+              },
+              "nested": {
+                "EnumReservedRange": {
+                  "fields": {
+                    "start": {
+                      "type": "int32",
+                      "id": 1,
+                      "comment": "Inclusive."
+                    },
+                    "end": {
+                      "type": "int32",
+                      "id": 2,
+                      "comment": "Inclusive."
+                    }
+                  },
+                  "comment": "Range of reserved numeric values. Reserved values may not be used by\nentries in the same enum. Reserved ranges may not overlap.\n\nNote that this is distinct from DescriptorProto.ReservedRange in that it\nis inclusive such that it can appropriately represent the entire int32\ndomain."
+                }
+              },
+              "comment": "Describes an enum type."
+            },
+            "EnumValueDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "number": {
+                  "type": "int32",
+                  "id": 2,
+                  "comment": null
+                },
+                "options": {
+                  "type": "EnumValueOptions",
+                  "id": 3,
+                  "comment": null
+                }
+              },
+              "comment": "Describes a value within an enum."
+            },
+            "ServiceDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "method": {
+                  "rule": "repeated",
+                  "type": "MethodDescriptorProto",
+                  "id": 2,
+                  "comment": null
+                },
+                "options": {
+                  "type": "ServiceOptions",
+                  "id": 3,
+                  "comment": null
+                }
+              },
+              "comment": "Describes a service."
+            },
+            "MethodDescriptorProto": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": null
+                },
+                "input_type": {
+                  "type": "string",
+                  "id": 2,
+                  "comment": "Input and output type names.  These are resolved in the same way as\nFieldDescriptorProto.type_name, but must refer to a message type."
+                },
+                "output_type": {
+                  "type": "string",
+                  "id": 3,
+                  "comment": null
+                },
+                "options": {
+                  "type": "MethodOptions",
+                  "id": 4,
+                  "comment": null
+                },
+                "client_streaming": {
+                  "type": "bool",
+                  "id": 5,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Identifies if client streams multiple client messages"
+                },
+                "server_streaming": {
+                  "type": "bool",
+                  "id": 6,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Identifies if server streams multiple server messages"
+                }
+              },
+              "comment": "Describes a method of a service."
+            },
+            "FileOptions": {
+              "edition": "proto2",
+              "fields": {
+                "java_package": {
+                  "type": "string",
+                  "id": 1,
+                  "comment": "Sets the Java package where classes generated from this .proto will be\nplaced.  By default, the proto package is used, but this is often\ninappropriate because proto packages do not normally start with backwards\ndomain names."
+                },
+                "java_outer_classname": {
+                  "type": "string",
+                  "id": 8,
+                  "comment": "Controls the name of the wrapper Java class generated for the .proto file.\nThat class will always contain the .proto file's getDescriptor() method as\nwell as any top-level extensions defined in the .proto file.\nIf java_multiple_files is disabled, then all the other classes from the\n.proto file will be nested inside the single wrapper outer class."
+                },
+                "java_multiple_files": {
+                  "type": "bool",
+                  "id": 10,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "If enabled, then the Java code generator will generate a separate .java\nfile for each top-level message, enum, and service defined in the .proto\nfile.  Thus, these types will *not* be nested inside the wrapper class\nnamed by java_outer_classname.  However, the wrapper class will still be\ngenerated to contain the file's getDescriptor() method as well as any\ntop-level extensions defined in the file."
+                },
+                "java_generate_equals_and_hash": {
+                  "type": "bool",
+                  "id": 20,
+                  "options": {
+                    "deprecated": true
+                  },
+                  "comment": "This option does nothing."
+                },
+                "java_string_check_utf8": {
+                  "type": "bool",
+                  "id": 27,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "If set true, then the Java2 code generator will generate code that\nthrows an exception whenever an attempt is made to assign a non-UTF-8\nbyte sequence to a string field.\nMessage reflection will do the same.\nHowever, an extension field still accepts non-UTF-8 byte sequences.\nThis option has no effect on when used with the lite runtime."
+                },
+                "optimize_for": {
+                  "type": "OptimizeMode",
+                  "id": 9,
+                  "options": {
+                    "default": "SPEED"
+                  },
+                  "comment": null
+                },
+                "go_package": {
+                  "type": "string",
+                  "id": 11,
+                  "comment": "Sets the Go package where structs generated from this .proto will be\nplaced. If omitted, the Go package will be derived from the following:\n- The basename of the package import path, if provided.\n- Otherwise, the package statement in the .proto file, if present.\n- Otherwise, the basename of the .proto file, without extension."
+                },
+                "cc_generic_services": {
+                  "type": "bool",
+                  "id": 16,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Should generic services be generated in each language?  \"Generic\" services\nare not specific to any particular RPC system.  They are generated by the\nmain code generators in each language (without additional plugins).\nGeneric services were the only kind of service generation supported by\nearly versions of google.protobuf.\n\nGeneric services are now considered deprecated in favor of using plugins\nthat generate code specific to your particular RPC system.  Therefore,\nthese default to false.  Old code which depends on generic services should\nexplicitly set them to true."
+                },
+                "java_generic_services": {
+                  "type": "bool",
+                  "id": 17,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": null
+                },
+                "py_generic_services": {
+                  "type": "bool",
+                  "id": 18,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": null
+                },
+                "php_generic_services": {
+                  "type": "bool",
+                  "id": 42,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": null
+                },
+                "deprecated": {
+                  "type": "bool",
+                  "id": 23,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this file deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor everything in the file, or it will be completely ignored; in the very\nleast, this is a formalization for deprecating files."
+                },
+                "cc_enable_arenas": {
+                  "type": "bool",
+                  "id": 31,
+                  "options": {
+                    "default": true
+                  },
+                  "comment": "Enables the use of arenas for the proto messages in this file. This applies\nonly to generated classes for C++."
+                },
+                "objc_class_prefix": {
+                  "type": "string",
+                  "id": 36,
+                  "comment": "Sets the objective c class prefix which is prepended to all objective c\ngenerated classes from this .proto. There is no default."
+                },
+                "csharp_namespace": {
+                  "type": "string",
+                  "id": 37,
+                  "comment": "Namespace for generated classes; defaults to the package."
+                },
+                "swift_prefix": {
+                  "type": "string",
+                  "id": 39,
+                  "comment": "By default Swift generators will take the proto package and CamelCase it\nreplacing '.' with underscore and use that to prefix the types/symbols\ndefined. When this options is provided, they will use this value instead\nto prefix the types/symbols defined."
+                },
+                "php_class_prefix": {
+                  "type": "string",
+                  "id": 40,
+                  "comment": "Sets the php class prefix which is prepended to all php generated classes\nfrom this .proto. Default is empty."
+                },
+                "php_namespace": {
+                  "type": "string",
+                  "id": 41,
+                  "comment": "Use this option to change the namespace of php generated classes. Default\nis empty. When this option is empty, the package name will be used for\ndetermining the namespace."
+                },
+                "php_metadata_namespace": {
+                  "type": "string",
+                  "id": 44,
+                  "comment": "Use this option to change the namespace of php generated metadata classes.\nDefault is empty. When this option is empty, the proto file name will be\nused for determining the namespace."
+                },
+                "ruby_package": {
+                  "type": "string",
+                  "id": 45,
+                  "comment": "Use this option to change the package of ruby generated classes. Default\nis empty. When this option is not set, the package name will be used for\ndetermining the ruby package."
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here.\nSee the documentation for the \"Options\" section above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "reserved": [
+                [
+                  38,
+                  38
+                ]
+              ],
+              "nested": {
+                "OptimizeMode": {
+                  "values": {
+                    "SPEED": 1,
+                    "CODE_SIZE": 2,
+                    "LITE_RUNTIME": 3
+                  },
+                  "comment": "Generated classes can be optimized for speed or code size.",
+                  "comments": {
+                    "SPEED": "Generate complete code for parsing, serialization,",
+                    "CODE_SIZE": "etc.",
+                    "LITE_RUNTIME": "Generate code using MessageLite and the lite runtime."
+                  }
+                }
+              },
+              "comment": null
+            },
+            "MessageOptions": {
+              "edition": "proto2",
+              "fields": {
+                "message_set_wire_format": {
+                  "type": "bool",
+                  "id": 1,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Set true to use the old proto1 MessageSet wire format for extensions.\nThis is provided for backwards-compatibility with the MessageSet wire\nformat.  You should not use this for any other reason:  It's less\nefficient, has fewer features, and is more complicated.\n\nThe message must be defined exactly as follows:\nmessage Foo {\noption message_set_wire_format = true;\nextensions 4 to max;\n}\nNote that the message cannot have any defined fields; MessageSets only\nhave extensions.\n\nAll extensions of your type must be singular messages; e.g. they cannot\nbe int32s, enums, or repeated messages.\n\nBecause this is an option, the above two restrictions are not enforced by\nthe protocol compiler."
+                },
+                "no_standard_descriptor_accessor": {
+                  "type": "bool",
+                  "id": 2,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Disables the generation of the standard \"descriptor()\" accessor, which can\nconflict with a field of the same name.  This is meant to make migration\nfrom proto1 easier; new code should avoid fields named \"descriptor\"."
+                },
+                "deprecated": {
+                  "type": "bool",
+                  "id": 3,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this message deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the message, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating messages."
+                },
+                "map_entry": {
+                  "type": "bool",
+                  "id": 7,
+                  "comment": "NOTE: Do not set the option in .proto files. Always use the maps syntax\ninstead. The option should only be implicitly set by the proto compiler\nparser.\n\nWhether the message is an automatically generated map entry type for the\nmaps field.\n\nFor maps fields:\nmap<KeyType, ValueType> map_field = 1;\nThe parsed descriptor looks like:\nmessage MapFieldEntry {\noption map_entry = true;\noptional KeyType key = 1;\noptional ValueType value = 2;\n}\nrepeated MapFieldEntry map_field = 1;\n\nImplementations may choose not to generate the map_entry=true message, but\nuse a native map in the target language to hold the keys and values.\nThe reflection APIs in such implementations still need to work as\nif the field is a repeated message field."
+                },
+                "deprecated_legacy_json_field_conflicts": {
+                  "type": "bool",
+                  "id": 11,
+                  "options": {
+                    "deprecated": true
+                  },
+                  "comment": "Enable the legacy handling of JSON field name conflicts.  This lowercases\nand strips underscored from the fields before comparison in proto3 only.\nThe new behavior takes `json_name` into account and applies to proto2 as\nwell.\n\nThis should only be used as a temporary measure against broken builds due\nto the change in behavior for JSON field name conflicts.\n\nTODO(b/261750190) This is legacy behavior we plan to remove once downstream\nteams have had time to migrate."
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "reserved": [
+                [
+                  4,
+                  4
+                ],
+                [
+                  5,
+                  5
+                ],
+                [
+                  6,
+                  6
+                ],
+                [
+                  8,
+                  8
+                ],
+                [
+                  9,
+                  9
+                ]
+              ],
+              "comment": null
+            },
+            "FieldOptions": {
+              "edition": "proto2",
+              "fields": {
+                "ctype": {
+                  "type": "CType",
+                  "id": 1,
+                  "options": {
+                    "default": "STRING"
+                  },
+                  "comment": "The ctype option instructs the C++ code generator to use a different\nrepresentation of the field than it normally would.  See the specific\noptions below.  This option is not yet implemented in the open source\nrelease -- sorry, we'll try to include it in a future version!"
+                },
+                "packed": {
+                  "type": "bool",
+                  "id": 2,
+                  "comment": "The packed option can be enabled for repeated primitive fields to enable\na more efficient representation on the wire. Rather than repeatedly\nwriting the tag and type for each element, the entire array is encoded as\na single length-delimited blob. In proto3, only explicit setting it to\nfalse will avoid using packed encoding."
+                },
+                "jstype": {
+                  "type": "JSType",
+                  "id": 6,
+                  "options": {
+                    "default": "JS_NORMAL"
+                  },
+                  "comment": "The jstype option determines the JavaScript type used for values of the\nfield.  The option is permitted only for 64 bit integral and fixed types\n(int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\nis represented as JavaScript string, which avoids loss of precision that\ncan happen when a large value is converted to a floating point JavaScript.\nSpecifying JS_NUMBER for the jstype causes the generated JavaScript code to\nuse the JavaScript \"number\" type.  The behavior of the default option\nJS_NORMAL is implementation dependent.\n\nThis option is an enum to permit additional types to be added, e.g.\ngoog.math.Integer."
+                },
+                "lazy": {
+                  "type": "bool",
+                  "id": 5,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Should this field be parsed lazily?  Lazy applies only to message-type\nfields.  It means that when the outer message is initially parsed, the\ninner message's contents will not be parsed but instead stored in encoded\nform.  The inner message will actually be parsed when it is first accessed.\n\nThis is only a hint.  Implementations are free to choose whether to use\neager or lazy parsing regardless of the value of this option.  However,\nsetting this option true suggests that the protocol author believes that\nusing lazy parsing on this field is worth the additional bookkeeping\noverhead typically needed to implement it.\n\nThis option does not affect the public interface of any generated code;\nall method signatures remain the same.  Furthermore, thread-safety of the\ninterface is not affected by this option; const methods remain safe to\ncall from multiple threads concurrently, while non-const methods continue\nto require exclusive access.\n\nNote that implementations may choose not to check required fields within\na lazy sub-message.  That is, calling IsInitialized() on the outer message\nmay return true even if the inner message has missing required fields.\nThis is necessary because otherwise the inner message would have to be\nparsed in order to perform the check, defeating the purpose of lazy\nparsing.  An implementation which chooses not to check required fields\nmust be consistent about it.  That is, for any particular sub-message, the\nimplementation must either *always* check its required fields, or *never*\ncheck its required fields, regardless of whether or not the message has\nbeen parsed.\n\nAs of May 2022, lazy verifies the contents of the byte stream during\nparsing.  An invalid byte stream will cause the overall parsing to fail."
+                },
+                "unverified_lazy": {
+                  "type": "bool",
+                  "id": 15,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "unverified_lazy does no correctness checks on the byte stream. This should\nonly be used where lazy with verification is prohibitive for performance\nreasons."
+                },
+                "deprecated": {
+                  "type": "bool",
+                  "id": 3,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this field deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor accessors, or it will be completely ignored; in the very least, this\nis a formalization for deprecating fields."
+                },
+                "weak": {
+                  "type": "bool",
+                  "id": 10,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "For Google-internal migration only. Do not use."
+                },
+                "debug_redact": {
+                  "type": "bool",
+                  "id": 16,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Indicate that the field value should not be printed out when using debug\nformats, e.g. when the field contains sensitive credentials."
+                },
+                "retention": {
+                  "type": "OptionRetention",
+                  "id": 17,
+                  "comment": null
+                },
+                "target": {
+                  "type": "OptionTargetType",
+                  "id": 18,
+                  "comment": null
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "reserved": [
+                [
+                  4,
+                  4
+                ]
+              ],
+              "nested": {
+                "CType": {
+                  "values": {
+                    "STRING": 0,
+                    "CORD": 1,
+                    "STRING_PIECE": 2
+                  },
+                  "comment": null,
+                  "comments": {
+                    "STRING": "Default mode.",
+                    "CORD": null,
+                    "STRING_PIECE": null
+                  }
+                },
+                "JSType": {
+                  "values": {
+                    "JS_NORMAL": 0,
+                    "JS_STRING": 1,
+                    "JS_NUMBER": 2
+                  },
+                  "comment": null,
+                  "comments": {
+                    "JS_NORMAL": "Use the default type.",
+                    "JS_STRING": "Use JavaScript strings.",
+                    "JS_NUMBER": "Use JavaScript numbers."
+                  }
+                },
+                "OptionRetention": {
+                  "values": {
+                    "RETENTION_UNKNOWN": 0,
+                    "RETENTION_RUNTIME": 1,
+                    "RETENTION_SOURCE": 2
+                  },
+                  "comment": "If set to RETENTION_SOURCE, the option will be omitted from the binary.\nNote: as of January 2023, support for this is in progress and does not yet\nhave an effect (b/264593489).",
+                  "comments": {
+                    "RETENTION_UNKNOWN": null,
+                    "RETENTION_RUNTIME": null,
+                    "RETENTION_SOURCE": null
+                  }
+                },
+                "OptionTargetType": {
+                  "values": {
+                    "TARGET_TYPE_UNKNOWN": 0,
+                    "TARGET_TYPE_FILE": 1,
+                    "TARGET_TYPE_EXTENSION_RANGE": 2,
+                    "TARGET_TYPE_MESSAGE": 3,
+                    "TARGET_TYPE_FIELD": 4,
+                    "TARGET_TYPE_ONEOF": 5,
+                    "TARGET_TYPE_ENUM": 6,
+                    "TARGET_TYPE_ENUM_ENTRY": 7,
+                    "TARGET_TYPE_SERVICE": 8,
+                    "TARGET_TYPE_METHOD": 9
+                  },
+                  "comment": "This indicates the types of entities that the field may apply to when used\nas an option. If it is unset, then the field may be freely used as an\noption on any kind of entity. Note: as of January 2023, support for this is\nin progress and does not yet have an effect (b/264593489).",
+                  "comments": {
+                    "TARGET_TYPE_UNKNOWN": null,
+                    "TARGET_TYPE_FILE": null,
+                    "TARGET_TYPE_EXTENSION_RANGE": null,
+                    "TARGET_TYPE_MESSAGE": null,
+                    "TARGET_TYPE_FIELD": null,
+                    "TARGET_TYPE_ONEOF": null,
+                    "TARGET_TYPE_ENUM": null,
+                    "TARGET_TYPE_ENUM_ENTRY": null,
+                    "TARGET_TYPE_SERVICE": null,
+                    "TARGET_TYPE_METHOD": null
+                  }
+                }
+              },
+              "comment": null
+            },
+            "OneofOptions": {
+              "edition": "proto2",
+              "fields": {
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "comment": null
+            },
+            "EnumOptions": {
+              "edition": "proto2",
+              "fields": {
+                "allow_alias": {
+                  "type": "bool",
+                  "id": 2,
+                  "comment": "Set this option to true to allow mapping different tag names to the same\nvalue."
+                },
+                "deprecated": {
+                  "type": "bool",
+                  "id": 3,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this enum deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the enum, or it will be completely ignored; in the very least, this\nis a formalization for deprecating enums."
+                },
+                "deprecated_legacy_json_field_conflicts": {
+                  "type": "bool",
+                  "id": 6,
+                  "options": {
+                    "deprecated": true
+                  },
+                  "comment": "Enable the legacy handling of JSON field name conflicts.  This lowercases\nand strips underscored from the fields before comparison in proto3 only.\nThe new behavior takes `json_name` into account and applies to proto2 as\nwell.\nTODO(b/261750190) Remove this legacy behavior once downstream teams have\nhad time to migrate."
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "reserved": [
+                [
+                  5,
+                  5
+                ]
+              ],
+              "comment": null
+            },
+            "EnumValueOptions": {
+              "edition": "proto2",
+              "fields": {
+                "deprecated": {
+                  "type": "bool",
+                  "id": 1,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this enum value deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the enum value, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating enum values."
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "comment": null
+            },
+            "ServiceOptions": {
+              "edition": "proto2",
+              "fields": {
+                "deprecated": {
+                  "type": "bool",
+                  "id": 33,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this service deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the service, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating services."
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "comment": null
+            },
+            "MethodOptions": {
+              "edition": "proto2",
+              "fields": {
+                "deprecated": {
+                  "type": "bool",
+                  "id": 33,
+                  "options": {
+                    "default": false
+                  },
+                  "comment": "Is this method deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the method, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating methods."
+                },
+                "idempotency_level": {
+                  "type": "IdempotencyLevel",
+                  "id": 34,
+                  "options": {
+                    "default": "IDEMPOTENCY_UNKNOWN"
+                  },
+                  "comment": null
+                },
+                "uninterpreted_option": {
+                  "rule": "repeated",
+                  "type": "UninterpretedOption",
+                  "id": 999,
+                  "comment": "The parser stores options it doesn't recognize here. See above."
+                }
+              },
+              "extensions": [
+                [
+                  1000,
+                  536870911
+                ]
+              ],
+              "nested": {
+                "IdempotencyLevel": {
+                  "values": {
+                    "IDEMPOTENCY_UNKNOWN": 0,
+                    "NO_SIDE_EFFECTS": 1,
+                    "IDEMPOTENT": 2
+                  },
+                  "comment": "Is this method side-effect-free (or safe in HTTP parlance), or idempotent,\nor neither? HTTP based RPC implementation may choose GET verb for safe\nmethods, and PUT verb for idempotent methods instead of the default POST.",
+                  "comments": {
+                    "IDEMPOTENCY_UNKNOWN": null,
+                    "NO_SIDE_EFFECTS": "implies idempotent",
+                    "IDEMPOTENT": "idempotent, but may have side effects"
+                  }
+                }
+              },
+              "comment": null
+            },
+            "UninterpretedOption": {
+              "edition": "proto2",
+              "fields": {
+                "name": {
+                  "rule": "repeated",
+                  "type": "NamePart",
+                  "id": 2,
+                  "comment": null
+                },
+                "identifier_value": {
+                  "type": "string",
+                  "id": 3,
+                  "comment": "The value of the uninterpreted option, in whatever type the tokenizer\nidentified it as during parsing. Exactly one of these should be set."
+                },
+                "positive_int_value": {
+                  "type": "uint64",
+                  "id": 4,
+                  "comment": null
+                },
+                "negative_int_value": {
+                  "type": "int64",
+                  "id": 5,
+                  "comment": null
+                },
+                "double_value": {
+                  "type": "double",
+                  "id": 6,
+                  "comment": null
+                },
+                "string_value": {
+                  "type": "bytes",
+                  "id": 7,
+                  "comment": null
+                },
+                "aggregate_value": {
+                  "type": "string",
+                  "id": 8,
+                  "comment": null
+                }
+              },
+              "nested": {
+                "NamePart": {
+                  "fields": {
+                    "name_part": {
+                      "rule": "required",
+                      "type": "string",
+                      "id": 1,
+                      "comment": null
+                    },
+                    "is_extension": {
+                      "rule": "required",
+                      "type": "bool",
+                      "id": 2,
+                      "comment": null
+                    }
+                  },
+                  "comment": "The name of the uninterpreted option.  Each string represents a segment in\na dot-separated name.  is_extension is true iff a segment represents an\nextension (denoted with parentheses in options specs in .proto files).\nE.g.,{ [\"foo\", false], [\"bar.baz\", true], [\"moo\", false] } represents\n\"foo.(bar.baz).moo\"."
+                }
+              },
+              "comment": "A message representing a option the parser does not recognize. This only\nappears in options protos created by the compiler::Parser class.\nDescriptorPool resolves these when building Descriptor objects. Therefore,\noptions protos in descriptor objects (e.g. returned by Descriptor::options(),\nor produced by Descriptor::CopyTo()) will never have UninterpretedOptions\nin them."
+            },
+            "SourceCodeInfo": {
+              "edition": "proto2",
+              "fields": {
+                "location": {
+                  "rule": "repeated",
+                  "type": "Location",
+                  "id": 1,
+                  "comment": "A Location identifies a piece of source code in a .proto file which\ncorresponds to a particular definition.  This information is intended\nto be useful to IDEs, code indexers, documentation generators, and similar\ntools.\n\nFor example, say we have a file like:\nmessage Foo {\noptional string foo = 1;\n}\nLet's look at just the field definition:\noptional string foo = 1;\n^       ^^     ^^  ^  ^^^\na       bc     de  f  ghi\nWe have the following locations:\nspan   path               represents\n[a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n[a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n[c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n[e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n[g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\nNotes:\n- A location may refer to a repeated field itself (i.e. not to any\nparticular index within it).  This is used whenever a set of elements are\nlogically enclosed in a single code segment.  For example, an entire\nextend block (possibly containing multiple extension definitions) will\nhave an outer location whose path refers to the \"extensions\" repeated\nfield without an index.\n- Multiple locations may have the same path.  This happens when a single\nlogical declaration is spread out across multiple places.  The most\nobvious example is the \"extend\" block again -- there may be multiple\nextend blocks in the same scope, each of which will have the same path.\n- A location's span is not always a subset of its parent's span.  For\nexample, the \"extendee\" of an extension declaration appears at the\nbeginning of the \"extend\" block and is shared by all extensions within\nthe block.\n- Just because a location's span is a subset of some other location's span\ndoes not mean that it is a descendant.  For example, a \"group\" defines\nboth a type and a field in a single declaration.  Thus, the locations\ncorresponding to the type and field and their components will overlap.\n- Code which tries to interpret locations should probably be designed to\nignore those that it doesn't understand, as more types of locations could\nbe recorded in the future."
+                }
+              },
+              "nested": {
+                "Location": {
+                  "fields": {
+                    "path": {
+                      "rule": "repeated",
+                      "type": "int32",
+                      "id": 1,
+                      "options": {
+                        "packed": true
+                      },
+                      "comment": "Identifies which part of the FileDescriptorProto was defined at this\nlocation.\n\nEach element is a field number or an index.  They form a path from\nthe root FileDescriptorProto to the place where the definition occurs.\nFor example, this path:\n[ 4, 3, 2, 7, 1 ]\nrefers to:\nfile.message_type(3)  // 4, 3\n.field(7)         // 2, 7\n.name()           // 1\nThis is because FileDescriptorProto.message_type has field number 4:\nrepeated DescriptorProto message_type = 4;\nand DescriptorProto.field has field number 2:\nrepeated FieldDescriptorProto field = 2;\nand FieldDescriptorProto.name has field number 1:\noptional string name = 1;\n\nThus, the above path gives the location of a field name.  If we removed\nthe last element:\n[ 4, 3, 2, 7 ]\nthis path refers to the whole field declaration (from the beginning\nof the label to the terminating semicolon)."
+                    },
+                    "span": {
+                      "rule": "repeated",
+                      "type": "int32",
+                      "id": 2,
+                      "options": {
+                        "packed": true
+                      },
+                      "comment": "Always has exactly three or four elements: start line, start column,\nend line (optional, otherwise assumed same as start line), end column.\nThese are packed into a single field for efficiency.  Note that line\nand column numbers are zero-based -- typically you will want to add\n1 to each before displaying to a user."
+                    },
+                    "leading_comments": {
+                      "type": "string",
+                      "id": 3,
+                      "comment": "If this SourceCodeInfo represents a complete declaration, these are any\ncomments appearing before and after the declaration which appear to be\nattached to the declaration.\n\nA series of line comments appearing on consecutive lines, with no other\ntokens appearing on those lines, will be treated as a single comment.\n\nleading_detached_comments will keep paragraphs of comments that appear\nbefore (but not connected to) the current element. Each paragraph,\nseparated by empty lines, will be one comment element in the repeated\nfield.\n\nOnly the comment content is provided; comment markers (e.g. //) are\nstripped out.  For block comments, leading whitespace and an asterisk\nwill be stripped from the beginning of each line other than the first.\nNewlines are included in the output.\n\nExamples:\n\noptional int32 foo = 1;  // Comment attached to foo.\n// Comment attached to bar.\noptional int32 bar = 2;\n\noptional string baz = 3;\n// Comment attached to baz.\n// Another line attached to baz.\n\n// Comment attached to moo.\n//\n// Another line attached to moo.\noptional double moo = 4;\n\n// Detached comment for corge. This is not leading or trailing comments\n// to moo or corge because there are blank lines separating it from\n// both.\n\n// Detached comment for corge paragraph 2.\n\noptional string corge = 5;\n/* Block comment attached\n* to corge.  Leading asterisks\n* will be removed. */\n/* Block comment attached to\n* grault. */\noptional int32 grault = 6;\n\n// ignored detached comments."
+                    },
+                    "trailing_comments": {
+                      "type": "string",
+                      "id": 4,
+                      "comment": null
+                    },
+                    "leading_detached_comments": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 6,
+                      "comment": null
+                    }
+                  },
+                  "comment": null
+                }
+              },
+              "comment": "Encapsulates information about the original source file from which a\nFileDescriptorProto was generated."
+            },
+            "GeneratedCodeInfo": {
+              "edition": "proto2",
+              "fields": {
+                "annotation": {
+                  "rule": "repeated",
+                  "type": "Annotation",
+                  "id": 1,
+                  "comment": "An Annotation connects some span of text in generated code to an element\nof its generating .proto file."
+                }
+              },
+              "nested": {
+                "Annotation": {
+                  "fields": {
+                    "path": {
+                      "rule": "repeated",
+                      "type": "int32",
+                      "id": 1,
+                      "options": {
+                        "packed": true
+                      },
+                      "comment": "Identifies the element in the original source .proto file. This field\nis formatted the same as SourceCodeInfo.Location.path."
+                    },
+                    "source_file": {
+                      "type": "string",
+                      "id": 2,
+                      "comment": "Identifies the filesystem path to the original source .proto."
+                    },
+                    "begin": {
+                      "type": "int32",
+                      "id": 3,
+                      "comment": "Identifies the starting offset in bytes in the generated code\nthat relates to the identified object."
+                    },
+                    "end": {
+                      "type": "int32",
+                      "id": 4,
+                      "comment": "Identifies the ending offset in bytes in the generated code that\nrelates to the identified object. The end offset should be one past\nthe last relevant byte (so the length of the text = end - begin)."
+                    },
+                    "semantic": {
+                      "type": "Semantic",
+                      "id": 5,
+                      "comment": null
+                    }
+                  },
+                  "nested": {
+                    "Semantic": {
+                      "values": {
+                        "NONE": 0,
+                        "SET": 1,
+                        "ALIAS": 2
+                      },
+                      "comment": "Represents the identified object's effect on the element in the original\n.proto file.",
+                      "comments": {
+                        "NONE": "There is no effect or the effect is indescribable.",
+                        "SET": "The element is set or otherwise mutated.",
+                        "ALIAS": "An alias to the element is returned."
+                      }
+                    }
+                  },
+                  "comment": null
+                }
+              },
+              "comment": "Describes the relationship between generated code and its original source\nfile. A GeneratedCodeInfo message is associated with only one generated\nsource file, but may contain references to different source .proto files."
+            }
+          }
+        }
+      }
+    }
+  }
+}

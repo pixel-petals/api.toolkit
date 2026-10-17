@@ -1,0 +1,66 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_function_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a PL/pgSQL trigger function",
+    "description": "Create or replace a PL/pgSQL trigger function for use with `datastore_create` triggers. Only trigger functions with `rettype = 'trigger'` are supported. Sysadmin only.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Function name."
+              },
+              "or_replace": {
+                "type": "boolean",
+                "default": false
+              },
+              "rettype": {
+                "type": "string",
+                "enum": [
+                  "trigger"
+                ],
+                "default": "trigger"
+              },
+              "definition": {
+                "type": "string",
+                "description": "PL/pgSQL function body.",
+                "example": "BEGIN\\n  NEW.value = UPPER(NEW.value);\\n  RETURN NEW;\\nEND;"
+              }
+            },
+            "required": [
+              "name",
+              "definition"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

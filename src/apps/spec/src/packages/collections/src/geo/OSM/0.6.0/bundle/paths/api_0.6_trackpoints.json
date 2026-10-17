@@ -1,0 +1,52 @@
+{
+  "get": {
+    "operationId": "getTrackpoints",
+    "summary": "Get GPS track points by bounding box",
+    "description": "Returns GPS track points within the bounding box as GPX 1.0. Returns 5000 points per page. Increment the page parameter to retrieve subsequent pages.",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "bbox",
+        "in": "query",
+        "required": true,
+        "description": "Bounding box as left,bottom,right,top. Max width and height is 0.25 degrees.",
+        "schema": {
+          "type": "string"
+        },
+        "example": "0,51.5,0.25,51.75"
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (0-indexed). Each page contains up to 5000 points.",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "GPX 1.0 document containing track points",
+        "content": {
+          "application/gpx+xml": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "text/xml": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "JSON array of SoQL data types for fields in the response.",
+  "schema": {
+    "type": "string",
+    "example": "[\"text\",\"text\"]"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "getArcGISBasemapStyle",
+    "summary": "Get an ArcGIS basemap style",
+    "description": "Returns Mapbox GL / MapLibre GL Style JSON for a named ArcGIS basemap style.\n\n**Available style names:** `navigation`, `navigation-night`, `streets`, `streets-night`, `streets-relief`, `streets-relief/base`, `community`, `outdoor`, `topographic`, `topographic/base`, `imagery`, `imagery/standard`, `imagery/labels`, `oceans`, `oceans/base`, `oceans/labels`, `hillshade/light`, `hillshade/dark`, `terrain`, `terrain/base`, `terrain/detail`, `light-gray`, `light-gray/base`, `light-gray/labels`, `dark-gray`, `dark-gray/base`, `dark-gray/labels`, `human-geography`, `human-geography/base`, `human-geography/detail`, `human-geography/labels`, `human-geography-dark`, `charted-territory`, `colored-pencil`, `nova`, `modern-antique`, `midcentury`, `newspaper`.",
+    "parameters": [
+      {
+        "name": "styleName",
+        "in": "path",
+        "required": true,
+        "description": "ArcGIS basemap style name.",
+        "schema": {
+          "type": "string",
+          "example": "navigation"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "description": "Label language as BCP-47 tag (e.g. `en`, `fr`, `de`, `ja`). Default uses local language.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "worldview",
+        "in": "query",
+        "description": "Boundary worldview for disputed territories.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "global",
+            "cn",
+            "in",
+            "us",
+            "ru",
+            "ar",
+            "ma",
+            "pk",
+            "tr"
+          ]
+        }
+      },
+      {
+        "name": "places",
+        "in": "query",
+        "description": "POI inclusion: `all` (default) or `none`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "all",
+            "none"
+          ]
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Mapbox GL Style JSON.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/BasemapStyleResponse.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

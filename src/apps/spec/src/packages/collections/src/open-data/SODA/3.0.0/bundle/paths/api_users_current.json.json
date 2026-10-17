@@ -1,0 +1,33 @@
+{
+  "get": {
+    "operationId": "getCurrentUser",
+    "summary": "Get the currently authenticated user",
+    "description": "Returns details about the currently authenticated user. Useful after OAuth authentication to identify who granted access.",
+    "tags": [
+      "Authentication"
+    ],
+    "security": [
+      {
+        "BasicAuth": []
+      },
+      {
+        "OAuth2": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Current user details.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/CurrentUser.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      }
+    }
+  }
+}

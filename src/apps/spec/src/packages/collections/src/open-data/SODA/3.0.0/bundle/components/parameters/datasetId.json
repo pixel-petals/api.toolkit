@@ -1,0 +1,11 @@
+{
+  "name": "datasetId",
+  "in": "path",
+  "required": true,
+  "description": "The unique 4x4 dataset identifier (eight alphanumeric characters split by a dash, e.g. `ydr8-5enu`).",
+  "schema": {
+    "type": "string",
+    "pattern": "^[a-z0-9]{4}-[a-z0-9]{4}$",
+    "example": "4tka-6guv"
+  }
+}

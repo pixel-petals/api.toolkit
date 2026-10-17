@@ -1,0 +1,71 @@
+{
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "updateFeatures",
+    "summary": "Update existing features",
+    "description": "Updates one or more existing features. Each feature must include its `OBJECTID`. Supports partial updates.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "features"
+            ],
+            "properties": {
+              "features": {
+                "type": "string",
+                "description": "JSON array of features to update. Each must include `attributes.OBJECTID`."
+              },
+              "rollbackOnFailure": {
+                "type": "boolean",
+                "default": true
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Update results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "updateResults": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../../components/schemas/EditResult.json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "facets": {
+      "type": "array",
+      "items": {
+        "$ref": "./facet_value_enumeration.json"
+      }
+    }
+  }
+}

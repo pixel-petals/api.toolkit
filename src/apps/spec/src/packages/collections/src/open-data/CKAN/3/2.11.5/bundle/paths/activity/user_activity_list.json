@@ -1,0 +1,90 @@
+{
+  "get": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "user_activity_list",
+    "summary": "Get user activity stream",
+    "description": "Return a user's public activity stream.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "User id or name.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Max activities (default 31).",
+        "schema": {
+          "type": "integer",
+          "default": 31
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "after",
+        "in": "query",
+        "description": "Return activities after this timestamp.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "before",
+        "in": "query",
+        "description": "Return activities before this timestamp.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_data",
+        "in": "query",
+        "description": "Include snapshot data in each activity.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      {
+        "name": "include_hidden_activity",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "security": [],
+    "responses": {
+      "200": {
+        "description": "List of activity dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

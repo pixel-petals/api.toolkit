@@ -1,0 +1,32 @@
+{
+  "description": "Bad Request",
+  "content": {
+    "application/json; charset=utf-8": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "error_code": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "message",
+          "error_code"
+        ]
+      },
+      "examples": {
+        "invalid_odsql": {
+          "value": {
+            "message": "ODSQL query is malformed: invalid_function() Clause(s) containing the error(s): select.",
+            "error_code": "ODSQLError"
+          }
+        }
+      }
+    }
+  }
+}

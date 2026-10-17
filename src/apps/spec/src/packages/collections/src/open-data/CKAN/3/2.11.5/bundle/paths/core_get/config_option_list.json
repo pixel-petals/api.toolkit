@@ -1,0 +1,31 @@
+{
+  "get": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "config_option_list",
+    "summary": "List editable config options",
+    "description": "Return a list of runtime-editable configuration keys. Sysadmin only.",
+    "parameters": [],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of config keys",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

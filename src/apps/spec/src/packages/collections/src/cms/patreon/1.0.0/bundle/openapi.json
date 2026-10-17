@@ -1,0 +1,155 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Patreon API v1",
+    "version": "1.0.0",
+    "description": "OpenAPI 3.1 specification for the Patreon API v1, split into subfiles using JSON `$ref` references.\n\n## Key concepts\n\n- **JSON:API**: All responses follow the [JSON:API](https://jsonapi.org/) specification. Primary data is in `data`, related resources in `included`.\n- **Pledges**: The v1 core patronage object. A `pledge` represents a patron's subscription to a campaign. Replaced by `Member` in API v2.\n- **Rewards**: v1 equivalent of Tiers in v2. Define pledge levels and benefits.\n- **Default fields**: Unlike v2, v1 returns a sensible set of fields by default. Use the `includes` parameter to include related resources.\n\n## Authentication\n\nAll requests require an OAuth 2.0 Bearer access token. Obtain one via the OAuth flow (`GET /oauth2/authorize` \u2192 `POST /api/oauth2/token`) or use your Creator's Access Token from the developer portal.\n\n## API v1 Scopes\n\n| Scope | Description |\n|-------|-------------|\n| `users` | Read user profile data |\n| `my-campaign` | Read the creator's own campaign |\n| `pledges-to-me` | Read pledges made to the creator |\n| `campaigns` | Read campaign data |\n\n## Rate Limits\n\nRequests are rate-limited at both the client and token level. HTTP 429 responses include a `retry_after_seconds` field. An edge-level block (30 minutes) is triggered after 2,000+ bad requests in a 10-minute window.\n\n## Directory structure\n\n```\nopenapi.json                          \u2190 root entry point\ncomponents/\n  schemas/          (14 files)         \u2190 Error, User, Campaign, Pledge, Reward, Goal, Webhook, etc.\n  parameters/       (1 file)           \u2190 includes\n  responses/        (6 files)          \u2190 shared HTTP error responses\n  securitySchemes/  (2 files)          \u2190 OAuth2, BearerToken\npaths/\n  oauth/            (2 files)          \u2190 token exchange + refresh\n  identity/         (1 file)           \u2190 /current_user\n  campaigns/        (2 files)          \u2190 /current_user/campaigns + /campaigns/{id}\n  pledges/          (1 file)           \u2190 /campaigns/{id}/pledges\n  webhooks/         (2 files)          \u2190 webhook CRUD\n```",
+    "contact": {
+      "name": "Patreon Developer Support",
+      "url": "https://www.patreondevelopers.com"
+    },
+    "termsOfService": "https://www.patreon.com/policy/legal",
+    "license": {
+      "name": "Patreon Platform Usage Policy",
+      "url": "https://www.patreon.com/policy/legal"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.patreon.com",
+      "description": "Patreon production API"
+    }
+  ],
+  "security": [
+    {
+      "OAuth2": []
+    },
+    {
+      "BearerToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth",
+      "description": "OAuth 2.0 token exchange and refresh endpoints. No authentication required."
+    },
+    {
+      "name": "Identity",
+      "description": "Fetch the current authenticated user's profile."
+    },
+    {
+      "name": "Campaigns",
+      "description": "Access campaign data \u2014 the creator's page including rewards and goals."
+    },
+    {
+      "name": "Pledges",
+      "description": "Access pledge data \u2014 patron subscriptions to a campaign. v1 equivalent of Members in v2."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Manage webhooks for real-time pledge event notifications (`pledges:create`, `pledges:update`, `pledges:delete`)."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "$ref": "components/securitySchemes/OAuth2.json"
+      },
+      "BearerToken": {
+        "$ref": "components/securitySchemes/BearerToken.json"
+      }
+    },
+    "parameters": {
+      "includes": {
+        "$ref": "components/parameters/includes.json"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "$ref": "components/responses/BadRequest.json"
+      },
+      "Unauthorized": {
+        "$ref": "components/responses/Unauthorized.json"
+      },
+      "Forbidden": {
+        "$ref": "components/responses/Forbidden.json"
+      },
+      "NotFound": {
+        "$ref": "components/responses/NotFound.json"
+      },
+      "TooManyRequests": {
+        "$ref": "components/responses/TooManyRequests.json"
+      },
+      "ServerError": {
+        "$ref": "components/responses/ServerError.json"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "$ref": "components/schemas/Error.json"
+      },
+      "ErrorResponse": {
+        "$ref": "components/schemas/ErrorResponse.json"
+      },
+      "OAuthTokenResponse": {
+        "$ref": "components/schemas/OAuthTokenResponse.json"
+      },
+      "ResourceLinkage": {
+        "$ref": "components/schemas/ResourceLinkage.json"
+      },
+      "Relationship": {
+        "$ref": "components/schemas/Relationship.json"
+      },
+      "User": {
+        "$ref": "components/schemas/User.json"
+      },
+      "Campaign": {
+        "$ref": "components/schemas/Campaign.json"
+      },
+      "Pledge": {
+        "$ref": "components/schemas/Pledge.json"
+      },
+      "Reward": {
+        "$ref": "components/schemas/Reward.json"
+      },
+      "Goal": {
+        "$ref": "components/schemas/Goal.json"
+      },
+      "Webhook": {
+        "$ref": "components/schemas/Webhook.json"
+      },
+      "JsonApiSingleResponse": {
+        "$ref": "components/schemas/JsonApiSingleResponse.json"
+      },
+      "JsonApiListResponse": {
+        "$ref": "components/schemas/JsonApiListResponse.json"
+      }
+    }
+  },
+  "paths": {
+    "/api/oauth2/token": {
+      "$ref": "paths/oauth/token.json"
+    },
+    "/api/oauth2/token#refresh": {
+      "$ref": "paths/oauth/refresh.json"
+    },
+    "/api/oauth2/api/current_user": {
+      "$ref": "paths/identity/current_user.json"
+    },
+    "/api/oauth2/api/current_user/campaigns": {
+      "$ref": "paths/campaigns/current_user_campaigns.json"
+    },
+    "/api/oauth2/api/campaigns/{campaign_id}": {
+      "$ref": "paths/campaigns/campaign.json"
+    },
+    "/api/oauth2/api/campaigns/{campaign_id}/pledges": {
+      "$ref": "paths/pledges/campaign_pledges.json"
+    },
+    "/api/oauth2/api/webhooks": {
+      "$ref": "paths/webhooks/webhooks.json"
+    },
+    "/api/oauth2/api/webhooks/{webhook_id}": {
+      "$ref": "paths/webhooks/webhook.json"
+    }
+  }
+}

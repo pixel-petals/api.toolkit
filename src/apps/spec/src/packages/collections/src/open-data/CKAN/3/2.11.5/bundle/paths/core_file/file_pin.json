@@ -1,0 +1,48 @@
+{
+  "post": {
+    "tags": [
+      "FileStore"
+    ],
+    "operationId": "file_pin",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Pin a file from deletion (CKAN 2.12+)",
+    "description": "Prevents automatic cleanup of a file.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated file dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

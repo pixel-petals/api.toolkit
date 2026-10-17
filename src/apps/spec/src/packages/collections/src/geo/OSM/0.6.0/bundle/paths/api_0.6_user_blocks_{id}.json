@@ -1,0 +1,42 @@
+{
+  "get": {
+    "operationId": "getUserBlock",
+    "summary": "Read a user block",
+    "tags": [
+      "User Blocks"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User block details",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_block": {
+                  "$ref": "../components/schemas/UserBlock.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

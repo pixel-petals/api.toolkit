@@ -1,0 +1,5034 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ArcGIS REST APIs",
+    "version": "2025.1.0",
+    "description": "Comprehensive OpenAPI 3.1 specification for ArcGIS REST APIs, split into subfiles using JSON `$ref` references.\n\n## Directory structure\n\n```\nopenapi.json                          ← this root file (entry point)\ncomponents/\n  schemas/          ← shared data models (28 files)\n  parameters/       ← shared query/path parameters (3 files)\n  responses/        ← shared error responses (4 files)\n  securitySchemes/  ← auth definitions (2 files)\npaths/\n  basemap/          ← Basemap Styles Service (6 operations)\n  geocoding/        ← Geocoding Service (4 operations)\n  places/           ← Places Service (5 operations)\n  routing/          ← Routing Service (10 operations)\n  geoenrichment/    ← GeoEnrichment Service (3 operations)\n  elevation/        ← Elevation Service (2 operations)\n  spatial_analysis/ ← Spatial Analysis Service (6 operations)\n  portal/           ← Portal / Sharing API (8 operations)\n  feature_service/  ← Feature Service (8 operations)\n```\n\n**Authentication:** ArcGIS token (OAuth 2.0) or API key via `token` query param or `Authorization: Bearer` header. Required for all write operations and for ArcGIS Online / Location Platform services.\n\n**Official OpenAPI specs** (for Basemap and Elevation services) are available at the respective service `/specification/open-api-v3-0/` endpoints.",
+    "contact": {
+      "name": "Esri Developer Support",
+      "url": "https://developers.arcgis.com",
+      "email": "devsupport@esri.com"
+    },
+    "license": {
+      "name": "Esri Master License Agreement",
+      "url": "https://www.esri.com/en-us/legal/overview"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2",
+      "description": "Basemap Styles Service v2"
+    },
+    {
+      "url": "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+      "description": "Geocoding Service (standard – not-stored results)"
+    },
+    {
+      "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+      "description": "Geocoding Service (enhanced – stored results / batch)"
+    },
+    {
+      "url": "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1",
+      "description": "Places Service v1"
+    },
+    {
+      "url": "https://route-api.arcgis.com/arcgis/rest/services/World",
+      "description": "Routing Service – Direct requests"
+    },
+    {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World",
+      "description": "Routing Service – Async job requests (VRP, LMD)"
+    },
+    {
+      "url": "https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment",
+      "description": "GeoEnrichment Service"
+    },
+    {
+      "url": "https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1",
+      "description": "Elevation Service v1"
+    },
+    {
+      "url": "https://analysis6.arcgis.com/arcgis/rest/services/tasks/GPServer",
+      "description": "Spatial Analysis Service (ArcGIS Online)"
+    },
+    {
+      "url": "https://org.arcgis.com/sharing/rest",
+      "description": "Portal / Sharing API – ArcGIS Online"
+    },
+    {
+      "url": "https://organization.example.com/{webadaptor}/sharing/rest",
+      "description": "Portal / Sharing API – ArcGIS Enterprise",
+      "variables": {
+        "webadaptor": {
+          "default": "arcgis",
+          "description": "Web adaptor context or site name"
+        }
+      }
+    },
+    {
+      "url": "https://organization.example.com/{webadaptor}/rest/services",
+      "description": "ArcGIS Server Services Directory – ArcGIS Enterprise",
+      "variables": {
+        "webadaptor": {
+          "default": "arcgis"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "BearerToken": []
+    },
+    {
+      "TokenParam": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Basemap Styles Service",
+      "description": "Vector tile basemap styles (streets, imagery, terrain, creative).\n\n**Base URL:** `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2`\n\n**Official OpenAPI:** https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/specification/open-api-v3-0/\n\n**Docs:** https://developers.arcgis.com/rest/basemap-styles/"
+    },
+    {
+      "name": "Geocoding Service",
+      "description": "Address geocoding, reverse geocoding, batch geocoding, and autosuggest.\n\n**Standard:** `https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer`\n\n**Enhanced:** `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer`\n\n**Docs:** https://developers.arcgis.com/rest/geocode/\n\n**Pricing:** 20K free/month then $0.50/1K (not stored); $4/1K (stored)"
+    },
+    {
+      "name": "Places Service",
+      "description": "Find businesses and POIs by radius or bounding box. Get detailed place attributes.\n\n**Base URL:** `https://places-api.arcgis.com/arcgis/rest/services/places-service/v1`\n\n**Docs:** https://developers.arcgis.com/rest/places/\n\n**Pricing:** 500 free searches then $8/1K"
+    },
+    {
+      "name": "Routing Service",
+      "description": "Routes, directions, service areas, OD cost matrix, closest facility, VRP, last-mile delivery.\n\n**Direct:** `https://route-api.arcgis.com/arcgis/rest/services/World`\n\n**Async:** `https://logistics.arcgis.com/arcgis/rest/services/World`\n\n**Docs:** https://developers.arcgis.com/rest/routing/\n\n**Pricing:** 20K free routes/month then $0.50/1K"
+    },
+    {
+      "name": "GeoEnrichment Service",
+      "description": "Append demographic data and local facts to locations. Generate PDF/Excel reports. Query standard geographies.\n\n**Base URL:** `https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment`\n\n**Docs:** https://developers.arcgis.com/rest/geoenrichment/\n\n**Pricing:** $1/1K attributes (Location Platform); 10 credits/1K (ArcGIS Online)"
+    },
+    {
+      "name": "Elevation Service",
+      "description": "Topographic and bathymetric elevation at single or multiple points. Returns meters.\n\n**Base URL:** `https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1`\n\n**Official OpenAPI:** https://elevation-api.arcgis.com/arcgis/rest/services/elevation-service/v1/specification/open-api-v3-0/\n\n**Docs:** https://developers.arcgis.com/rest/elevation/\n\n**Pricing:** 50K free/month then $1/1K"
+    },
+    {
+      "name": "Spatial Analysis Service",
+      "description": "Hosted geoprocessing analysis. All tasks run asynchronously – submit a job, poll status, retrieve results.\n\n**Base URL:** `https://analysis6.arcgis.com/arcgis/rest/services/tasks/GPServer`\n\n**Docs:** https://developers.arcgis.com/rest/analysis/\n\n**Auth:** ArcGIS Online token + Publisher role required"
+    },
+    {
+      "name": "Portal Service",
+      "description": "Manage users, groups, items, search, sharing, and OAuth tokens.\n\n**ArcGIS Online:** `https://org.arcgis.com/sharing/rest`\n\n**Enterprise:** `https://organization.example.com/{webadaptor}/sharing/rest`\n\n**Docs:** https://developers.arcgis.com/rest/users-groups-and-items/"
+    },
+    {
+      "name": "Feature Service",
+      "description": "Query, add, update, delete, and sync hosted or enterprise feature layers.\n\n**URL pattern:** `https://{host}/{context}/rest/services/{folder}/{serviceName}/FeatureServer`\n\n**Docs:** https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/"
+    }
+  ],
+  "paths": {
+    "/sessions/start": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "basemapSessionStart",
+        "summary": "Start a basemap style session",
+        "description": "Initiates a new session and returns a session token for tile requests.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/styles/arcgis/{styleName}": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "getArcGISBasemapStyle",
+        "summary": "Get an ArcGIS basemap style",
+        "description": "Returns Mapbox GL / MapLibre GL Style JSON for a named ArcGIS basemap style.\n\n**Available style names:** `navigation`, `navigation-night`, `streets`, `streets-night`, `streets-relief`, `streets-relief/base`, `community`, `outdoor`, `topographic`, `topographic/base`, `imagery`, `imagery/standard`, `imagery/labels`, `oceans`, `oceans/base`, `oceans/labels`, `hillshade/light`, `hillshade/dark`, `terrain`, `terrain/base`, `terrain/detail`, `light-gray`, `light-gray/base`, `light-gray/labels`, `dark-gray`, `dark-gray/base`, `dark-gray/labels`, `human-geography`, `human-geography/base`, `human-geography/detail`, `human-geography/labels`, `human-geography-dark`, `charted-territory`, `colored-pencil`, `nova`, `modern-antique`, `midcentury`, `newspaper`.",
+        "parameters": [
+          {
+            "name": "styleName",
+            "in": "path",
+            "required": true,
+            "description": "ArcGIS basemap style name.",
+            "schema": {
+              "type": "string",
+              "example": "navigation"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Label language as BCP-47 tag (e.g. `en`, `fr`, `de`, `ja`). Default uses local language.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "worldview",
+            "in": "query",
+            "description": "Boundary worldview for disputed territories.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "global",
+                "cn",
+                "in",
+                "us",
+                "ru",
+                "ar",
+                "ma",
+                "pk",
+                "tr"
+              ]
+            }
+          },
+          {
+            "name": "places",
+            "in": "query",
+            "description": "POI inclusion: `all` (default) or `none`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "none"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mapbox GL Style JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasemapStyleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/styles/open/{styleName}": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "getOpenBasemapStyle",
+        "summary": "Get an open (OSM-based) basemap style",
+        "description": "Returns a Mapbox GL style based on OpenStreetMap data.\n\n**Available styles:** `osm-style`, `osm-style-relief`, `osm-style-relief/base`, `navigation`, `navigation-dark`, `streets`, `streets-relief`, `streets-relief/base`, `streets-night`, `hybrid`, `hybrid/detail`, `light-gray`, `light-gray/base`, `light-gray/labels`, `dark-gray`, `dark-gray/base`, `dark-gray/labels`, `blueprint`.",
+        "parameters": [
+          {
+            "name": "styleName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "navigation"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "worldview",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mapbox GL Style JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasemapStyleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/styles/items/{itemId}": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "getCustomBasemapStyleByItemId",
+        "summary": "Get a custom basemap style by portal item ID",
+        "description": "Returns the Mapbox GL style for a custom basemap style stored as a portal item.",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "description": "Portal item ID of the custom basemap style.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom basemap style JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasemapStyleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/webmaps/arcgis/{styleName}": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "getArcGISBasemapWebmap",
+        "summary": "Get an ArcGIS basemap as web map JSON",
+        "description": "Returns a web map JSON document for the requested ArcGIS basemap style. Use this to set a basemap in a web map.",
+        "parameters": [
+          {
+            "name": "styleName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "worldview",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Web map JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/styles/self": {
+      "get": {
+        "tags": [
+          "Basemap Styles Service"
+        ],
+        "operationId": "getBasemapServiceSelf",
+        "summary": "Get basemap styles service metadata",
+        "description": "Returns metadata about the service including available styles, supported languages, and worldviews.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/findAddressCandidates": {
+      "get": {
+        "tags": [
+          "Geocoding Service"
+        ],
+        "operationId": "findAddressCandidates",
+        "summary": "Geocode an address or place name",
+        "description": "Converts text describing a location into candidate locations with coordinates and match scores. Supports single-line or component-based address input.",
+        "parameters": [
+          {
+            "name": "singleLine",
+            "in": "query",
+            "description": "Single-line address or place name.",
+            "schema": {
+              "type": "string",
+              "example": "380 New York St, Redlands, CA"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address2",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address3",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subregion",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "description": "State, province, or region.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postal",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postalExt",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "countryCode",
+            "in": "query",
+            "description": "ISO 3166-1 alpha-2 or alpha-3 country code.",
+            "schema": {
+              "type": "string",
+              "example": "US"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "description": "Preference location as JSON `{x,y}` or `lon,lat`. Biases results toward this area.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "description": "Radius in meters around `location` for preference bias.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Category filter: `Address`, `POI`, `Airport`, `City`, etc.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxLocations",
+            "in": "query",
+            "description": "Max candidates to return (default 5, max 50).",
+            "schema": {
+              "type": "integer",
+              "default": 5,
+              "maximum": 50
+            }
+          },
+          {
+            "name": "outFields",
+            "in": "query",
+            "description": "Comma-separated attribute fields to return. Use `*` for all.",
+            "schema": {
+              "type": "string",
+              "example": "PlaceName,Place_addr,Phone"
+            }
+          },
+          {
+            "name": "outSR",
+            "in": "query",
+            "description": "Output spatial reference WKID.",
+            "schema": {
+              "type": "integer",
+              "default": 4326
+            }
+          },
+          {
+            "name": "searchExtent",
+            "in": "query",
+            "description": "Bounding box to restrict search (JSON envelope or `xmin,ymin,xmax,ymax`).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "magicKey",
+            "in": "query",
+            "description": "Magic key from a prior `/suggest` response. Retrieves a full candidate at no additional geocoding cost.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "langCode",
+            "in": "query",
+            "description": "Language for result labels (BCP-47).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locationType",
+            "in": "query",
+            "description": "Preferred result location type: `rooftop` or `street`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "rooftop",
+                "street"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Geocoded address candidates.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeocodeCandidatesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/geocodeAddresses": {
+      "post": {
+        "tags": [
+          "Geocoding Service"
+        ],
+        "operationId": "geocodeAddresses",
+        "summary": "Batch geocode a list of addresses (synchronous, up to 1,000)",
+        "description": "Synchronously geocodes up to 1,000 addresses in a single request. Results are stored and incur stored-geocode pricing.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "addresses"
+                ],
+                "properties": {
+                  "addresses": {
+                    "type": "string",
+                    "description": "JSON `{records:[{attributes:{OBJECTID,SingleLine}},...]}`."
+                  },
+                  "countryCode": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "outSR": {
+                    "type": "integer",
+                    "default": 4326
+                  },
+                  "outFields": {
+                    "type": "string"
+                  },
+                  "locationType": {
+                    "type": "string",
+                    "enum": [
+                      "rooftop",
+                      "street"
+                    ]
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch geocode results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spatialReference": {
+                      "$ref": "#/components/schemas/SpatialReference"
+                    },
+                    "locations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "address": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "$ref": "#/components/schemas/Location"
+                          },
+                          "score": {
+                            "type": "number"
+                          },
+                          "attributes": {
+                            "type": "object",
+                            "additionalProperties": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/reverseGeocode": {
+      "get": {
+        "tags": [
+          "Geocoding Service"
+        ],
+        "operationId": "reverseGeocode",
+        "summary": "Reverse geocode a coordinate to an address",
+        "description": "Converts a longitude/latitude coordinate to the nearest address or place.",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "query",
+            "required": true,
+            "description": "Point as JSON `{x, y, spatialReference}` or `lon,lat`.",
+            "schema": {
+              "type": "string",
+              "example": "{\"x\":-117.196,\"y\":34.057}"
+            }
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "description": "Search radius in meters (default 100).",
+            "schema": {
+              "type": "number",
+              "default": 100
+            }
+          },
+          {
+            "name": "outSR",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 4326
+            }
+          },
+          {
+            "name": "langCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "featureTypes",
+            "in": "query",
+            "description": "Restrict address type: `StreetAddress`, `StreetName`, `Locality`, `PostalLoc`, `PointAddress`, `Subaddress`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locationtype",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "rooftop",
+                "street"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reverse geocode result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReverseGeocodeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/suggest": {
+      "get": {
+        "tags": [
+          "Geocoding Service"
+        ],
+        "operationId": "geocodeSuggest",
+        "summary": "Get typeahead address/place suggestions",
+        "description": "Returns candidate suggestions for partial text input. Use the returned `magicKey` with `findAddressCandidates` to retrieve full coordinates at no additional credit cost.",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "required": true,
+            "description": "Partial address or place name.",
+            "schema": {
+              "type": "string",
+              "example": "380 New Yor"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "description": "Preference location as JSON `{x,y}`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "description": "Radius in meters around preference location.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "countryCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxSuggestions",
+            "in": "query",
+            "description": "Maximum suggestions (default 5, max 15).",
+            "schema": {
+              "type": "integer",
+              "default": 5,
+              "maximum": 15
+            }
+          },
+          {
+            "name": "searchExtent",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Suggestion candidates.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          }
+        }
+      }
+    },
+    "/places/near-point": {
+      "get": {
+        "tags": [
+          "Places Service"
+        ],
+        "operationId": "placesNearPoint",
+        "summary": "Search for places near a point",
+        "description": "Returns places within a radius around a coordinate. Filter by category. Max 20 results per page.",
+        "parameters": [
+          {
+            "name": "x",
+            "in": "query",
+            "required": true,
+            "description": "Longitude.",
+            "schema": {
+              "type": "number",
+              "example": -117.196
+            }
+          },
+          {
+            "name": "y",
+            "in": "query",
+            "required": true,
+            "description": "Latitude.",
+            "schema": {
+              "type": "number",
+              "example": 34.057
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "description": "Search radius in meters (max 10,000). Default 1,000.",
+            "schema": {
+              "type": "number",
+              "default": 1000,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "categoryIds",
+            "in": "query",
+            "description": "Comma-separated category IDs.",
+            "schema": {
+              "type": "string",
+              "example": "17069,17070"
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "Free-text filter on place names.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "description": "Pagination token from a prior response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nearby places.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/places/within-extent": {
+      "get": {
+        "tags": [
+          "Places Service"
+        ],
+        "operationId": "placesWithinExtent",
+        "summary": "Search for places within a bounding box",
+        "description": "Returns places within min/max longitude/latitude extent. Filter by category. Max 20 results per page.",
+        "parameters": [
+          {
+            "name": "xmin",
+            "in": "query",
+            "required": true,
+            "description": "Minimum longitude (western boundary).",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ymin",
+            "in": "query",
+            "required": true,
+            "description": "Minimum latitude (southern boundary).",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "xmax",
+            "in": "query",
+            "required": true,
+            "description": "Maximum longitude (eastern boundary).",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ymax",
+            "in": "query",
+            "required": true,
+            "description": "Maximum latitude (northern boundary).",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "categoryIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Places within extent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/places/{placeId}": {
+      "get": {
+        "tags": [
+          "Places Service"
+        ],
+        "operationId": "getPlaceDetails",
+        "summary": "Get place details by place ID",
+        "description": "Returns detailed attributes for a specific place.\n\n**Field groups (priced separately):**\n- Place: `name`, `categories`\n- Location: `location`, `additionalLocations:*`\n- Address: `address:*`\n- Details: `contactInfo:*`, `hours:*`, `rating:*`, `socialMedia:*`, `description`, `chains`",
+        "parameters": [
+          {
+            "name": "placeId",
+            "in": "path",
+            "required": true,
+            "description": "Unique place identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "requestedFields",
+            "in": "query",
+            "description": "Comma-separated fields or `all`.",
+            "schema": {
+              "type": "string",
+              "example": "name,categories,location,address:streetAddress"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Place details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/PlaceDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Places Service"
+        ],
+        "operationId": "getPlaceCategories",
+        "summary": "List all place categories",
+        "description": "Returns all category IDs and labels, or a filtered subset. Category queries are free.",
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Text to filter category names.",
+            "schema": {
+              "type": "string",
+              "example": "coffee"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "parents": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{categoryId}": {
+      "get": {
+        "tags": [
+          "Places Service"
+        ],
+        "operationId": "getCategoryDetails",
+        "summary": "Get category details by ID",
+        "description": "Returns the hierarchy and label for a specific category ID.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/Route/NAServer/Route_World/solve": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "solveRoute",
+        "summary": "Solve a route – directions (direct/sync)",
+        "description": "Finds the best path between two or more stops with turn-by-turn directions, total distance, and travel time. Supports walking, driving, trucking and other travel modes.",
+        "parameters": [
+          {
+            "name": "stops",
+            "in": "query",
+            "required": true,
+            "description": "Stops as JSON FeatureSet, `lon,lat;lon,lat`, or address strings.",
+            "schema": {
+              "type": "string",
+              "example": "-117.196,34.057;-118.243,34.052"
+            }
+          },
+          {
+            "name": "travelMode",
+            "in": "query",
+            "description": "Travel mode name or JSON (e.g. `Driving Time`, `Walking Time`, `Trucking Time`).",
+            "schema": {
+              "type": "string",
+              "default": "Driving Time"
+            }
+          },
+          {
+            "name": "returnDirections",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "returnRoutes",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "findBestSequence",
+            "in": "query",
+            "description": "Optimize stop order (traveling salesman).",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "preserveFirstStop",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "preserveLastStop",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "Departure time as epoch milliseconds. Enables live traffic.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "outputLines",
+            "in": "query",
+            "description": "`esriNAOutputLineTrueShape`, `esriNAOutputLineStraight`, or `esriNAOutputLineNone`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "directionsLanguage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outSR",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 4326
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route solve result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "routes": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "stops": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "directions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "solveServiceArea",
+        "summary": "Generate service areas – isochrones (direct/sync)",
+        "description": "Creates polygons representing areas reachable within specified time or distance thresholds from one or more facilities.",
+        "parameters": [
+          {
+            "name": "facilities",
+            "in": "query",
+            "required": true,
+            "description": "Facility locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "defaultBreaks",
+            "in": "query",
+            "description": "Space-delimited break values (minutes or distance). Example: `5 10 15`.",
+            "schema": {
+              "type": "string",
+              "example": "5 10 15"
+            }
+          },
+          {
+            "name": "travelMode",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "Driving Time"
+            }
+          },
+          {
+            "name": "travelDirection",
+            "in": "query",
+            "description": "`esriNATravelDirectionFromFacility` or `esriNATravelDirectionToFacility`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outputType",
+            "in": "query",
+            "description": "`esriNAOutputPolygonSimplified` or `esriNAOutputPolygonDetailed`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "polygonOverlapType",
+            "in": "query",
+            "description": "`esriNAOutputPolygonRings`, `esriNAOutputPolygonDisks`, or `esriNAOutputPolygonOverlap`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outSR",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service area polygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "saPolygons": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "facilities": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/ClosestFacility/NAServer/ClosestFacility_World/solveClosestFacility": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "solveClosestFacility",
+        "summary": "Find closest facility to incidents (direct/sync)",
+        "description": "Finds one or more nearest facilities from incidents based on travel time or distance.",
+        "parameters": [
+          {
+            "name": "incidents",
+            "in": "query",
+            "required": true,
+            "description": "Incident locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "facilities",
+            "in": "query",
+            "required": true,
+            "description": "Candidate facility locations.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "defaultTargetFacilityCount",
+            "in": "query",
+            "description": "Nearest facilities to find per incident.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "travelMode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "returnRoutes",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "returnDirections",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "travelDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Closest facility routes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "routes": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "facilities": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "incidents": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/OriginDestinationCostMatrix/NAServer/OriginDestinationCostMatrix_World/solveODCostMatrix": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "solveODCostMatrix",
+        "summary": "Solve OD cost matrix (direct/sync)",
+        "description": "Calculates travel cost between every origin and every destination. Returns a cost table.",
+        "parameters": [
+          {
+            "name": "origins",
+            "in": "query",
+            "required": true,
+            "description": "Origin locations as JSON FeatureSet or `lon,lat;lon,lat`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "destinations",
+            "in": "query",
+            "required": true,
+            "description": "Destination locations.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "travelMode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "defaultTargetDestinationCount",
+            "in": "query",
+            "description": "Limit destinations returned per origin.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "defaultImpedanceCutoff",
+            "in": "query",
+            "description": "Maximum travel cost cutoff.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "returnODLines",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OD cost matrix result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "odLines": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "origins": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    },
+                    "destinations": {
+                      "$ref": "#/components/schemas/FeatureSet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/SnapToRoadsSync/GPServer/SnapToRoads/execute": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "snapToRoads",
+        "summary": "Snap GPS track points to roads (direct/sync)",
+        "description": "Snaps a series of GPS track points to the underlying road network for map-matching and track correction.",
+        "parameters": [
+          {
+            "name": "inputFeatures",
+            "in": "query",
+            "required": true,
+            "description": "GPS track points as JSON FeatureSet.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outputCurrentLocation",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "coordinateType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapped track points.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/Route/GPServer/FindRoutes/submitJob": {
+      "post": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "submitFindRoutesJob",
+        "summary": "Submit async route-finding job",
+        "description": "Submits an async routing job. Returns a `jobId` to poll. Use for large inputs exceeding the direct API limits.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "Stops"
+                ],
+                "properties": {
+                  "Stops": {
+                    "type": "string",
+                    "description": "JSON FeatureSet of stops."
+                  },
+                  "Travel_Mode": {
+                    "type": "string"
+                  },
+                  "Return_Directions": {
+                    "type": "boolean"
+                  },
+                  "Return_Routes": {
+                    "type": "boolean"
+                  },
+                  "Find_Best_Sequence": {
+                    "type": "boolean"
+                  },
+                  "Preserve_First_Stop": {
+                    "type": "boolean"
+                  },
+                  "Preserve_Last_Stop": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/ServiceAreas/GPServer/GenerateServiceAreas/submitJob": {
+      "post": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "submitServiceAreaJob",
+        "summary": "Submit async service area job",
+        "description": "Submits an async service area (isochrone) generation job.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "Facilities"
+                ],
+                "properties": {
+                  "Facilities": {
+                    "type": "string"
+                  },
+                  "Break_Values": {
+                    "type": "string",
+                    "example": "5 10 15"
+                  },
+                  "Break_Units": {
+                    "type": "string",
+                    "example": "Minutes"
+                  },
+                  "Travel_Mode": {
+                    "type": "string"
+                  },
+                  "Travel_Direction": {
+                    "type": "string"
+                  },
+                  "Time_Of_Day": {
+                    "type": "string"
+                  },
+                  "Geometry_At_Overlaps": {
+                    "type": "string"
+                  },
+                  "Polygon_Detail": {
+                    "type": "string"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob": {
+      "post": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "submitVRPJob",
+        "summary": "Submit Vehicle Routing Problem (VRP) async job",
+        "description": "Determines effective route assignments for a fleet visiting multiple stops. Supports time windows, capacities, depots, and break schedules.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "Orders",
+                  "Depots",
+                  "Routes"
+                ],
+                "properties": {
+                  "Orders": {
+                    "type": "string",
+                    "description": "JSON FeatureSet of orders/deliveries."
+                  },
+                  "Depots": {
+                    "type": "string",
+                    "description": "JSON FeatureSet of depot locations."
+                  },
+                  "Routes": {
+                    "type": "string",
+                    "description": "JSON FeatureSet of vehicles/routes."
+                  },
+                  "Breaks": {
+                    "type": "string"
+                  },
+                  "Time_Units": {
+                    "type": "string",
+                    "default": "Minutes"
+                  },
+                  "Distance_Units": {
+                    "type": "string",
+                    "default": "Kilometers"
+                  },
+                  "Populate_Route_Lines": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "VRP job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/VehicleRoutingProblem/GPServer/SolveLastMileDelivery/submitJob": {
+      "post": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "submitLastMileDeliveryJob",
+        "summary": "Submit last-mile delivery async job",
+        "description": "Determines the most effective routes for a fleet to minimize operating cost for a last-mile delivery scenario.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "Orders",
+                  "Depots",
+                  "Routes"
+                ],
+                "properties": {
+                  "Orders": {
+                    "type": "string"
+                  },
+                  "Depots": {
+                    "type": "string"
+                  },
+                  "Routes": {
+                    "type": "string"
+                  },
+                  "Time_Units": {
+                    "type": "string",
+                    "default": "Minutes"
+                  },
+                  "Distance_Units": {
+                    "type": "string",
+                    "default": "Kilometers"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/Route/GPServer/FindRoutes/jobs/{jobId}": {
+      "get": {
+        "tags": [
+          "Routing Service"
+        ],
+        "operationId": "getRoutingJobStatus",
+        "summary": "Poll async routing job status",
+        "description": "Returns current status of an async routing job. Poll until `jobStatus` is `esriJobSucceeded` or `esriJobFailed`, then retrieve results from the `results` links.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/Enrich": {
+      "post": {
+        "tags": [
+          "GeoEnrichment Service"
+        ],
+        "operationId": "enrichLocations",
+        "summary": "Enrich locations with demographic data",
+        "description": "Appends demographic facts and local statistics to input locations (points, polygons, or standard geographies). Returns the requested data variables for each feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "studyAreas"
+                ],
+                "properties": {
+                  "studyAreas": {
+                    "type": "string",
+                    "description": "JSON array of study area objects. Can be points (with optional buffer), polygons, or named place IDs. Example: `[{\"geometry\":{\"x\":-117.196,\"y\":34.057}}]`."
+                  },
+                  "analysisVariables": {
+                    "type": "string",
+                    "description": "JSON array of variable IDs. Example: `[\"AtRisk.ACSTOTPOP\",\"AtRisk.ACSOMALES\"]`."
+                  },
+                  "dataCollections": {
+                    "type": "string",
+                    "description": "JSON array of data collection names (returns all variables in each collection)."
+                  },
+                  "studyAreasOptions": {
+                    "type": "string",
+                    "description": "JSON buffer options: `{areaType, bufferUnits, bufferRadii}`."
+                  },
+                  "returnGeometry": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "inSR": {
+                    "type": "integer",
+                    "default": 4326
+                  },
+                  "outSR": {
+                    "type": "integer",
+                    "default": 4326
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Enrichment results per study area.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/createReport": {
+      "post": {
+        "tags": [
+          "GeoEnrichment Service"
+        ],
+        "operationId": "createEnrichmentReport",
+        "summary": "Generate a demographic or business report",
+        "description": "Generates a PDF or Excel report summarising demographics, tapestry market segments, business data, or market potential for a study area.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "studyAreas",
+                  "report"
+                ],
+                "properties": {
+                  "studyAreas": {
+                    "type": "string"
+                  },
+                  "report": {
+                    "type": "string",
+                    "description": "Report template: `esri_demographics`, `esri_tapestry`, `business_summary`, `market_potential`."
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "PDF",
+                      "XLSX"
+                    ],
+                    "default": "PDF"
+                  },
+                  "studyAreasOptions": {
+                    "type": "string"
+                  },
+                  "inSR": {
+                    "type": "integer"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Report as base64-encoded content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/StandardGeographyQuery": {
+      "post": {
+        "tags": [
+          "GeoEnrichment Service"
+        ],
+        "operationId": "standardGeographyQuery",
+        "summary": "Query standard geographies",
+        "description": "Returns standard geography features and IDs for different geographic levels (country, state, county, ZIP code, census tract, block group, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sourceCountry": {
+                    "type": "string",
+                    "example": "US"
+                  },
+                  "geographylayers": {
+                    "type": "string",
+                    "description": "JSON array of geography layer IDs. Example: `[{\"id\":\"US.States\"}]`."
+                  },
+                  "geographyids": {
+                    "type": "string",
+                    "description": "JSON array of geography feature IDs to retrieve."
+                  },
+                  "geographyquery": {
+                    "type": "string",
+                    "description": "Text to search within geography names."
+                  },
+                  "returnGeometry": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "returnSubGeographyLayer": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Geography features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/elevation/at-point": {
+      "get": {
+        "tags": [
+          "Elevation Service"
+        ],
+        "operationId": "getElevationAtPoint",
+        "summary": "Get elevation at a single coordinate",
+        "description": "Returns TopoBathy elevation (land topography + ocean bathymetry) for a single coordinate. Values are in meters.",
+        "parameters": [
+          {
+            "name": "x",
+            "in": "query",
+            "required": true,
+            "description": "Longitude in decimal degrees (WGS84).",
+            "schema": {
+              "type": "number",
+              "example": -117.196
+            }
+          },
+          {
+            "name": "y",
+            "in": "query",
+            "required": true,
+            "description": "Latitude in decimal degrees (WGS84).",
+            "schema": {
+              "type": "number",
+              "example": 34.057
+            }
+          },
+          {
+            "name": "relativeTo",
+            "in": "query",
+            "description": "Vertical datum: `ellipsoidalHeight` (default) or `meanSeaLevel`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ellipsoidalHeight",
+                "meanSeaLevel"
+              ],
+              "default": "ellipsoidalHeight"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Elevation at the coordinate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElevationAtPointResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/elevation/at-many-points": {
+      "post": {
+        "tags": [
+          "Elevation Service"
+        ],
+        "operationId": "getElevationAtManyPoints",
+        "summary": "Get elevation at multiple coordinates",
+        "description": "Returns elevation values for up to 100 coordinate pairs in a single request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "coordinates"
+                ],
+                "properties": {
+                  "coordinates": {
+                    "type": "array",
+                    "description": "Array of `[longitude, latitude]` pairs.",
+                    "maxItems": 100,
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "example": [
+                      [
+                        -117.196,
+                        34.057
+                      ],
+                      [
+                        -118.243,
+                        34.052
+                      ]
+                    ]
+                  },
+                  "relativeTo": {
+                    "type": "string",
+                    "enum": [
+                      "ellipsoidalHeight",
+                      "meanSeaLevel"
+                    ],
+                    "default": "ellipsoidalHeight"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Elevation values per input coordinate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElevationAtManyPointsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/AggregatePoints/submitJob": {
+      "post": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "aggregatePoints",
+        "summary": "Aggregate points into polygon bins (async)",
+        "description": "Groups point features into polygon bins using a fishnet, hexagon grid, or custom polygons. Calculates counts and optional statistics per bin. Runs asynchronously.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "pointLayer"
+                ],
+                "properties": {
+                  "outputName": {
+                    "type": "string",
+                    "description": "Name for the output hosted feature layer."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "JSON context: `{extent, outSR}`."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  },
+                  "pointLayer": {
+                    "type": "string",
+                    "description": "Input point layer as JSON FeatureCollection, item URL, or feature service URL."
+                  },
+                  "polygonLayer": {
+                    "type": "string",
+                    "description": "Polygon layer to aggregate into. If omitted a grid is generated."
+                  },
+                  "keepBoundariesWithNoPoints": {
+                    "type": "boolean"
+                  },
+                  "summaryFields": {
+                    "type": "string",
+                    "description": "JSON array of statistic definitions."
+                  },
+                  "groupByField": {
+                    "type": "string"
+                  },
+                  "minorityMajority": {
+                    "type": "boolean"
+                  },
+                  "percentPoints": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/FindHotSpots/submitJob": {
+      "post": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "findHotSpots",
+        "summary": "Find hot spots (Gi* spatial clustering, async)",
+        "description": "Uses the Getis-Ord Gi* statistic to identify statistically significant spatial clusters of high values (hot spots) and low values (cold spots).",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "analysisLayer"
+                ],
+                "properties": {
+                  "outputName": {
+                    "type": "string",
+                    "description": "Name for the output hosted feature layer."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "JSON context: `{extent, outSR}`."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  },
+                  "analysisLayer": {
+                    "type": "string",
+                    "description": "Input feature layer URL or JSON."
+                  },
+                  "analysisField": {
+                    "type": "string",
+                    "description": "Numeric field to evaluate for clustering."
+                  },
+                  "dividedByField": {
+                    "type": "string"
+                  },
+                  "boundingPolygonLayer": {
+                    "type": "string"
+                  },
+                  "aggregationPolygonLayer": {
+                    "type": "string"
+                  },
+                  "shapeType": {
+                    "type": "string",
+                    "enum": [
+                      "Fishnet",
+                      "Hexagon"
+                    ]
+                  },
+                  "cellSize": {
+                    "type": "number"
+                  },
+                  "cellSizeUnits": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/CreateBuffers/submitJob": {
+      "post": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "createBuffers",
+        "summary": "Create buffers around features (async)",
+        "description": "Creates buffer polygons around input features at specified distances. Supports multiple ring distances, dissolve options, and distance units.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "inputLayer",
+                  "distances"
+                ],
+                "properties": {
+                  "outputName": {
+                    "type": "string",
+                    "description": "Name for the output hosted feature layer."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "JSON context: `{extent, outSR}`."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  },
+                  "inputLayer": {
+                    "type": "string",
+                    "description": "Input feature layer."
+                  },
+                  "distances": {
+                    "type": "string",
+                    "description": "JSON array of buffer distances."
+                  },
+                  "field": {
+                    "type": "string",
+                    "description": "Field whose values define per-feature buffer distances."
+                  },
+                  "units": {
+                    "type": "string",
+                    "enum": [
+                      "Meters",
+                      "Kilometers",
+                      "Feet",
+                      "Miles",
+                      "NauticalMiles",
+                      "Yards"
+                    ]
+                  },
+                  "dissolveType": {
+                    "type": "string",
+                    "enum": [
+                      "None",
+                      "Dissolve"
+                    ]
+                  },
+                  "ringType": {
+                    "type": "string",
+                    "enum": [
+                      "Disks",
+                      "Rings"
+                    ],
+                    "description": "`Disks` (filled) or `Rings` (donut shapes) for multiple distances."
+                  },
+                  "sideType": {
+                    "type": "string",
+                    "enum": [
+                      "Full",
+                      "Left",
+                      "Right"
+                    ],
+                    "description": "Which side of a line to buffer."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/OverlayLayers/submitJob": {
+      "post": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "overlayLayers",
+        "summary": "Overlay two feature layers (async)",
+        "description": "Combines two feature layers using a geometric overlay (Intersect, Union, Erase). Returns a new layer with combined attributes.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "inputLayer",
+                  "overlayLayer"
+                ],
+                "properties": {
+                  "outputName": {
+                    "type": "string",
+                    "description": "Name for the output hosted feature layer."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "JSON context: `{extent, outSR}`."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  },
+                  "inputLayer": {
+                    "type": "string"
+                  },
+                  "overlayLayer": {
+                    "type": "string"
+                  },
+                  "overlayType": {
+                    "type": "string",
+                    "enum": [
+                      "Intersect",
+                      "Union",
+                      "Erase"
+                    ],
+                    "default": "Intersect"
+                  },
+                  "snapToInput": {
+                    "type": "boolean"
+                  },
+                  "outputType": {
+                    "type": "string"
+                  },
+                  "tolerance": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/SummarizeNearby/submitJob": {
+      "post": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "summarizeNearby",
+        "summary": "Summarize features near each input feature (async)",
+        "description": "Calculates statistics on features within a specified distance or travel time of each input feature. Useful for site analysis, proximity queries, and service area summaries.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sumNearbyLayer",
+                  "summaryLayer"
+                ],
+                "properties": {
+                  "outputName": {
+                    "type": "string",
+                    "description": "Name for the output hosted feature layer."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "JSON context: `{extent, outSR}`."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  },
+                  "sumNearbyLayer": {
+                    "type": "string",
+                    "description": "Features to summarize around."
+                  },
+                  "summaryLayer": {
+                    "type": "string",
+                    "description": "Features to count and summarize."
+                  },
+                  "nearType": {
+                    "type": "string",
+                    "enum": [
+                      "StraightLine",
+                      "DrivingTime",
+                      "DrivingDistance"
+                    ],
+                    "default": "StraightLine"
+                  },
+                  "distances": {
+                    "type": "string",
+                    "description": "JSON array of distance values."
+                  },
+                  "units": {
+                    "type": "string"
+                  },
+                  "timeOfDay": {
+                    "type": "string"
+                  },
+                  "timeZoneForTimeOfDay": {
+                    "type": "string"
+                  },
+                  "returnBoundaries": {
+                    "type": "boolean"
+                  },
+                  "sumShape": {
+                    "type": "boolean"
+                  },
+                  "shapeUnits": {
+                    "type": "string"
+                  },
+                  "summaryFields": {
+                    "type": "string"
+                  },
+                  "groupByField": {
+                    "type": "string"
+                  },
+                  "minorityMajority": {
+                    "type": "boolean"
+                  },
+                  "percentShape": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis job submitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{analysisTask}/jobs/{jobId}": {
+      "get": {
+        "tags": [
+          "Spatial Analysis Service"
+        ],
+        "operationId": "getSpatialAnalysisJobStatus",
+        "summary": "Poll spatial analysis job status",
+        "description": "Returns current status of a submitted spatial analysis job. Poll until `jobStatus` is `esriJobSucceeded`. Retrieve results by following URLs in the `results` object.",
+        "parameters": [
+          {
+            "name": "analysisTask",
+            "in": "path",
+            "required": true,
+            "description": "Task name (e.g. `AggregatePoints`, `FindHotSpots`, `CreateBuffers`, `OverlayLayers`, `SummarizeNearby`).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job status and result links.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/portals/self": {
+      "get": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "getPortalSelf",
+        "summary": "Get portal information (self)",
+        "description": "Returns the portal as seen by the authenticated user, including org details, default extent, featured content group IDs, and token service URLs.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Portal self resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalSelf"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "searchPortal",
+        "summary": "Search portal items, groups, or users",
+        "description": "Full-text search across portal items using Lucene-style query syntax for field-specific filtering.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Lucene-style query. Example: `type:\"Feature Service\" AND tags:transportation`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "1-based index of first result (pagination).",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "num",
+            "in": "query",
+            "description": "Number of results (max 100).",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "sortField",
+            "in": "query",
+            "description": "Sort by: `title`, `created`, `modified`, `numViews`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "title",
+                "created",
+                "modified",
+                "numViews"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            }
+          },
+          {
+            "name": "bbox",
+            "in": "query",
+            "description": "Bounding box filter as `xmin,ymin,xmax,ymax`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "description": "Comma-separated item category filters.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          }
+        }
+      }
+    },
+    "/community/users/{username}": {
+      "get": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "getUser",
+        "summary": "Get user profile",
+        "description": "Returns the profile for a specific portal user including their groups, role, and user type.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "The portal username.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalUser"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/community/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "getGroup",
+        "summary": "Get group details",
+        "description": "Returns details about a portal group including description, members, and content sharing settings.",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalGroup"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/content/items/{itemId}": {
+      "get": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "getItem",
+        "summary": "Get portal item details",
+        "description": "Returns metadata for a portal item including title, type, description, URL, tags, and access level.",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "description": "The unique item ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalItem"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/content/users/{username}/addItem": {
+      "post": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "addItem",
+        "summary": "Add an item to the portal",
+        "description": "Creates a new portal item. The item can be a file upload, a URL reference, or inline content (JSON, text, etc.).",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "type"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "Feature Service"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "Comma-separated tags."
+                  },
+                  "snippet": {
+                    "type": "string",
+                    "description": "Short summary (max 250 chars)."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "URL of the service or resource the item represents."
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Item JSON content (for items without a file)."
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "overwrite": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "folder": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/content/users/{username}/items/{itemId}/share": {
+      "post": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "shareItem",
+        "summary": "Share a portal item",
+        "description": "Changes the sharing level of an item. Can share publicly, to the organization, or to specific groups.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "everyone": {
+                    "type": "boolean",
+                    "description": "Share publicly."
+                  },
+                  "org": {
+                    "type": "boolean",
+                    "description": "Share within the organization."
+                  },
+                  "groups": {
+                    "type": "string",
+                    "description": "Comma-separated group IDs to share with."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sharing result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "type": "string"
+                    },
+                    "notSharedWith": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/oauth2/token": {
+      "post": {
+        "tags": [
+          "Portal Service"
+        ],
+        "operationId": "generateOAuthToken",
+        "summary": "Generate an OAuth 2.0 access token",
+        "description": "Exchanges client credentials for an ArcGIS access token. Supports `client_credentials` (app token), `authorization_code`, and `refresh_token` grant types.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "client_id",
+                  "grant_type"
+                ],
+                "properties": {
+                  "client_id": {
+                    "type": "string",
+                    "description": "Your registered application's client ID."
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "description": "Client secret (required for `client_credentials`)."
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code",
+                      "client_credentials",
+                      "refresh_token"
+                    ]
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Authorization code (for `authorization_code` flow)."
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "description": "Redirect URI registered with the app."
+                  },
+                  "refresh_token": {
+                    "type": "string",
+                    "description": "Refresh token (for `refresh_token` flow)."
+                  },
+                  "expiration": {
+                    "type": "integer",
+                    "description": "Token lifetime in minutes (max 20160 / 2 weeks)."
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OAuth token response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer": {
+      "get": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "getFeatureServiceInfo",
+        "summary": "Get feature service metadata",
+        "description": "Returns the root resource of a feature service including layer list, capabilities, spatial reference, sync settings, and supported operations.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feature service metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureServiceInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/{layerId}/query": {
+      "get": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "queryFeatureLayer",
+        "summary": "Query a feature layer",
+        "description": "Returns features from a layer matching the specified attribute, spatial, or temporal criteria.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          },
+          {
+            "name": "where",
+            "in": "query",
+            "description": "SQL WHERE clause to filter features. Use `1=1` to return all features.",
+            "schema": {
+              "type": "string",
+              "example": "STATE_NAME = 'California'"
+            }
+          },
+          {
+            "name": "objectIds",
+            "in": "query",
+            "description": "Comma-separated object IDs to retrieve.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "geometry",
+            "in": "query",
+            "description": "Spatial filter geometry as JSON.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "geometryType",
+            "in": "query",
+            "description": "Type of the filter geometry.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "esriGeometryPoint",
+                "esriGeometryMultipoint",
+                "esriGeometryPolyline",
+                "esriGeometryPolygon",
+                "esriGeometryEnvelope"
+              ],
+              "default": "esriGeometryEnvelope"
+            }
+          },
+          {
+            "name": "spatialRel",
+            "in": "query",
+            "description": "Spatial relationship between input and feature geometry.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "esriSpatialRelIntersects",
+                "esriSpatialRelContains",
+                "esriSpatialRelCrosses",
+                "esriSpatialRelEnvelopeIntersects",
+                "esriSpatialRelIndexIntersects",
+                "esriSpatialRelOverlaps",
+                "esriSpatialRelTouches",
+                "esriSpatialRelWithin"
+              ],
+              "default": "esriSpatialRelIntersects"
+            }
+          },
+          {
+            "name": "outFields",
+            "in": "query",
+            "description": "Comma-separated field names. Use `*` for all fields.",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          },
+          {
+            "name": "returnGeometry",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "outSR",
+            "in": "query",
+            "description": "Output spatial reference WKID.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "resultOffset",
+            "in": "query",
+            "description": "Number of records to skip for pagination.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "resultRecordCount",
+            "in": "query",
+            "description": "Maximum records to return.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderByFields",
+            "in": "query",
+            "description": "Comma-separated field names + optional `ASC`/`DESC` to sort.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupByFieldsForStatistics",
+            "in": "query",
+            "description": "Fields to group by for statistical queries.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outStatistics",
+            "in": "query",
+            "description": "JSON array of statistic definitions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "returnCountOnly",
+            "in": "query",
+            "description": "If true, returns only the feature count.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "returnDistinctValues",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query results as a feature set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureSet"
+                }
+              },
+              "application/geo+json": {
+                "schema": {
+                  "type": "object",
+                  "description": "GeoJSON FeatureCollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "queryFeatureLayerPost",
+        "summary": "Query a feature layer (POST – for long queries)",
+        "description": "Same as GET query but via POST to support large geometry inputs and complex WHERE clauses exceeding URL length limits.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "type": "string"
+                  },
+                  "objectIds": {
+                    "type": "string"
+                  },
+                  "geometry": {
+                    "type": "string"
+                  },
+                  "geometryType": {
+                    "type": "string"
+                  },
+                  "spatialRel": {
+                    "type": "string"
+                  },
+                  "outFields": {
+                    "type": "string"
+                  },
+                  "returnGeometry": {
+                    "type": "boolean"
+                  },
+                  "outSR": {
+                    "type": "integer"
+                  },
+                  "resultOffset": {
+                    "type": "integer"
+                  },
+                  "resultRecordCount": {
+                    "type": "integer"
+                  },
+                  "orderByFields": {
+                    "type": "string"
+                  },
+                  "outStatistics": {
+                    "type": "string"
+                  },
+                  "groupByFieldsForStatistics": {
+                    "type": "string"
+                  },
+                  "returnCountOnly": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results as a feature set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureSet"
+                }
+              },
+              "application/geo+json": {
+                "schema": {
+                  "type": "object",
+                  "description": "GeoJSON FeatureCollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/{layerId}/addFeatures": {
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "addFeatures",
+        "summary": "Add new features to a layer",
+        "description": "Inserts one or more new features into a feature layer. Returns per-feature success/error results including newly assigned object IDs.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "features"
+                ],
+                "properties": {
+                  "features": {
+                    "type": "string",
+                    "description": "JSON array of features to add. Each has `geometry` and `attributes`."
+                  },
+                  "rollbackOnFailure": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "trueCurveClient": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Add results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "addResults": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EditResult"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/{layerId}/updateFeatures": {
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "updateFeatures",
+        "summary": "Update existing features",
+        "description": "Updates one or more existing features. Each feature must include its `OBJECTID`. Supports partial updates.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "features"
+                ],
+                "properties": {
+                  "features": {
+                    "type": "string",
+                    "description": "JSON array of features to update. Each must include `attributes.OBJECTID`."
+                  },
+                  "rollbackOnFailure": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "updateResults": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EditResult"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/{layerId}/deleteFeatures": {
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "deleteFeatures",
+        "summary": "Delete features from a layer",
+        "description": "Deletes one or more features by object IDs or a WHERE clause filter.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "objectIds": {
+                    "type": "string",
+                    "description": "Comma-separated object IDs to delete."
+                  },
+                  "where": {
+                    "type": "string",
+                    "description": "SQL WHERE clause for bulk delete."
+                  },
+                  "geometry": {
+                    "type": "string"
+                  },
+                  "geometryType": {
+                    "type": "string"
+                  },
+                  "spatialRel": {
+                    "type": "string"
+                  },
+                  "rollbackOnFailure": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleteResults": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EditResult"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/applyEdits": {
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "applyEditsFeatureService",
+        "summary": "Apply edits across multiple layers in a single transaction",
+        "description": "Performs adds, updates, and deletes across multiple layers atomically. The `edits` parameter specifies layer-level edit objects. Supports rollback on failure.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "edits"
+                ],
+                "properties": {
+                  "edits": {
+                    "type": "string",
+                    "description": "JSON array of edit objects per layer. Each has `id` (layer ID), `adds`, `updates`, `deletes`."
+                  },
+                  "honorSequenceOfEdits": {
+                    "type": "boolean"
+                  },
+                  "rollbackOnFailure": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "useGlobalIds": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Apply edits results per layer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "addResults": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/EditResult"
+                        }
+                      },
+                      "updateResults": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/EditResult"
+                        }
+                      },
+                      "deleteResults": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/EditResult"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/{serviceName}/FeatureServer/{layerId}/applyEdits": {
+      "post": {
+        "tags": [
+          "Feature Service"
+        ],
+        "operationId": "applyEditsLayer",
+        "summary": "Apply edits to a single layer",
+        "description": "Performs adds, updates, and deletes on a single feature layer in one atomic operation.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/serviceName"
+          },
+          {
+            "$ref": "#/components/parameters/layerId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "adds": {
+                    "type": "string",
+                    "description": "JSON array of features to add."
+                  },
+                  "updates": {
+                    "type": "string",
+                    "description": "JSON array of features to update."
+                  },
+                  "deletes": {
+                    "type": "string",
+                    "description": "Comma-separated object IDs to delete."
+                  },
+                  "gdbVersion": {
+                    "type": "string"
+                  },
+                  "rollbackOnFailure": {
+                    "type": "boolean"
+                  },
+                  "useGlobalIds": {
+                    "type": "boolean"
+                  },
+                  "f": {
+                    "type": "string",
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Layer edit results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyEditsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ArcGISError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "ArcGIS Token or OAuth2 JWT",
+        "description": "ArcGIS token or OAuth 2.0 access token passed in the Authorization header."
+      },
+      "TokenParam": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "token",
+        "description": "ArcGIS token passed as a query parameter. Accepted by all ArcGIS REST services."
+      }
+    },
+    "parameters": {
+      "f": {
+        "name": "f",
+        "in": "query",
+        "description": "Response format. `json` (default), `pjson` (pretty-JSON), `geojson`, `html`, `xml`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "json",
+            "pjson",
+            "geojson",
+            "html",
+            "xml",
+            "csv",
+            "kmz"
+          ],
+          "default": "json"
+        }
+      },
+      "layerId": {
+        "name": "layerId",
+        "in": "path",
+        "required": true,
+        "description": "Layer index within the service (0-based integer).",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "serviceName": {
+        "name": "serviceName",
+        "in": "path",
+        "required": true,
+        "description": "Name of the ArcGIS service.",
+        "schema": {
+          "type": "string",
+          "example": "USA_Demographics"
+        }
+      }
+    },
+    "responses": {
+      "ArcGISError": {
+        "description": "ArcGIS service error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ArcGISError"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication required or token invalid/expired.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ArcGISError"
+            },
+            "example": {
+              "error": {
+                "code": 498,
+                "message": "Invalid token.",
+                "details": []
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Insufficient privileges.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ArcGISError"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ArcGISError"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SpatialReference": {
+        "type": "object",
+        "description": "Spatial reference specified as a well-known ID or well-known text.",
+        "properties": {
+          "wkid": {
+            "type": "integer",
+            "example": 4326
+          },
+          "latestWkid": {
+            "type": "integer"
+          },
+          "wkt": {
+            "type": "string"
+          }
+        }
+      },
+      "Geometry": {
+        "type": "object",
+        "description": "ArcGIS geometry (point, polyline, polygon, envelope, or multipoint).",
+        "properties": {
+          "x": {
+            "type": "number",
+            "description": "Longitude (point)"
+          },
+          "y": {
+            "type": "number",
+            "description": "Latitude (point)"
+          },
+          "z": {
+            "type": "number"
+          },
+          "spatialReference": {
+            "$ref": "#/components/schemas/SpatialReference"
+          },
+          "rings": {
+            "type": "array",
+            "items": {},
+            "description": "Polygon rings"
+          },
+          "paths": {
+            "type": "array",
+            "items": {},
+            "description": "Polyline paths"
+          },
+          "points": {
+            "type": "array",
+            "items": {},
+            "description": "Multipoint coords"
+          },
+          "xmin": {
+            "type": "number"
+          },
+          "ymin": {
+            "type": "number"
+          },
+          "xmax": {
+            "type": "number"
+          },
+          "ymax": {
+            "type": "number"
+          }
+        }
+      },
+      "Envelope": {
+        "type": "object",
+        "description": "Bounding envelope / extent.",
+        "required": [
+          "xmin",
+          "ymin",
+          "xmax",
+          "ymax"
+        ],
+        "properties": {
+          "xmin": {
+            "type": "number"
+          },
+          "ymin": {
+            "type": "number"
+          },
+          "xmax": {
+            "type": "number"
+          },
+          "ymax": {
+            "type": "number"
+          },
+          "spatialReference": {
+            "$ref": "#/components/schemas/SpatialReference"
+          }
+        }
+      },
+      "Location": {
+        "type": "object",
+        "description": "Longitude / latitude coordinate pair.",
+        "required": [
+          "x",
+          "y"
+        ],
+        "properties": {
+          "x": {
+            "type": "number",
+            "description": "Longitude"
+          },
+          "y": {
+            "type": "number",
+            "description": "Latitude"
+          }
+        }
+      },
+      "Field": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "esriFieldTypeString"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "length": {
+            "type": "integer"
+          },
+          "nullable": {
+            "type": "boolean"
+          },
+          "editable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Feature": {
+        "type": "object",
+        "description": "A geographic feature with optional geometry and attribute map.",
+        "properties": {
+          "geometry": {
+            "$ref": "#/components/schemas/Geometry"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "FeatureSet": {
+        "type": "object",
+        "description": "A collection of features returned by a query.",
+        "properties": {
+          "objectIdFieldName": {
+            "type": "string"
+          },
+          "globalIdFieldName": {
+            "type": "string"
+          },
+          "geometryType": {
+            "type": "string",
+            "enum": [
+              "esriGeometryPoint",
+              "esriGeometryPolyline",
+              "esriGeometryPolygon",
+              "esriGeometryMultipoint",
+              "esriGeometryEnvelope"
+            ]
+          },
+          "spatialReference": {
+            "$ref": "#/components/schemas/SpatialReference"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Field"
+            }
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            }
+          },
+          "exceededTransferLimit": {
+            "type": "boolean"
+          },
+          "nextUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ArcGISError": {
+        "type": "object",
+        "description": "Standard ArcGIS REST API error envelope.",
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 400
+              },
+              "message": {
+                "type": "string",
+                "example": "Unable to complete operation."
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "JobStatus": {
+        "type": "object",
+        "description": "Async job status returned from submitJob operations.",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "jobStatus": {
+            "type": "string",
+            "enum": [
+              "esriJobNew",
+              "esriJobWaiting",
+              "esriJobExecuting",
+              "esriJobSucceeded",
+              "esriJobFailed",
+              "esriJobTimedOut",
+              "esriJobCancelling",
+              "esriJobCancelled",
+              "esriJobDeleting",
+              "esriJobDeleted"
+            ]
+          },
+          "results": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "JobRef": {
+        "type": "object",
+        "description": "Immediate response when an async job is submitted.",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "jobStatus": {
+            "type": "string",
+            "example": "esriJobSubmitted"
+          }
+        }
+      },
+      "EditResult": {
+        "type": "object",
+        "description": "Per-feature result of an add/update/delete operation.",
+        "properties": {
+          "objectId": {
+            "type": "integer"
+          },
+          "globalId": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ApplyEditsResponse": {
+        "type": "object",
+        "properties": {
+          "addResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EditResult"
+            }
+          },
+          "updateResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EditResult"
+            }
+          },
+          "deleteResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EditResult"
+            }
+          }
+        }
+      },
+      "BasemapStyleResponse": {
+        "type": "object",
+        "description": "Mapbox GL / MapLibre GL Style Specification JSON.",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "example": 8
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "sources": {
+            "type": "object"
+          },
+          "layers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "glyphs": {
+            "type": "string"
+          },
+          "sprite": {
+            "type": "string"
+          }
+        }
+      },
+      "GeocodeCandidatesResponse": {
+        "type": "object",
+        "properties": {
+          "spatialReference": {
+            "$ref": "#/components/schemas/SpatialReference"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "location": {
+                  "$ref": "#/components/schemas/Location"
+                },
+                "score": {
+                  "type": "number"
+                },
+                "attributes": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "extent": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ReverseGeocodeResponse": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          }
+        }
+      },
+      "SuggestResponse": {
+        "type": "object",
+        "properties": {
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "magicKey": {
+                  "type": "string"
+                },
+                "isCollection": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PlaceResult": {
+        "type": "object",
+        "properties": {
+          "placeId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "icon": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "contentType": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PlaceSearchResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaceResult"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "previousUrl": {
+                "type": "string"
+              },
+              "nextUrl": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PlaceDetails": {
+        "type": "object",
+        "description": "Detailed attributes for a single place.",
+        "properties": {
+          "placeId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "contactInfo": {
+            "type": "object"
+          },
+          "description": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "object"
+          },
+          "rating": {
+            "type": "object"
+          },
+          "socialMedia": {
+            "type": "object"
+          },
+          "chains": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ElevationAtPointResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "point": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "z": {
+                    "type": "number",
+                    "description": "Elevation in meters"
+                  },
+                  "spatialReference": {
+                    "$ref": "#/components/schemas/SpatialReference"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ElevationAtManyPointsResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number",
+                      "description": "Elevation in meters"
+                    },
+                    "spatialReference": {
+                      "$ref": "#/components/schemas/SpatialReference"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PortalItem": {
+        "type": "object",
+        "description": "An ArcGIS portal item (map, layer, application, file, etc.).",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "Feature Service"
+          },
+          "url": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "access": {
+            "type": "string",
+            "enum": [
+              "private",
+              "shared",
+              "org",
+              "public"
+            ]
+          },
+          "created": {
+            "type": "integer"
+          },
+          "modified": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "numViews": {
+            "type": "integer"
+          }
+        }
+      },
+      "PortalUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "orgId": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "modified": {
+            "type": "integer"
+          }
+        }
+      },
+      "PortalGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "access": {
+            "type": "string",
+            "enum": [
+              "private",
+              "org",
+              "public"
+            ]
+          },
+          "isInvitationOnly": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created": {
+            "type": "integer"
+          },
+          "modified": {
+            "type": "integer"
+          }
+        }
+      },
+      "PortalSelf": {
+        "type": "object",
+        "description": "Portal self resource — the portal as seen by the authenticated user.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "culture": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/PortalUser"
+          },
+          "defaultExtent": {
+            "$ref": "#/components/schemas/Envelope"
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "integer"
+          },
+          "num": {
+            "type": "integer"
+          },
+          "nextStart": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PortalItem"
+            }
+          }
+        }
+      },
+      "OAuthTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "ssl": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FeatureServiceInfo": {
+        "type": "object",
+        "description": "Feature Service root resource metadata.",
+        "properties": {
+          "currentVersion": {
+            "type": "number"
+          },
+          "serviceDescription": {
+            "type": "string"
+          },
+          "hasVersionedData": {
+            "type": "boolean"
+          },
+          "syncEnabled": {
+            "type": "boolean"
+          },
+          "capabilities": {
+            "type": "string",
+            "example": "Create,Delete,Extract,Query,Update,Sync"
+          },
+          "maxRecordCount": {
+            "type": "integer"
+          },
+          "allowGeometryUpdates": {
+            "type": "boolean"
+          },
+          "supportedQueryFormats": {
+            "type": "string"
+          },
+          "layers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "spatialReference": {
+            "$ref": "#/components/schemas/SpatialReference"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "array",
+  "description": "Confirmation list returned after deleting a single row.",
+  "items": {
+    "type": "object",
+    "properties": {
+      "typ": {
+        "type": "string",
+        "example": "delete"
+      },
+      "id": {
+        "type": "string",
+        "example": "row-evac~sxbs~gm8t"
+      }
+    }
+  }
+}

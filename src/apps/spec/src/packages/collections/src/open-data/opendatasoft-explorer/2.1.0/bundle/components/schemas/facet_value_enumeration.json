@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "count": {
+      "type": "integer"
+    },
+    "value": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_timestamp": {
+      "type": "string",
+      "format": "dateTime"
+    },
+    "_size": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "_links": {
+      "type": "array",
+      "items": {
+        "$ref": "./links.json"
+      }
+    }
+  },
+  "additionalProperties": {}
+}

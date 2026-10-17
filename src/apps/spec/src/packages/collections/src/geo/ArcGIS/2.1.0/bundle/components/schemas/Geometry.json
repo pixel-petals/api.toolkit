@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "description": "ArcGIS geometry (point, polyline, polygon, envelope, or multipoint).",
+  "properties": {
+    "x": {
+      "type": "number",
+      "description": "Longitude (point)"
+    },
+    "y": {
+      "type": "number",
+      "description": "Latitude (point)"
+    },
+    "z": {
+      "type": "number"
+    },
+    "spatialReference": {
+      "$ref": "./SpatialReference.json"
+    },
+    "rings": {
+      "type": "array",
+      "items": {},
+      "description": "Polygon rings"
+    },
+    "paths": {
+      "type": "array",
+      "items": {},
+      "description": "Polyline paths"
+    },
+    "points": {
+      "type": "array",
+      "items": {},
+      "description": "Multipoint coords"
+    },
+    "xmin": {
+      "type": "number"
+    },
+    "ymin": {
+      "type": "number"
+    },
+    "xmax": {
+      "type": "number"
+    },
+    "ymax": {
+      "type": "number"
+    }
+  }
+}

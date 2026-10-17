@@ -1,0 +1,75 @@
+{
+  "get": {
+    "tags": [
+      "DCAT"
+    ],
+    "operationId": "dcatDataset",
+    "summary": "Get a single dataset as RDF/DCAT",
+    "description": "Returns a single dataset in the requested RDF serialization format as DCAT.\n\n**URL:** `{ckan-host}/dataset/{dataset-id}.{format}`\n\nThe `.{format}` extension is appended to the standard CKAN dataset URL.\n\n**Content negotiation:** If `ckanext.dcat.enable_content_negotiation = True`, the dataset page URL accepts `Accept` headers like `text/turtle` or `application/ld+json`.",
+    "parameters": [
+      {
+        "name": "dataset_id",
+        "in": "path",
+        "required": true,
+        "description": "Dataset id or name.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "format",
+        "in": "path",
+        "required": true,
+        "description": "RDF serialization format.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rdf",
+            "ttl",
+            "n3",
+            "jsonld",
+            "xml"
+          ]
+        }
+      },
+      {
+        "name": "profiles",
+        "in": "query",
+        "description": "Comma-separated list of profiles (e.g. `euro_dcat_ap,schemaorg`).",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "RDF dataset document.",
+        "content": {
+          "application/rdf+xml": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "text/turtle": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "application/ld+json": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "text/n3": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "post": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "submitFindRoutesJob",
+    "summary": "Submit async route-finding job",
+    "description": "Submits an async routing job. Returns a `jobId` to poll. Use for large inputs exceeding the direct API limits.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "Stops"
+            ],
+            "properties": {
+              "Stops": {
+                "type": "string",
+                "description": "JSON FeatureSet of stops."
+              },
+              "Travel_Mode": {
+                "type": "string"
+              },
+              "Return_Directions": {
+                "type": "boolean"
+              },
+              "Return_Routes": {
+                "type": "boolean"
+              },
+              "Find_Best_Sequence": {
+                "type": "boolean"
+              },
+              "Preserve_First_Stop": {
+                "type": "boolean"
+              },
+              "Preserve_Last_Stop": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

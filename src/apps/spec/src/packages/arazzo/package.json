@@ -1,0 +1,20 @@
+{
+  "name": "@package/arazzo",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "arazzo": "src/bin/cmd.js"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "exports": {
+    "./*": "./src/schema/*"
+  },
+  "dependencies": {
+    "@util/api": "*"
+  },
+  "imports": {
+    "#lib/*": "./src/bin/lib/*.js"
+  }
+}

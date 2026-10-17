@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number",
+                "description": "Elevation in meters"
+              },
+              "spatialReference": {
+                "$ref": "./SpatialReference.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

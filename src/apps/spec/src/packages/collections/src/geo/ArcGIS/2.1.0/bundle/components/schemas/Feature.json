@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "description": "A geographic feature with optional geometry and attribute map.",
+  "properties": {
+    "geometry": {
+      "$ref": "./Geometry.json"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "uid": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "user": {
+      "type": "string"
+    },
+    "user_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "opened",
+        "commented",
+        "closed",
+        "reopened",
+        "hidden"
+      ]
+    },
+    "text": {
+      "type": "string"
+    },
+    "html": {
+      "type": "string"
+    }
+  }
+}

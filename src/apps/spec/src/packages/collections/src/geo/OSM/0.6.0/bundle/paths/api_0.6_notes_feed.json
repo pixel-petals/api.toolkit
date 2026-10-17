@@ -1,0 +1,34 @@
+{
+  "get": {
+    "operationId": "getNotesFeed",
+    "summary": "Get RSS feed of notes",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "bbox",
+        "in": "query",
+        "description": "Bounding box as left,bottom,right,top",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "RSS feed of recent notes",
+        "content": {
+          "application/rss+xml": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

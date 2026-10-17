@@ -1,0 +1,97 @@
+{
+  "post": {
+    "tags": [
+      "Geocoding Service"
+    ],
+    "operationId": "geocodeAddresses",
+    "summary": "Batch geocode a list of addresses (synchronous, up to 1,000)",
+    "description": "Synchronously geocodes up to 1,000 addresses in a single request. Results are stored and incur stored-geocode pricing.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "addresses"
+            ],
+            "properties": {
+              "addresses": {
+                "type": "string",
+                "description": "JSON `{records:[{attributes:{OBJECTID,SingleLine}},...]}`."
+              },
+              "countryCode": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "outSR": {
+                "type": "integer",
+                "default": 4326
+              },
+              "outFields": {
+                "type": "string"
+              },
+              "locationType": {
+                "type": "string",
+                "enum": [
+                  "rooftop",
+                  "street"
+                ]
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Batch geocode results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "spatialReference": {
+                  "$ref": "../../components/schemas/SpatialReference.json"
+                },
+                "locations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string"
+                      },
+                      "location": {
+                        "$ref": "../../components/schemas/Location.json"
+                      },
+                      "score": {
+                        "type": "number"
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

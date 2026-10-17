@@ -1,0 +1,72 @@
+{
+  "post": {
+    "tags": [
+      "Routing Service"
+    ],
+    "operationId": "submitServiceAreaJob",
+    "summary": "Submit async service area job",
+    "description": "Submits an async service area (isochrone) generation job.",
+    "requestBody": {
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "Facilities"
+            ],
+            "properties": {
+              "Facilities": {
+                "type": "string"
+              },
+              "Break_Values": {
+                "type": "string",
+                "example": "5 10 15"
+              },
+              "Break_Units": {
+                "type": "string",
+                "example": "Minutes"
+              },
+              "Travel_Mode": {
+                "type": "string"
+              },
+              "Travel_Direction": {
+                "type": "string"
+              },
+              "Time_Of_Day": {
+                "type": "string"
+              },
+              "Geometry_At_Overlaps": {
+                "type": "string"
+              },
+              "Polygon_Detail": {
+                "type": "string"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Job submitted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobRef.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

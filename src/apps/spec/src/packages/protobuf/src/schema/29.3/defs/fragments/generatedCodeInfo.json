@@ -1,0 +1,69 @@
+{
+  "name": "GeneratedCodeInfo",
+  "fullName": "google.protobuf.GeneratedCodeInfo",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/GeneratedCodeInfo",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "annotation": {
+        "rule": "repeated",
+        "type": "Annotation",
+        "id": 1,
+        "comment": "An Annotation connects some span of text in generated code to an element\nof its generating .proto file."
+      }
+    },
+    "nested": {
+      "Annotation": {
+        "fields": {
+          "path": {
+            "rule": "repeated",
+            "type": "int32",
+            "id": 1,
+            "options": {
+              "packed": true
+            },
+            "comment": "Identifies the element in the original source .proto file. This field\nis formatted the same as SourceCodeInfo.Location.path."
+          },
+          "source_file": {
+            "type": "string",
+            "id": 2,
+            "comment": "Identifies the filesystem path to the original source .proto."
+          },
+          "begin": {
+            "type": "int32",
+            "id": 3,
+            "comment": "Identifies the starting offset in bytes in the generated code\nthat relates to the identified object."
+          },
+          "end": {
+            "type": "int32",
+            "id": 4,
+            "comment": "Identifies the ending offset in bytes in the generated code that\nrelates to the identified object. The end offset should be one past\nthe last relevant byte (so the length of the text = end - begin)."
+          },
+          "semantic": {
+            "type": "Semantic",
+            "id": 5,
+            "comment": null
+          }
+        },
+        "nested": {
+          "Semantic": {
+            "values": {
+              "NONE": 0,
+              "SET": 1,
+              "ALIAS": 2
+            },
+            "comment": "Represents the identified object's effect on the element in the original\n.proto file.",
+            "comments": {
+              "NONE": "There is no effect or the effect is indescribable.",
+              "SET": "The element is set or otherwise mutated.",
+              "ALIAS": "An alias to the element is returned."
+            }
+          }
+        },
+        "comment": null
+      }
+    },
+    "comment": "Describes the relationship between generated code and its original source\nfile. A GeneratedCodeInfo message is associated with only one generated\nsource file, but may contain references to different source .proto files."
+  }
+}

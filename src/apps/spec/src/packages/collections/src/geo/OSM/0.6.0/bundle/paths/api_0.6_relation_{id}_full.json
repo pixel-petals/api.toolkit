@@ -1,0 +1,41 @@
+{
+  "get": {
+    "operationId": "getRelationFull",
+    "summary": "Get a relation and all referenced elements",
+    "description": "Returns the relation, all member nodes/ways/relations, and all nodes used by member ways. Recursion does not apply to sub-relations.",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Relation and all directly referenced elements",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "410": {
+        "$ref": "../components/responses/410.json"
+      }
+    }
+  }
+}

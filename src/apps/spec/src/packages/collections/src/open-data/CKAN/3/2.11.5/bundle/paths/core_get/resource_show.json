@@ -1,0 +1,46 @@
+{
+  "get": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_show",
+    "summary": "Get a resource",
+    "description": "Return the metadata of a resource.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Resource id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_tracking",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Resource dict.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

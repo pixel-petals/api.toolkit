@@ -1,0 +1,39 @@
+{
+  "get": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "getUser",
+    "summary": "Get user profile",
+    "description": "Returns the profile for a specific portal user including their groups, role, and user type.",
+    "parameters": [
+      {
+        "name": "username",
+        "in": "path",
+        "required": true,
+        "description": "The portal username.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User profile.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PortalUser.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "post": {
+    "operationId": "subscribeToChangeset",
+    "summary": "Subscribe to changeset discussion notifications",
+    "tags": [
+      "Changeset Discussion"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successfully subscribed"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "409": {
+        "description": "User is already subscribed to this changeset"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "unsubscribeFromChangeset",
+    "summary": "Unsubscribe from changeset discussion notifications",
+    "tags": [
+      "Changeset Discussion"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successfully unsubscribed"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "404": {
+        "description": "User was not subscribed to this changeset"
+      }
+    }
+  }
+}

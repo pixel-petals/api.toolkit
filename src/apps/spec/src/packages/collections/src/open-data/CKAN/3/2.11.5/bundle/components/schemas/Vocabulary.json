@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "description": "A controlled vocabulary for tags.",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "./Tag.json"
+      }
+    }
+  }
+}

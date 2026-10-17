@@ -1,0 +1,15 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/exports?apikey=<API Key>"
+  method: GET
+  queryParams:
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: text
+    content: ""
+order: 5000

@@ -1,0 +1,96 @@
+{
+  "post": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a resource",
+    "description": "Appends a new resource to a dataset. To upload a file to the FileStore, send as `multipart/form-data` with the binary in the `upload` field. For external URL resources, provide `url` in JSON.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "package_id"
+            ],
+            "properties": {
+              "package_id": {
+                "type": "string",
+                "description": "Dataset id or name."
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "description": "External URL (for linked resources)."
+              },
+              "format": {
+                "type": "string",
+                "example": "CSV"
+              },
+              "mimetype": {
+                "type": "string"
+              },
+              "resource_type": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "package_id"
+            ],
+            "properties": {
+              "package_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "upload": {
+                "type": "string",
+                "format": "binary",
+                "description": "File to upload to the FileStore."
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created resource dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

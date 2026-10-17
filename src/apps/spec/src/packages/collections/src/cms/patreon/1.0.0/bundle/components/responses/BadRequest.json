@@ -1,0 +1,10 @@
+{
+  "description": "400 Bad Request \u2014 malformed request syntax or invalid parameters.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

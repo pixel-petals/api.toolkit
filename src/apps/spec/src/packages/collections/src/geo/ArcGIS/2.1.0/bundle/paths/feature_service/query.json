@@ -1,0 +1,284 @@
+{
+  "get": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "queryFeatureLayer",
+    "summary": "Query a feature layer",
+    "description": "Returns features from a layer matching the specified attribute, spatial, or temporal criteria.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      },
+      {
+        "name": "where",
+        "in": "query",
+        "description": "SQL WHERE clause to filter features. Use `1=1` to return all features.",
+        "schema": {
+          "type": "string",
+          "example": "STATE_NAME = 'California'"
+        }
+      },
+      {
+        "name": "objectIds",
+        "in": "query",
+        "description": "Comma-separated object IDs to retrieve.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "geometry",
+        "in": "query",
+        "description": "Spatial filter geometry as JSON.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "geometryType",
+        "in": "query",
+        "description": "Type of the filter geometry.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "esriGeometryPoint",
+            "esriGeometryMultipoint",
+            "esriGeometryPolyline",
+            "esriGeometryPolygon",
+            "esriGeometryEnvelope"
+          ],
+          "default": "esriGeometryEnvelope"
+        }
+      },
+      {
+        "name": "spatialRel",
+        "in": "query",
+        "description": "Spatial relationship between input and feature geometry.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "esriSpatialRelIntersects",
+            "esriSpatialRelContains",
+            "esriSpatialRelCrosses",
+            "esriSpatialRelEnvelopeIntersects",
+            "esriSpatialRelIndexIntersects",
+            "esriSpatialRelOverlaps",
+            "esriSpatialRelTouches",
+            "esriSpatialRelWithin"
+          ],
+          "default": "esriSpatialRelIntersects"
+        }
+      },
+      {
+        "name": "outFields",
+        "in": "query",
+        "description": "Comma-separated field names. Use `*` for all fields.",
+        "schema": {
+          "type": "string",
+          "default": "*"
+        }
+      },
+      {
+        "name": "returnGeometry",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "outSR",
+        "in": "query",
+        "description": "Output spatial reference WKID.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "resultOffset",
+        "in": "query",
+        "description": "Number of records to skip for pagination.",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      {
+        "name": "resultRecordCount",
+        "in": "query",
+        "description": "Maximum records to return.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "orderByFields",
+        "in": "query",
+        "description": "Comma-separated field names + optional `ASC`/`DESC` to sort.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "groupByFieldsForStatistics",
+        "in": "query",
+        "description": "Fields to group by for statistical queries.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "outStatistics",
+        "in": "query",
+        "description": "JSON array of statistic definitions.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "returnCountOnly",
+        "in": "query",
+        "description": "If true, returns only the feature count.",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "returnDistinctValues",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Query results as a feature set.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/FeatureSet.json"
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object",
+              "description": "GeoJSON FeatureCollection"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "queryFeatureLayerPost",
+    "summary": "Query a feature layer (POST \u2013 for long queries)",
+    "description": "Same as GET query but via POST to support large geometry inputs and complex WHERE clauses exceeding URL length limits.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "where": {
+                "type": "string"
+              },
+              "objectIds": {
+                "type": "string"
+              },
+              "geometry": {
+                "type": "string"
+              },
+              "geometryType": {
+                "type": "string"
+              },
+              "spatialRel": {
+                "type": "string"
+              },
+              "outFields": {
+                "type": "string"
+              },
+              "returnGeometry": {
+                "type": "boolean"
+              },
+              "outSR": {
+                "type": "integer"
+              },
+              "resultOffset": {
+                "type": "integer"
+              },
+              "resultRecordCount": {
+                "type": "integer"
+              },
+              "orderByFields": {
+                "type": "string"
+              },
+              "outStatistics": {
+                "type": "string"
+              },
+              "groupByFieldsForStatistics": {
+                "type": "string"
+              },
+              "returnCountOnly": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Query results as a feature set.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/FeatureSet.json"
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object",
+              "description": "GeoJSON FeatureCollection"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

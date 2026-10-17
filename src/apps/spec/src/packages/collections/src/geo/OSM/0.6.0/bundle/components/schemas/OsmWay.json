@@ -1,0 +1,20 @@
+{
+  "allOf": [
+    {
+      "$ref": "./OsmElement.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": "Ordered list of node IDs referenced by this way (max 2000)"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "post": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "activity_create",
+    "summary": "Create an activity",
+    "description": "Create a custom activity entry. Requires sysadmin or specific permission.",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string"
+              },
+              "object_id": {
+                "type": "string"
+              },
+              "activity_type": {
+                "type": "string"
+              },
+              "data": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "user_id",
+              "object_id",
+              "activity_type"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created activity dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "oauth2",
+  "description": "Patreon OAuth 2.0. Complete the flow at https://www.patreon.com/oauth2/authorize and exchange the code at POST /api/oauth2/token.",
+  "flows": {
+    "authorizationCode": {
+      "authorizationUrl": "https://www.patreon.com/oauth2/authorize",
+      "tokenUrl": "https://www.patreon.com/api/oauth2/token",
+      "scopes": {
+        "identity": "Read access to the user's public profile information.",
+        "identity[email]": "Read access to the user's email address.",
+        "identity.memberships": "Read access to the user's memberships.",
+        "campaigns": "Read access to campaign data.",
+        "w:campaigns.webhook": "Read, write, update, and delete access to campaign webhooks created by your client.",
+        "campaigns.members": "Read access to data about a campaign's members. Also enables webhook delivery of member data.",
+        "campaigns.members[email]": "Read access to member email addresses. Also enables webhook delivery.",
+        "campaigns.members.address": "Read access to member shipping addresses. Also enables webhook delivery.",
+        "campaigns.posts": "Read access to posts on a campaign."
+      }
+    }
+  }
+}

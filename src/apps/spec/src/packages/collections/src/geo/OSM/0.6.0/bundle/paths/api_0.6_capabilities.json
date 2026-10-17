@@ -1,0 +1,29 @@
+{
+  "get": {
+    "operationId": "getCapabilities",
+    "summary": "Get API capabilities and limitations",
+    "tags": [
+      "Miscellaneous"
+    ],
+    "security": [
+      {}
+    ],
+    "responses": {
+      "200": {
+        "description": "API capabilities including limits for areas, changesets, ways, etc.",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

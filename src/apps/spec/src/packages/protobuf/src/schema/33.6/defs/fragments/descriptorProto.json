@@ -1,0 +1,112 @@
+{
+  "name": "DescriptorProto",
+  "fullName": "google.protobuf.DescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/DescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "field": {
+        "rule": "repeated",
+        "type": "FieldDescriptorProto",
+        "id": 2,
+        "comment": null
+      },
+      "extension": {
+        "rule": "repeated",
+        "type": "FieldDescriptorProto",
+        "id": 6,
+        "comment": null
+      },
+      "nested_type": {
+        "rule": "repeated",
+        "type": "DescriptorProto",
+        "id": 3,
+        "comment": null
+      },
+      "enum_type": {
+        "rule": "repeated",
+        "type": "EnumDescriptorProto",
+        "id": 4,
+        "comment": null
+      },
+      "extension_range": {
+        "rule": "repeated",
+        "type": "ExtensionRange",
+        "id": 5,
+        "comment": null
+      },
+      "oneof_decl": {
+        "rule": "repeated",
+        "type": "OneofDescriptorProto",
+        "id": 8,
+        "comment": null
+      },
+      "options": {
+        "type": "MessageOptions",
+        "id": 7,
+        "comment": null
+      },
+      "reserved_range": {
+        "rule": "repeated",
+        "type": "ReservedRange",
+        "id": 9,
+        "comment": null
+      },
+      "reserved_name": {
+        "rule": "repeated",
+        "type": "string",
+        "id": 10,
+        "comment": "Reserved field names, which may not be used by fields in the same message.\nA given name may only be reserved once."
+      },
+      "visibility": {
+        "type": "SymbolVisibility",
+        "id": 11,
+        "comment": "Support for `export` and `local` keywords on enums."
+      }
+    },
+    "nested": {
+      "ExtensionRange": {
+        "fields": {
+          "start": {
+            "type": "int32",
+            "id": 1,
+            "comment": "Inclusive."
+          },
+          "end": {
+            "type": "int32",
+            "id": 2,
+            "comment": "Exclusive."
+          },
+          "options": {
+            "type": "ExtensionRangeOptions",
+            "id": 3,
+            "comment": null
+          }
+        },
+        "comment": null
+      },
+      "ReservedRange": {
+        "fields": {
+          "start": {
+            "type": "int32",
+            "id": 1,
+            "comment": "Inclusive."
+          },
+          "end": {
+            "type": "int32",
+            "id": 2,
+            "comment": "Exclusive."
+          }
+        },
+        "comment": "Range of reserved tag numbers. Reserved tag numbers may not be used by\nfields or extension ranges in the same message. Reserved ranges may\nnot overlap."
+      }
+    },
+    "comment": "Describes a message type."
+  }
+}

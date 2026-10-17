@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "total": {
+      "type": "integer"
+    },
+    "start": {
+      "type": "integer"
+    },
+    "num": {
+      "type": "integer"
+    },
+    "nextStart": {
+      "type": "integer"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "./PortalItem.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "page[cursor]",
+  "in": "query",
+  "description": "Opaque cursor for cursor-based pagination. Obtain from `meta.pagination.cursors.next` in a prior response.",
+  "schema": {
+    "type": "string"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "post": {
+    "operationId": "createGpxTrace",
+    "summary": "Upload a GPX trace",
+    "description": "Upload a GPX file or archive (.gpx, .tar, .tar.gz, .zip). Processing is asynchronous.",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_gpx"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "file",
+              "description",
+              "visibility"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "format": "binary",
+                "description": "GPX file or archive"
+              },
+              "description": {
+                "type": "string",
+                "description": "Trace description (max 255 characters)",
+                "maxLength": 255
+              },
+              "tags": {
+                "type": "string",
+                "description": "Comma-separated tags for the trace"
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "public",
+                  "trackable",
+                  "identifiable"
+                ],
+                "description": "Visibility level of the trace"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "ID of the uploaded trace",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

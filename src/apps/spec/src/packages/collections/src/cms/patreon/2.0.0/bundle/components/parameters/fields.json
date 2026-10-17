@@ -1,0 +1,10 @@
+{
+  "name": "fields[{resource_type}]",
+  "in": "query",
+  "description": "Comma-separated list of attributes to return for a given resource type. **In v2, no attributes are returned by default** \u2014 all desired fields must be explicitly requested.\n\nEncode brackets: `fields%5Bcampaign%5D=patron_count,created_at`\n\n**Examples:**\n- `fields[campaign]=patron_count,created_at,is_monthly`\n- `fields[member]=full_name,patron_status,last_charge_status`\n- `fields[tier]=amount_cents,title,patron_count`\n- `fields[address]=city,line_1,postal_code`",
+  "schema": {
+    "type": "string"
+  },
+  "style": "deepObject",
+  "explode": true
+}

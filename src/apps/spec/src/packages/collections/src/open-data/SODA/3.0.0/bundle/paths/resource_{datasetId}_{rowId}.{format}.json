@@ -1,0 +1,197 @@
+{
+  "get": {
+    "operationId": "getRow",
+    "summary": "Get a single row by identifier",
+    "description": "Retrieve one row from the dataset by its row identifier (internal `:id` or publisher-configured row identifier column value).",
+    "tags": [
+      "Single Row (SODA Producer)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/rowId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The matching row.",
+        "headers": {
+          "X-Socrata-RequestId": {
+            "$ref": "../components/headers/X-Socrata-RequestId.json"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/DataRow.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "updateRowPost",
+    "summary": "Update a single row (via POST upsert)",
+    "description": "Update a specific row by submitting a single-element JSON array with the row's identifier included. The server performs an upsert: it updates the existing row if found, or creates a new one if the identifier doesn't match any existing row.",
+    "tags": [
+      "Single Row (SODA Producer)"
+    ],
+    "security": [
+      {
+        "BasicAuth": []
+      },
+      {
+        "OAuth2": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/rowId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "$ref": "../components/schemas/UpsertRow.json"
+            }
+          },
+          "example": [
+            {
+              ":id": "row-evac~sxbs~gm8t",
+              "status": "ACTIVE"
+            }
+          ]
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Update summary (Rows Updated: 1).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/UpsertResult.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "deleteRow",
+    "summary": "Delete a single row",
+    "description": "Permanently delete a row from the dataset by its row identifier. Requires authentication.",
+    "tags": [
+      "Single Row (SODA Producer)"
+    ],
+    "security": [
+      {
+        "BasicAuth": []
+      },
+      {
+        "OAuth2": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "$ref": "../components/parameters/rowId.json"
+      },
+      {
+        "$ref": "../components/parameters/queryFormat.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Confirmation of deletion.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/DeleteRowResult.json"
+            },
+            "example": [
+              {
+                "typ": "delete",
+                "id": "row-evac~sxbs~gm8t"
+              }
+            ]
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  }
+}

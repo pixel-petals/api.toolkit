@@ -1,0 +1,10 @@
+{
+  "description": "401 Unauthorized \u2014 Invalid, expired, or missing OAuth access token.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

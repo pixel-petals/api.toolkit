@@ -1,0 +1,31 @@
+{
+  "get": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "dashboard_new_activities_count",
+    "summary": "Count new dashboard activities",
+    "description": "Return the number of new activities on the current user's dashboard since they last viewed it.",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "parameters": [],
+    "responses": {
+      "200": {
+        "description": "Integer count",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

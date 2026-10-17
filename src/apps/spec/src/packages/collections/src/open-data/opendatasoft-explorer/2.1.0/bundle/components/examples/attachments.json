@@ -1,0 +1,14 @@
+{
+  "value": {
+    "links": [],
+    "attachments": [
+      {
+        "href": "https://documentation-resources.opendatasoft.com/api/v2/catalog/datasets/geonames-all-cities-with-a-population-1000/attachments/cities1000_zip",
+        "metas": {
+          "mime-type": "application/zip",
+          "title": "cities1000.zip"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "example": "esriFieldTypeString"
+    },
+    "alias": {
+      "type": "string"
+    },
+    "length": {
+      "type": "integer"
+    },
+    "nullable": {
+      "type": "boolean"
+    },
+    "editable": {
+      "type": "boolean"
+    }
+  }
+}

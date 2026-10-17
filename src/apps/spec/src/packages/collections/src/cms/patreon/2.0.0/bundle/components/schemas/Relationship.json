@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "oneOf": [
+        {
+          "$ref": "../../components/schemas/ResourceLinkage.json"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "../../components/schemas/ResourceLinkage.json"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "related": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

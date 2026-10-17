@@ -1,0 +1,28 @@
+{
+  "name": "ServiceDescriptorProto",
+  "fullName": "google.protobuf.ServiceDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/ServiceDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "method": {
+        "rule": "repeated",
+        "type": "MethodDescriptorProto",
+        "id": 2,
+        "comment": null
+      },
+      "options": {
+        "type": "ServiceOptions",
+        "id": 3,
+        "comment": null
+      }
+    },
+    "comment": "Describes a service."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "get": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "status_show",
+    "summary": "Get site status",
+    "description": "Return a dict with information about the site, including CKAN version, enabled extensions, and site title. No authentication required.",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "description": "Site status information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

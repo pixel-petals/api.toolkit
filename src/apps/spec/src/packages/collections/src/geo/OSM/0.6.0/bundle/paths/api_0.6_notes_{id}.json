@@ -1,0 +1,67 @@
+{
+  "get": {
+    "operationId": "getNote",
+    "summary": "Read a note",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Note details",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/Note.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "hideNote",
+    "summary": "Hide a note (moderator only)",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Note successfully hidden"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

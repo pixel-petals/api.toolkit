@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/datasets/:dataset_id/exports?apikey=<API Key>"
+  method: GET
+  queryParams:
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: dataset_id
+      value: string
+      description: |-
+        The identifier of the dataset to be queried.
+
+        You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: text
+    content: ""
+order: 3000

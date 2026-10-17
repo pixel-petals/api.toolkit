@@ -1,0 +1,55 @@
+{
+  "post": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "tag_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a tag in a vocabulary",
+    "description": "Create a new tag and add it to a vocabulary.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "vocabulary_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "vocabulary_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created tag dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

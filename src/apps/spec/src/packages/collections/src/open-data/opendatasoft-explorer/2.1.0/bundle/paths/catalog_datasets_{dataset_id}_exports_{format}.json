@@ -1,0 +1,74 @@
+{
+  "get": {
+    "summary": "Export a dataset",
+    "operationId": "exportRecords",
+    "tags": [
+      "Dataset"
+    ],
+    "description": "Export a dataset in the desired format.\n**Note:** The `group_by` parameter is only available on exports starting with the v2.1",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      },
+      {
+        "$ref": "../components/parameters/format-datasets.json"
+      },
+      {
+        "$ref": "../components/parameters/select.json"
+      },
+      {
+        "$ref": "../components/parameters/where.json"
+      },
+      {
+        "$ref": "../components/parameters/order_by.json"
+      },
+      {
+        "$ref": "../components/parameters/group_by.json"
+      },
+      {
+        "$ref": "../components/parameters/limit_export.json"
+      },
+      {
+        "$ref": "../components/parameters/refine.json"
+      },
+      {
+        "$ref": "../components/parameters/exclude.json"
+      },
+      {
+        "$ref": "../components/parameters/lang.json"
+      },
+      {
+        "$ref": "../components/parameters/timezone.json"
+      },
+      {
+        "$ref": "../components/parameters/use_labels.json"
+      },
+      {
+        "$ref": "../components/parameters/compressed.json"
+      },
+      {
+        "$ref": "../components/parameters/epsg.json"
+      },
+      {
+        "$ref": "../components/parameters/main_geo_field.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Return a file"
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "page[count]",
+  "in": "query",
+  "description": "Number of results per page. Default 1000 for most endpoints; 500 if `pledge_history` is included.",
+  "schema": {
+    "type": "integer"
+  }
+}

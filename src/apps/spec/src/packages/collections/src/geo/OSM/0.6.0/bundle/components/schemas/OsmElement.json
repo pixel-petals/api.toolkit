@@ -1,0 +1,49 @@
+{
+  "type": "object",
+  "discriminator": {
+    "propertyName": "type",
+    "mapping": {}
+  },
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "node",
+        "way",
+        "relation"
+      ]
+    },
+    "id": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "changeset": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user": {
+      "type": "string"
+    },
+    "uid": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "visible": {
+      "type": "boolean"
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Key-value tag pairs, each max 255 unicode codepoints"
+    }
+  }
+}

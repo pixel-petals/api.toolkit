@@ -1,0 +1,58 @@
+{
+  "get": {
+    "summary": "List dataset attachments",
+    "operationId": "getDatasetAttachments",
+    "tags": [
+      "Dataset"
+    ],
+    "description": "Returns a list of all available attachments for a dataset.\n",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dataset_id.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of all available attachments",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../components/schemas/links.json"
+                  }
+                },
+                "attachments": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../components/schemas/attachment.json"
+                  }
+                }
+              }
+            },
+            "examples": {
+              "attachments": {
+                "$ref": "../components/examples/attachments.json"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

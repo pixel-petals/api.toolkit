@@ -1,0 +1,36 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_job_show",
+    "summary": "Get a harvest job",
+    "description": "Return details for a single harvest job including gather/fetch/import stats.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Harvest job id.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Harvest job dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

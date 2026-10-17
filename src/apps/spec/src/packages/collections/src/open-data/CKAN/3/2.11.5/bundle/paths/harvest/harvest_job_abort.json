@@ -1,0 +1,51 @@
+{
+  "post": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_job_abort",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Abort a running harvest job",
+    "description": "Abort a harvest job that is currently in progress.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated harvest job dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "type": "object",
+  "description": "A data resource attached to a CKAN dataset.",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "package_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "format": {
+      "type": "string",
+      "example": "CSV"
+    },
+    "mimetype": {
+      "type": "string"
+    },
+    "size": {
+      "type": "integer",
+      "description": "File size in bytes."
+    },
+    "hash": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deleted"
+      ]
+    },
+    "resource_type": {
+      "type": "string"
+    },
+    "datastore_active": {
+      "type": "boolean",
+      "description": "True if this resource has been pushed into the DataStore."
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "url_type": {
+      "type": "string",
+      "enum": [
+        "upload",
+        ""
+      ],
+      "description": "'upload' for FileStore uploads, empty for external URLs."
+    }
+  }
+}

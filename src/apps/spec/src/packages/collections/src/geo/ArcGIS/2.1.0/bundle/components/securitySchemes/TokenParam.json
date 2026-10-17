@@ -1,0 +1,6 @@
+{
+  "type": "apiKey",
+  "in": "query",
+  "name": "token",
+  "description": "ArcGIS token passed as a query parameter. Accepted by all ArcGIS REST services."
+}

@@ -1,0 +1,52 @@
+{
+  "post": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "tag_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete a tag",
+    "description": "Change the state of a tag to 'deleted'. The tag can be recovered by an admin. Use `tag_purge` (if available) to permanently remove.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The id or name of the tag to delete."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Deleted tag dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

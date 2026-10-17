@@ -1,0 +1,52 @@
+{
+  "post": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete a resource",
+    "description": "Change the state of a resource to 'deleted'. The resource can be recovered by an admin. Use `resource_purge` (if available) to permanently remove.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The id or name of the resource to delete."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Deleted resource dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

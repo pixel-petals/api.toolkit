@@ -1,0 +1,184 @@
+{
+  "type": "object",
+  "description": "A creator's Patreon campaign (API v2). All fields must be explicitly requested via `fields[campaign]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "campaign"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Request individual attributes via `fields[campaign]=created_at,patron_count,...`",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "creation_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "discord_server_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "google_analytics_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "has_rss": {
+          "type": "boolean"
+        },
+        "has_sent_rss_notify": {
+          "type": "boolean"
+        },
+        "image_small_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "is_charged_immediately": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "is_monthly": {
+          "type": "boolean"
+        },
+        "is_nsfw": {
+          "type": "boolean"
+        },
+        "main_video_embed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "main_video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "one_liner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "patron_count": {
+          "type": "integer"
+        },
+        "pay_per_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pledge_url": {
+          "type": "string"
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "rss_artwork_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "rss_feed_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "show_earnings": {
+          "type": "boolean"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_embed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_msg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thanks_video_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "vanity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "benefits": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "categories": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "creator": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "goals": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "tiers": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

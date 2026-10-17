@@ -1,0 +1,50 @@
+{
+  "post": {
+    "operationId": "closeNote",
+    "summary": "Close a note as resolved",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      },
+      {
+        "name": "text",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Optional closing comment"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Note closed",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "409": {
+        "description": "Note is already closed"
+      }
+    }
+  }
+}

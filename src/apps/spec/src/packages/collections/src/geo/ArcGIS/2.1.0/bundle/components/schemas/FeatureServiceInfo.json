@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "description": "Feature Service root resource metadata.",
+  "properties": {
+    "currentVersion": {
+      "type": "number"
+    },
+    "serviceDescription": {
+      "type": "string"
+    },
+    "hasVersionedData": {
+      "type": "boolean"
+    },
+    "syncEnabled": {
+      "type": "boolean"
+    },
+    "capabilities": {
+      "type": "string",
+      "example": "Create,Delete,Extract,Query,Update,Sync"
+    },
+    "maxRecordCount": {
+      "type": "integer"
+    },
+    "allowGeometryUpdates": {
+      "type": "boolean"
+    },
+    "supportedQueryFormats": {
+      "type": "string"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "tables": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "spatialReference": {
+      "$ref": "./SpatialReference.json"
+    }
+  }
+}

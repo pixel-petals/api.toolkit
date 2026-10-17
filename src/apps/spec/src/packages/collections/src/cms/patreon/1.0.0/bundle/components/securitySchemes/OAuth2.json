@@ -1,0 +1,16 @@
+{
+  "type": "oauth2",
+  "description": "Patreon OAuth 2.0. Obtain an access token by completing the OAuth flow at https://www.patreon.com/oauth2/authorize and exchanging the code at POST /api/oauth2/token.",
+  "flows": {
+    "authorizationCode": {
+      "authorizationUrl": "https://www.patreon.com/oauth2/authorize",
+      "tokenUrl": "https://www.patreon.com/api/oauth2/token",
+      "scopes": {
+        "users": "Read access to the user's public profile information.",
+        "my-campaign": "Read access to the creator's campaign and rewards.",
+        "pledges-to-me": "Read access to pledges made to the creator's campaign.",
+        "campaigns": "Read access to campaign data."
+      }
+    }
+  }
+}

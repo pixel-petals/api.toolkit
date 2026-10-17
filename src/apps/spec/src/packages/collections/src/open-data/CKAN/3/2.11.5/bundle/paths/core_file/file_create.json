@@ -1,0 +1,54 @@
+{
+  "post": {
+    "tags": [
+      "FileStore"
+    ],
+    "operationId": "file_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create / upload a file (CKAN 2.12+)",
+    "description": "Upload a file to configurable cloud or local storage via the new File API (added CKAN 2.12). Returns a managed file record.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "upload"
+            ],
+            "properties": {
+              "upload": {
+                "type": "string",
+                "format": "binary",
+                "description": "File binary data."
+              },
+              "name": {
+                "type": "string",
+                "description": "Optional display name."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "File record dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

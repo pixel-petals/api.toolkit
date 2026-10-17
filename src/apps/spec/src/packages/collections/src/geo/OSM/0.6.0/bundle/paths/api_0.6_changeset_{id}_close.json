@@ -1,0 +1,35 @@
+{
+  "put": {
+    "operationId": "closeChangeset",
+    "summary": "Close a changeset",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Changeset successfully closed"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "405": {
+        "$ref": "../components/responses/405.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      }
+    }
+  }
+}

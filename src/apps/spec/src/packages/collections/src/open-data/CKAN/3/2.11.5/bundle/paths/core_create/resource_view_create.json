@@ -1,0 +1,63 @@
+{
+  "post": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "resource_view_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a resource view",
+    "description": "Add a view to a resource (e.g. datatables_view, image_view, recline_view).",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "view_type": {
+                "type": "string",
+                "example": "datatables_view"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "resource_id",
+              "title",
+              "view_type"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created resource view dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_function_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete a trigger function",
+    "description": "Delete a PL/pgSQL trigger function by name. Sysadmin only.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

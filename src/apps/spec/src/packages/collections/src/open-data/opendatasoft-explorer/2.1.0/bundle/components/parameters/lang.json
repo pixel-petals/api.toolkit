@@ -1,0 +1,22 @@
+{
+  "name": "lang",
+  "in": "query",
+  "description": "A language value.\n\nIf specified, the `lang` value override the default language, which is \"fr\".\nThe language is used to format string, for example in the `date_format` function.",
+  "schema": {
+    "type": "string",
+    "enum": [
+      "en",
+      "fr",
+      "nl",
+      "pt",
+      "it",
+      "ar",
+      "de",
+      "es",
+      "ca",
+      "eu",
+      "sv"
+    ]
+  },
+  "style": "form"
+}

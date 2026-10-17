@@ -1,0 +1,51 @@
+{
+  "get": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "tag_list",
+    "summary": "List tags",
+    "description": "Return a list of the site's tags.",
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "description": "Search string to filter tags.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "vocabulary_id",
+        "in": "query",
+        "description": "Return only tags from this vocabulary.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "all_fields",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Tag names or dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

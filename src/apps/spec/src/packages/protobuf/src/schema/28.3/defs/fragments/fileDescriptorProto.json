@@ -1,0 +1,84 @@
+{
+  "name": "FileDescriptorProto",
+  "fullName": "google.protobuf.FileDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FileDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": "file name, relative to root of source tree"
+      },
+      "package": {
+        "type": "string",
+        "id": 2,
+        "comment": "e.g. \"foo\", \"foo.bar\", etc."
+      },
+      "dependency": {
+        "rule": "repeated",
+        "type": "string",
+        "id": 3,
+        "comment": "Names of files imported by this file."
+      },
+      "public_dependency": {
+        "rule": "repeated",
+        "type": "int32",
+        "id": 10,
+        "comment": "Indexes of the public imported files in the dependency list above."
+      },
+      "weak_dependency": {
+        "rule": "repeated",
+        "type": "int32",
+        "id": 11,
+        "comment": "Indexes of the weak imported files in the dependency list.\nFor Google-internal migration only. Do not use."
+      },
+      "message_type": {
+        "rule": "repeated",
+        "type": "DescriptorProto",
+        "id": 4,
+        "comment": "All top-level definitions in this file."
+      },
+      "enum_type": {
+        "rule": "repeated",
+        "type": "EnumDescriptorProto",
+        "id": 5,
+        "comment": null
+      },
+      "service": {
+        "rule": "repeated",
+        "type": "ServiceDescriptorProto",
+        "id": 6,
+        "comment": null
+      },
+      "extension": {
+        "rule": "repeated",
+        "type": "FieldDescriptorProto",
+        "id": 7,
+        "comment": null
+      },
+      "options": {
+        "type": "FileOptions",
+        "id": 8,
+        "comment": null
+      },
+      "source_code_info": {
+        "type": "SourceCodeInfo",
+        "id": 9,
+        "comment": "This field contains optional information about the original source code.\nYou may safely remove this entire field without harming runtime\nfunctionality of the descriptors -- the information is needed only by\ndevelopment tools."
+      },
+      "syntax": {
+        "type": "string",
+        "id": 12,
+        "comment": "The syntax of the proto file.\nThe supported values are \"proto2\", \"proto3\", and \"editions\".\n\nIf `edition` is present, this value must be \"editions\"."
+      },
+      "edition": {
+        "type": "Edition",
+        "id": 14,
+        "comment": "The edition of the proto file."
+      }
+    },
+    "comment": "Describes a complete .proto file."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "string",
+  "enum": [
+    "csv",
+    "fgb",
+    "geojson",
+    "gpx",
+    "json",
+    "jsonl",
+    "jsonld",
+    "kml",
+    "n3",
+    "ov2",
+    "parquet",
+    "rdfxml",
+    "shp",
+    "turtle",
+    "xlsx"
+  ]
+}

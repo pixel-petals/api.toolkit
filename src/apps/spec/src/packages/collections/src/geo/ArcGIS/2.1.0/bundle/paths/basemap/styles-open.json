@@ -1,0 +1,56 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "getOpenBasemapStyle",
+    "summary": "Get an open (OSM-based) basemap style",
+    "description": "Returns a Mapbox GL style based on OpenStreetMap data.\n\n**Available styles:** `osm-style`, `osm-style-relief`, `osm-style-relief/base`, `navigation`, `navigation-dark`, `streets`, `streets-relief`, `streets-relief/base`, `streets-night`, `hybrid`, `hybrid/detail`, `light-gray`, `light-gray/base`, `light-gray/labels`, `dark-gray`, `dark-gray/base`, `dark-gray/labels`, `blueprint`.",
+    "parameters": [
+      {
+        "name": "styleName",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "navigation"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "worldview",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Mapbox GL Style JSON.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/BasemapStyleResponse.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

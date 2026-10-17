@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "description": "A Patreon user (API v2). All fields must be explicitly requested via `fields[user]=...`",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "user"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Request individual attributes via `fields[user]=about,email,...`",
+      "properties": {
+        "about": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Requires `identity[email]` scope."
+        },
+        "first_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "last_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "social_connections": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Map of connected social accounts."
+        },
+        "thumb_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "vanity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "../../components/schemas/Relationship.json"
+        },
+        "memberships": {
+          "$ref": "../../components/schemas/Relationship.json"
+        }
+      }
+    }
+  }
+}

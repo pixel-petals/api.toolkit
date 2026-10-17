@@ -1,0 +1,192 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Patreon API v2",
+    "version": "2.0.0",
+    "description": "OpenAPI 3.1 specification for the Patreon API v2, split into subfiles using JSON `$ref` references.\n\n## What's new in v2 vs v1\n\n| Change | Details |\n|--------|----------|\n| **Members replace Pledges** | The `Member` resource replaces the v1 `Pledge`. Members return richer data including charge status and membership lifetime. |\n| **Explicit fields required** | No attributes or relationships are returned by default. All desired fields must be requested via `fields[{type}]=...` |\n| **Improved scopes** | Finer-grained OAuth scopes for better security and developer control. |\n| **Webhook management** | Clients can create and manage webhooks on campaigns on behalf of creators. |\n| **Cursor pagination** | Member and post endpoints use cursor-based pagination via `page[cursor]`. |\n\n## Authentication\n\nAll requests require an OAuth 2.0 Bearer token. Complete the authorization flow:\n1. Redirect user to `GET https://www.patreon.com/oauth2/authorize`\n2. Exchange the authorization code: `POST /api/oauth2/token`\n3. Include `Authorization: Bearer {access_token}` on all API requests.\n\n## OAuth Scopes\n\n| Scope | Access granted |\n|-------|----------------|\n| `identity` | User public profile |\n| `identity[email]` | User email address |\n| `identity.memberships` | User's own memberships |\n| `campaigns` | Campaign data |\n| `w:campaigns.webhook` | Create/manage webhooks |\n| `campaigns.members` | Campaign member data |\n| `campaigns.members[email]` | Member email |\n| `campaigns.members.address` | Member shipping address |\n| `campaigns.posts` | Campaign posts |\n\n## Requesting Fields\n\nAll attributes must be explicitly requested. URL-encode square brackets:\n\n```\nGET /api/oauth2/v2/campaigns?fields%5Bcampaign%5D=patron_count,is_monthly\n```\n\n## Cursor Pagination\n\nUse `meta.pagination.cursors.next` from a response as the `page[cursor]` parameter to fetch the next page. A null `next` cursor means no further pages.\n\n## Rate Limits\n\nRate-limited at both client and token level. HTTP 429 responses include `retry_after_seconds`. Refreshing a token does **not** reset rate limits. After 2,000+ bad requests in 10 minutes, a 30-minute block is applied.\n\n## Directory structure\n\n```\nopenapi.json                          \u2190 root entry point\ncomponents/\n  schemas/          (19 files)         \u2190 Error, User, Campaign, Member, Tier, Benefit,\n  |                                       Address, Post, Webhook, Goal, PaginationMeta,\n  |                                       ResourceLinkage, Relationship, JSON:API envelopes\n  parameters/       (4 files)           \u2190 fields, include, page[cursor], page[count]\n  responses/        (7 files)           \u2190 shared HTTP error responses\n  securitySchemes/  (2 files)           \u2190 OAuth2, BearerToken\npaths/\n  oauth/            (2 files)           \u2190 token exchange + refresh\n  identity/         (1 file)            \u2190 GET /identity\n  campaigns/        (4 files)           \u2190 campaigns list, single, members, posts\n  members/          (1 file)            \u2190 GET /members/{id}\n  posts/            (1 file)            \u2190 GET /posts/{id}\n  webhooks/         (2 files)           \u2190 webhook CRUD\n```",
+    "contact": {
+      "name": "Patreon Developer Support",
+      "url": "https://www.patreondevelopers.com"
+    },
+    "termsOfService": "https://www.patreon.com/policy/legal",
+    "license": {
+      "name": "Patreon Platform Usage Policy",
+      "url": "https://www.patreon.com/policy/legal"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.patreon.com",
+      "description": "Patreon production API"
+    }
+  ],
+  "security": [
+    {
+      "OAuth2": []
+    },
+    {
+      "BearerToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth",
+      "description": "OAuth 2.0 token exchange and refresh. No authentication required on these endpoints."
+    },
+    {
+      "name": "Identity",
+      "description": "Fetch data about the current authenticated user via their OAuth token."
+    },
+    {
+      "name": "Campaigns",
+      "description": "Access campaign data \u2014 list, single campaign, campaign members, and campaign posts."
+    },
+    {
+      "name": "Members",
+      "description": "Access individual member records. Members replace v1 Pledges and provide richer data about patron relationships."
+    },
+    {
+      "name": "Posts",
+      "description": "Access individual post records on campaigns."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Manage webhooks for real-time campaign event delivery. Supports member lifecycle events and post events."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "$ref": "components/securitySchemes/OAuth2.json"
+      },
+      "BearerToken": {
+        "$ref": "components/securitySchemes/BearerToken.json"
+      }
+    },
+    "parameters": {
+      "fields": {
+        "$ref": "components/parameters/fields.json"
+      },
+      "include": {
+        "$ref": "components/parameters/include.json"
+      },
+      "pageCursor": {
+        "$ref": "components/parameters/pageCursor.json"
+      },
+      "pageCount": {
+        "$ref": "components/parameters/pageCount.json"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "$ref": "components/responses/BadRequest.json"
+      },
+      "Unauthorized": {
+        "$ref": "components/responses/Unauthorized.json"
+      },
+      "Forbidden": {
+        "$ref": "components/responses/Forbidden.json"
+      },
+      "NotFound": {
+        "$ref": "components/responses/NotFound.json"
+      },
+      "MethodNotAllowed": {
+        "$ref": "components/responses/MethodNotAllowed.json"
+      },
+      "TooManyRequests": {
+        "$ref": "components/responses/TooManyRequests.json"
+      },
+      "ServerError": {
+        "$ref": "components/responses/ServerError.json"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "$ref": "components/schemas/Error.json"
+      },
+      "ErrorResponse": {
+        "$ref": "components/schemas/ErrorResponse.json"
+      },
+      "OAuthTokenResponse": {
+        "$ref": "components/schemas/OAuthTokenResponse.json"
+      },
+      "ResourceLinkage": {
+        "$ref": "components/schemas/ResourceLinkage.json"
+      },
+      "Relationship": {
+        "$ref": "components/schemas/Relationship.json"
+      },
+      "PaginationMeta": {
+        "$ref": "components/schemas/PaginationMeta.json"
+      },
+      "JsonApiSingleResponse": {
+        "$ref": "components/schemas/JsonApiSingleResponse.json"
+      },
+      "JsonApiListResponse": {
+        "$ref": "components/schemas/JsonApiListResponse.json"
+      },
+      "User": {
+        "$ref": "components/schemas/User.json"
+      },
+      "Campaign": {
+        "$ref": "components/schemas/Campaign.json"
+      },
+      "Member": {
+        "$ref": "components/schemas/Member.json"
+      },
+      "Tier": {
+        "$ref": "components/schemas/Tier.json"
+      },
+      "Benefit": {
+        "$ref": "components/schemas/Benefit.json"
+      },
+      "Goal": {
+        "$ref": "components/schemas/Goal.json"
+      },
+      "Address": {
+        "$ref": "components/schemas/Address.json"
+      },
+      "Post": {
+        "$ref": "components/schemas/Post.json"
+      },
+      "Webhook": {
+        "$ref": "components/schemas/Webhook.json"
+      }
+    }
+  },
+  "paths": {
+    "/api/oauth2/token": {
+      "$ref": "paths/oauth/token.json"
+    },
+    "/api/oauth2/token#refresh": {
+      "$ref": "paths/oauth/refresh.json"
+    },
+    "/api/oauth2/v2/identity": {
+      "$ref": "paths/identity/identity.json"
+    },
+    "/api/oauth2/v2/campaigns": {
+      "$ref": "paths/campaigns/campaigns.json"
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}": {
+      "$ref": "paths/campaigns/campaign.json"
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}/members": {
+      "$ref": "paths/campaigns/campaign_members.json"
+    },
+    "/api/oauth2/v2/campaigns/{campaign_id}/posts": {
+      "$ref": "paths/campaigns/campaign_posts.json"
+    },
+    "/api/oauth2/v2/members/{member_id}": {
+      "$ref": "paths/members/member.json"
+    },
+    "/api/oauth2/v2/posts/{post_id}": {
+      "$ref": "paths/posts/post.json"
+    },
+    "/api/oauth2/v2/webhooks": {
+      "$ref": "paths/webhooks/webhooks.json"
+    },
+    "/api/oauth2/v2/webhooks/{webhook_id}": {
+      "$ref": "paths/webhooks/webhook.json"
+    }
+  }
+}

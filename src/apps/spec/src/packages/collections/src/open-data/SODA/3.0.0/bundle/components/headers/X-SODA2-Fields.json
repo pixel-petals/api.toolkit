@@ -1,0 +1,7 @@
+{
+  "description": "JSON array of field names in the response (may be omitted for wide datasets).",
+  "schema": {
+    "type": "string",
+    "example": "[\"business\",\"category\"]"
+  }
+}

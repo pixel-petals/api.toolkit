@@ -1,0 +1,50 @@
+{
+  "post": {
+    "tags": [
+      "Auth"
+    ],
+    "operationId": "api_token_revoke",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Revoke an API token",
+    "description": "Permanently revoke an API token.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "Token id or value."
+              },
+              "jti": {
+                "type": "string",
+                "description": "Token JWT ID (alternative to token)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

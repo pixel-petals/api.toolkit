@@ -1,0 +1,10 @@
+{
+  "name": "order_by",
+  "in": "query",
+  "description": "Example: `order_by=sum(age) desc, name asc`\n\nA comma-separated list of field names or aggregations to sort on, followed by an order (`asc` or `desc`).\n\nResults are sorted in ascending order by default. To sort results in descending order, use the `desc` keyword.",
+  "style": "form",
+  "explode": false,
+  "schema": {
+    "type": "string"
+  }
+}

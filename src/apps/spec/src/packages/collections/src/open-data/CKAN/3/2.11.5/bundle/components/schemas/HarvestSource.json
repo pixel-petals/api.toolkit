@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "description": "A harvest source (represented as a special CKAN dataset of type `harvest`).",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of the remote source to harvest."
+    },
+    "source_type": {
+      "type": "string",
+      "description": "Harvester plugin name (e.g. `ckan`, `waf`, `csw`, `dcat_rdf`)."
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "MANUAL",
+        "DAILY",
+        "WEEKLY",
+        "BIWEEKLY",
+        "MONTHLY",
+        "ALWAYS"
+      ],
+      "default": "MANUAL"
+    },
+    "config": {
+      "type": "string",
+      "description": "JSON string with harvester-specific configuration options."
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "owner_org": {
+      "type": "string"
+    },
+    "status": {
+      "type": "object",
+      "description": "Aggregated job status information."
+    }
+  }
+}

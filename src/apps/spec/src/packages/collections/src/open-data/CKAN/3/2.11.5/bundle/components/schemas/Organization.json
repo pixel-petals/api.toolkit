@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "description": "A CKAN organization.",
+  "allOf": [
+    {
+      "$ref": "./Group.json"
+    }
+  ],
+  "properties": {
+    "is_organization": {
+      "type": "boolean",
+      "default": true
+    },
+    "type": {
+      "type": "string",
+      "default": "organization"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "post": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "addItem",
+    "summary": "Add an item to the portal",
+    "description": "Creates a new portal item. The item can be a file upload, a URL reference, or inline content (JSON, text, etc.).",
+    "parameters": [
+      {
+        "name": "username",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "title",
+              "type"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "example": "Feature Service"
+              },
+              "description": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "string",
+                "description": "Comma-separated tags."
+              },
+              "snippet": {
+                "type": "string",
+                "description": "Short summary (max 250 chars)."
+              },
+              "url": {
+                "type": "string",
+                "description": "URL of the service or resource the item represents."
+              },
+              "text": {
+                "type": "string",
+                "description": "Item JSON content (for items without a file)."
+              },
+              "file": {
+                "type": "string",
+                "format": "binary"
+              },
+              "overwrite": {
+                "type": "boolean"
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Item created.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "folder": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

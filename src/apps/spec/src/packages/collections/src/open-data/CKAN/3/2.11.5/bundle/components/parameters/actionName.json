@@ -1,0 +1,9 @@
+{
+  "name": "action",
+  "in": "path",
+  "required": true,
+  "description": "CKAN action function name (e.g. `package_show`, `datastore_search`).",
+  "schema": {
+    "type": "string"
+  }
+}

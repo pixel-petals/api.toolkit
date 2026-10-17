@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "description": "Per-feature result of an add/update/delete operation.",
+  "properties": {
+    "objectId": {
+      "type": "integer"
+    },
+    "globalId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

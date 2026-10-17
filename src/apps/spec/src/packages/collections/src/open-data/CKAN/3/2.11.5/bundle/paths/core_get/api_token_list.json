@@ -1,0 +1,41 @@
+{
+  "get": {
+    "tags": [
+      "Auth"
+    ],
+    "operationId": "api_token_list",
+    "summary": "List API tokens",
+    "description": "Return a list of API tokens for a user.",
+    "parameters": [
+      {
+        "name": "user_id",
+        "in": "query",
+        "required": true,
+        "description": "User id or name.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of API token dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

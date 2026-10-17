@@ -1,0 +1,100 @@
+{
+  "get": {
+    "tags": [
+      "DCAT"
+    ],
+    "operationId": "dcatCatalog",
+    "summary": "Get catalog as RDF/DCAT",
+    "description": "Returns the entire catalog of datasets in the requested RDF serialization format. Results are paginated.\n\n**URL:** `{ckan-host}/catalog.{format}`\n\nDefault base path (`/catalog.{format}`) can be overridden with `ckanext.dcat.catalog_endpoint` config option.\n\n**Supported formats:** `rdf` (XML), `ttl` (Turtle), `n3`, `jsonld`, `xml`\n\n**Content negotiation:** When `ckanext.dcat.enable_content_negotiation = True`, the catalog is also available at the root URL (`/`) via `Accept` header.",
+    "parameters": [
+      {
+        "name": "format",
+        "in": "path",
+        "required": true,
+        "description": "RDF serialization format.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rdf",
+            "ttl",
+            "n3",
+            "jsonld",
+            "xml"
+          ]
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Page number (1-based).",
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "modified_since",
+        "in": "query",
+        "description": "ISO 8601 datetime \u2014 return only datasets modified after this date.",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "profiles",
+        "in": "query",
+        "description": "Comma-separated list of RDF profiles to use (e.g. `euro_dcat_ap_2,schemaorg`).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Solr full-text search query to filter catalog contents.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fq",
+        "in": "query",
+        "description": "Solr filter query.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "RDF catalog document.",
+        "content": {
+          "application/rdf+xml": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "text/turtle": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "application/ld+json": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "text/n3": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Unsupported format or invalid parameters."
+      }
+    }
+  }
+}

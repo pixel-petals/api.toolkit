@@ -1,0 +1,52 @@
+$kind: http-request
+name: Export a catalog in RDF/XML (DCAT)
+description: Export a catalog in RDF/XML described with DCAT (Data Catalog Vocabulary). Specific parameters are described here
+url: "{{baseUrl}}/catalog/exports/dcat{{dcat_ap_format}}?include_exports=csv,json,geojson&use_labels_in_exports=true"
+method: GET
+headers:
+  Accept: application/json; charset=utf-8
+queryParams:
+  - key: include_exports
+    value: csv,json,geojson
+    description: Sets the datasets exports exposed in the DCAT export. By default, all exports are exposed.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "enum": [
+              "csv",
+              "fgb",
+              "geojson",
+              "gpx",
+              "json",
+              "jsonl",
+              "jsonld",
+              "kml",
+              "n3",
+              "ov2",
+              "parquet",
+              "rdfxml",
+              "shp",
+              "turtle",
+              "xlsx"
+            ]
+          }
+        }
+      }
+  - key: use_labels_in_exports
+    value: "true"
+    description: If set to `true`, this parameter will make distributions output the label of each field rather than its name. This parameter only applies on distributions that contain a list of the fields in their output (e.g., CSV, XLSX).
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+examples: ./.resources/Export a catalog in RDF-XML (DCAT).resources/examples
+order: 1000

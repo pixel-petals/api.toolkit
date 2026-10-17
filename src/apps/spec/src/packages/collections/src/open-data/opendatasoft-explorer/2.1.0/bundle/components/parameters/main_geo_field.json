@@ -1,0 +1,9 @@
+{
+  "name": "main_geo_field",
+  "in": "query",
+  "description": "In case you have multiple geometry fields in your dataset, this parameter allows you to set the main geometry field which will be used when exporting. This can be used for all geographic formats which support the geometry type (e.g. GeoJSON, Shapefile, FlatGeobuf, KML, GPX, etc.).\n",
+  "schema": {
+    "type": "string",
+    "default": null
+  }
+}

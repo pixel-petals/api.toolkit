@@ -1,0 +1,48 @@
+{
+  "post": {
+    "tags": [
+      "Following"
+    ],
+    "operationId": "follow_user",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Follow a user",
+    "description": "Start following a user.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Follow dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

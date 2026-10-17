@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "node",
+        "way",
+        "relation"
+      ]
+    },
+    "ref": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "role": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "required": [
+    "type",
+    "ref"
+  ]
+}

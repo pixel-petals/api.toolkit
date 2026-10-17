@@ -1,0 +1,47 @@
+{
+  "post": {
+    "tags": [
+      "FileStore"
+    ],
+    "operationId": "file_unpin",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Unpin a file (CKAN 2.12+)",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated file dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

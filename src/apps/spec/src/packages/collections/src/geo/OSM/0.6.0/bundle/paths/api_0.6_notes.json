@@ -1,0 +1,130 @@
+{
+  "get": {
+    "operationId": "getNotesByBbox",
+    "summary": "Retrieve notes by bounding box",
+    "description": "Returns notes within the given bounding box. Max area is 25 square degrees.",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "bbox",
+        "in": "query",
+        "required": true,
+        "description": "Bounding box as left,bottom,right,top",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Max number of results (default 100, max 10000)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000,
+          "default": 100
+        }
+      },
+      {
+        "name": "closed",
+        "in": "query",
+        "description": "Number of days a closed note is still returned (-1=all, 0=open only, default=7)",
+        "schema": {
+          "type": "integer",
+          "default": 7
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of notes",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "createNote",
+    "summary": "Create a new note",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {},
+      {
+        "oauth2": [
+          "write_notes"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "lat",
+              "lon",
+              "text"
+            ],
+            "properties": {
+              "lat": {
+                "type": "number",
+                "format": "double",
+                "description": "Latitude"
+              },
+              "lon": {
+                "type": "number",
+                "format": "double",
+                "description": "Longitude"
+              },
+              "text": {
+                "type": "string",
+                "description": "Initial note text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Newly created note",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/Note.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      }
+    }
+  }
+}

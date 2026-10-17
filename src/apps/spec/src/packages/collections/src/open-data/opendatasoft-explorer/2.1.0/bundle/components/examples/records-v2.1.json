@@ -1,0 +1,64 @@
+{
+  "value": {
+    "total_count": 137611,
+    "results": [
+      {
+        "admin1_code": "27",
+        "elevation": null,
+        "name": "Saint-Leu",
+        "modification_date": "2019-03-26",
+        "alternate_names": [
+          "Saint-Leu"
+        ],
+        "feature_class": "P",
+        "admin3_code": "711",
+        "cou_name_en": "France",
+        "coordinates": {
+          "lat": 46.7306,
+          "lon": 4.50083
+        },
+        "country_code_2": null,
+        "geoname_id": "2978771",
+        "feature_code": "PPL",
+        "label_en": "France",
+        "dem": 366,
+        "country_code": "FR",
+        "ascii_name": "Saint-Leu",
+        "timezone": "Europe/Paris",
+        "admin2_code": "71",
+        "admin4_code": "71436",
+        "population": 29278
+      },
+      {
+        "admin1_code": "32",
+        "elevation": null,
+        "name": "Saint-Léger-lès-Domart",
+        "modification_date": "2016-02-18",
+        "alternate_names": [
+          "Saint-Leger",
+          "Saint-Leger-les-Domart",
+          "Saint-Léger",
+          "Saint-Léger-lès-Domart"
+        ],
+        "feature_class": "P",
+        "admin3_code": "802",
+        "cou_name_en": "France",
+        "coordinates": {
+          "lat": 50.05208,
+          "lon": 2.14067
+        },
+        "country_code_2": null,
+        "geoname_id": "2978817",
+        "feature_code": "PPL",
+        "label_en": "France",
+        "dem": 31,
+        "country_code": "FR",
+        "ascii_name": "Saint-Leger-les-Domart",
+        "timezone": "Europe/Paris",
+        "admin2_code": "80",
+        "admin4_code": "80706",
+        "population": 1781
+      }
+    ]
+  }
+}

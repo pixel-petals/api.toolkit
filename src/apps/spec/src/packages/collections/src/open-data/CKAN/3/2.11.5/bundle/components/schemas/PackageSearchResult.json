@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "integer"
+    },
+    "sort": {
+      "type": "string"
+    },
+    "facets": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "./Package.json"
+      }
+    },
+    "search_facets": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

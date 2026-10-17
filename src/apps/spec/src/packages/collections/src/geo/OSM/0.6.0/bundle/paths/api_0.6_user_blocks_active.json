@@ -1,0 +1,34 @@
+{
+  "get": {
+    "operationId": "getActiveUserBlocks",
+    "summary": "List active blocks for the authenticated user",
+    "tags": [
+      "User Blocks"
+    ],
+    "security": [
+      {
+        "oauth2": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Active user blocks",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

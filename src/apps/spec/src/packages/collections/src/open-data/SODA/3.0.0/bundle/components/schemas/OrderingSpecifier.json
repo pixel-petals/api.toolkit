@@ -1,0 +1,9 @@
+{
+  "type": "string",
+  "description": "Controls row ordering. `total` (default) preserves ORDER BY semantics; `discard` skips ordering for a significant performance gain when order is irrelevant.",
+  "enum": [
+    "total",
+    "discard"
+  ],
+  "default": "total"
+}

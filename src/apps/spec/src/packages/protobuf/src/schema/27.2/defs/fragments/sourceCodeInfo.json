@@ -1,0 +1,59 @@
+{
+  "name": "SourceCodeInfo",
+  "fullName": "google.protobuf.SourceCodeInfo",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/SourceCodeInfo",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "location": {
+        "rule": "repeated",
+        "type": "Location",
+        "id": 1,
+        "comment": "A Location identifies a piece of source code in a .proto file which\ncorresponds to a particular definition.  This information is intended\nto be useful to IDEs, code indexers, documentation generators, and similar\ntools.\n\nFor example, say we have a file like:\nmessage Foo {\noptional string foo = 1;\n}\nLet's look at just the field definition:\noptional string foo = 1;\n^       ^^     ^^  ^  ^^^\na       bc     de  f  ghi\nWe have the following locations:\nspan   path               represents\n[a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n[a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n[c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n[e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n[g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\nNotes:\n- A location may refer to a repeated field itself (i.e. not to any\nparticular index within it).  This is used whenever a set of elements are\nlogically enclosed in a single code segment.  For example, an entire\nextend block (possibly containing multiple extension definitions) will\nhave an outer location whose path refers to the \"extensions\" repeated\nfield without an index.\n- Multiple locations may have the same path.  This happens when a single\nlogical declaration is spread out across multiple places.  The most\nobvious example is the \"extend\" block again -- there may be multiple\nextend blocks in the same scope, each of which will have the same path.\n- A location's span is not always a subset of its parent's span.  For\nexample, the \"extendee\" of an extension declaration appears at the\nbeginning of the \"extend\" block and is shared by all extensions within\nthe block.\n- Just because a location's span is a subset of some other location's span\ndoes not mean that it is a descendant.  For example, a \"group\" defines\nboth a type and a field in a single declaration.  Thus, the locations\ncorresponding to the type and field and their components will overlap.\n- Code which tries to interpret locations should probably be designed to\nignore those that it doesn't understand, as more types of locations could\nbe recorded in the future."
+      }
+    },
+    "nested": {
+      "Location": {
+        "fields": {
+          "path": {
+            "rule": "repeated",
+            "type": "int32",
+            "id": 1,
+            "options": {
+              "packed": true
+            },
+            "comment": "Identifies which part of the FileDescriptorProto was defined at this\nlocation.\n\nEach element is a field number or an index.  They form a path from\nthe root FileDescriptorProto to the place where the definition appears.\nFor example, this path:\n[ 4, 3, 2, 7, 1 ]\nrefers to:\nfile.message_type(3)  // 4, 3\n.field(7)         // 2, 7\n.name()           // 1\nThis is because FileDescriptorProto.message_type has field number 4:\nrepeated DescriptorProto message_type = 4;\nand DescriptorProto.field has field number 2:\nrepeated FieldDescriptorProto field = 2;\nand FieldDescriptorProto.name has field number 1:\noptional string name = 1;\n\nThus, the above path gives the location of a field name.  If we removed\nthe last element:\n[ 4, 3, 2, 7 ]\nthis path refers to the whole field declaration (from the beginning\nof the label to the terminating semicolon)."
+          },
+          "span": {
+            "rule": "repeated",
+            "type": "int32",
+            "id": 2,
+            "options": {
+              "packed": true
+            },
+            "comment": "Always has exactly three or four elements: start line, start column,\nend line (optional, otherwise assumed same as start line), end column.\nThese are packed into a single field for efficiency.  Note that line\nand column numbers are zero-based -- typically you will want to add\n1 to each before displaying to a user."
+          },
+          "leading_comments": {
+            "type": "string",
+            "id": 3,
+            "comment": "If this SourceCodeInfo represents a complete declaration, these are any\ncomments appearing before and after the declaration which appear to be\nattached to the declaration.\n\nA series of line comments appearing on consecutive lines, with no other\ntokens appearing on those lines, will be treated as a single comment.\n\nleading_detached_comments will keep paragraphs of comments that appear\nbefore (but not connected to) the current element. Each paragraph,\nseparated by empty lines, will be one comment element in the repeated\nfield.\n\nOnly the comment content is provided; comment markers (e.g. //) are\nstripped out.  For block comments, leading whitespace and an asterisk\nwill be stripped from the beginning of each line other than the first.\nNewlines are included in the output.\n\nExamples:\n\noptional int32 foo = 1;  // Comment attached to foo.\n// Comment attached to bar.\noptional int32 bar = 2;\n\noptional string baz = 3;\n// Comment attached to baz.\n// Another line attached to baz.\n\n// Comment attached to moo.\n//\n// Another line attached to moo.\noptional double moo = 4;\n\n// Detached comment for corge. This is not leading or trailing comments\n// to moo or corge because there are blank lines separating it from\n// both.\n\n// Detached comment for corge paragraph 2.\n\noptional string corge = 5;\n/* Block comment attached\n* to corge.  Leading asterisks\n* will be removed. */\n/* Block comment attached to\n* grault. */\noptional int32 grault = 6;\n\n// ignored detached comments."
+          },
+          "trailing_comments": {
+            "type": "string",
+            "id": 4,
+            "comment": null
+          },
+          "leading_detached_comments": {
+            "rule": "repeated",
+            "type": "string",
+            "id": 6,
+            "comment": null
+          }
+        },
+        "comment": null
+      }
+    },
+    "comment": "Encapsulates information about the original source file from which a\nFileDescriptorProto was generated."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "post": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "generateOAuthToken",
+    "summary": "Generate an OAuth 2.0 access token",
+    "description": "Exchanges client credentials for an ArcGIS access token. Supports `client_credentials` (app token), `authorization_code`, and `refresh_token` grant types.",
+    "security": [],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "client_id",
+              "grant_type"
+            ],
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "description": "Your registered application's client ID."
+              },
+              "client_secret": {
+                "type": "string",
+                "description": "Client secret (required for `client_credentials`)."
+              },
+              "grant_type": {
+                "type": "string",
+                "enum": [
+                  "authorization_code",
+                  "client_credentials",
+                  "refresh_token"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "description": "Authorization code (for `authorization_code` flow)."
+              },
+              "redirect_uri": {
+                "type": "string",
+                "description": "Redirect URI registered with the app."
+              },
+              "refresh_token": {
+                "type": "string",
+                "description": "Refresh token (for `refresh_token` flow)."
+              },
+              "expiration": {
+                "type": "integer",
+                "description": "Token lifetime in minutes (max 20160 / 2 weeks)."
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "OAuth token response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/OAuthTokenResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      }
+    }
+  }
+}

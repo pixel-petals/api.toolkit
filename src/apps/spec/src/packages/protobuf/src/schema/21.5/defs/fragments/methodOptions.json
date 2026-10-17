@@ -1,0 +1,55 @@
+{
+  "name": "MethodOptions",
+  "fullName": "google.protobuf.MethodOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/MethodOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "deprecated": {
+        "type": "bool",
+        "id": 33,
+        "options": {
+          "default": false
+        },
+        "comment": "Is this method deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the method, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating methods."
+      },
+      "idempotency_level": {
+        "type": "IdempotencyLevel",
+        "id": 34,
+        "options": {
+          "default": "IDEMPOTENCY_UNKNOWN"
+        },
+        "comment": null
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "nested": {
+      "IdempotencyLevel": {
+        "values": {
+          "IDEMPOTENCY_UNKNOWN": 0,
+          "NO_SIDE_EFFECTS": 1,
+          "IDEMPOTENT": 2
+        },
+        "comment": "Is this method side-effect-free (or safe in HTTP parlance), or idempotent,\nor neither? HTTP based RPC implementation may choose GET verb for safe\nmethods, and PUT verb for idempotent methods instead of the default POST.",
+        "comments": {
+          "IDEMPOTENCY_UNKNOWN": null,
+          "NO_SIDE_EFFECTS": "implies idempotent",
+          "IDEMPOTENT": "idempotent, but may have side effects"
+        }
+      }
+    },
+    "comment": null
+  }
+}

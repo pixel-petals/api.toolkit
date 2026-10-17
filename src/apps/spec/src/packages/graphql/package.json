@@ -1,0 +1,22 @@
+{
+  "name": "@package/graphql",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "graphql": "src/bin/cmd.js"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "exports": {
+    "./*": "./src/schema/*"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "graphql": "^17.0.2",
+    "@util/api": "*"
+  },
+  "imports": {
+    "#lib/*": "./src/bin/lib/*.js"
+  }
+}

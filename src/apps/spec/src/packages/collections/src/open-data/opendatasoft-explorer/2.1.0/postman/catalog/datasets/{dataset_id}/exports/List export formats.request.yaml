@@ -1,0 +1,27 @@
+$kind: http-request
+description: List available export formats
+url: "{{baseUrl}}/catalog/datasets/:dataset_id/exports"
+method: GET
+headers:
+  Accept: application/json; charset=utf-8
+pathVariables:
+  - key: dataset_id
+    value: string
+    description: |-
+      The identifier of the dataset to be queried.
+
+      You can find it in the "Information" tab of the dataset page or in the dataset URL, right after `/datasets/`.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+examples: ./.resources/List export formats.resources/examples
+order: 5000

@@ -1,0 +1,36 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_source_show",
+    "summary": "Get a harvest source",
+    "description": "Return the details of a harvest source, including its last job status.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Harvest source id or name.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Harvest source dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

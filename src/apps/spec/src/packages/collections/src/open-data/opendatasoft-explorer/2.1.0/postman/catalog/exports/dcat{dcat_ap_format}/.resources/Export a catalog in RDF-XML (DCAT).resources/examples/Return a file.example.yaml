@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/exports/dcat{{dcat_ap_format}}?include_exports=csv,json,geojson&use_labels_in_exports=true&apikey=<API Key>"
+  method: GET
+  queryParams:
+    - key: include_exports
+      value: csv,json,geojson
+      description: Sets the datasets exports exposed in the DCAT export. By default, all exports are exposed.
+    - key: use_labels_in_exports
+      value: "true"
+      description: If set to `true`, this parameter will make distributions output the label of each field rather than its name. This parameter only applies on distributions that contain a list of the fields in their output (e.g., CSV, XLSX).
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: text
+    content: ""
+order: 1000

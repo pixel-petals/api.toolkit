@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "total_count": {
+      "type": "integer"
+    },
+    "_links": {
+      "type": "array",
+      "items": {
+        "$ref": "./links.json"
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "./record.json"
+      }
+    }
+  }
+}

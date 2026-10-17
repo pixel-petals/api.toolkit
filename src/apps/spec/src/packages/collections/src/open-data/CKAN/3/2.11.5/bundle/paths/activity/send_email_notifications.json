@@ -1,0 +1,41 @@
+{
+  "post": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "send_email_notifications",
+    "summary": "Send activity email notifications",
+    "description": "Send pending email notifications for recent activity. Usually run by a scheduled cron job. Sysadmin only.",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

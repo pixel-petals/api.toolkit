@@ -1,0 +1,109 @@
+{
+  "get": {
+    "tags": [
+      "Members"
+    ],
+    "operationId": "getMember",
+    "summary": "Get a member by ID",
+    "description": "Fetch a single Member by its UUID.\n\n**Scope:** `campaigns.members`\n\n**Top-level includes:** `address`, `campaign`, `currently_entitled_tiers`, `user`\n\nWe recommend including `currently_entitled_tiers` to know exactly what a member is entitled to.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "member_id",
+        "in": "path",
+        "required": true,
+        "description": "The UUID of the member.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/fields.json"
+      },
+      {
+        "$ref": "../../components/parameters/include.json"
+      },
+      {
+        "name": "fields[member]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fields[tier]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "fields[address]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Requires `campaigns.members.address` scope."
+      },
+      {
+        "name": "fields[user]",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The member resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            },
+            "example": {
+              "data": {
+                "attributes": {
+                  "full_name": "A Patron",
+                  "is_follower": false,
+                  "last_charge_date": "2020-10-01T11:18:36.000+00:00"
+                },
+                "id": "123-456-789",
+                "type": "member"
+              },
+              "links": {
+                "self": "https://www.patreon.com/api/oauth2/v2/members/123-456-789"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

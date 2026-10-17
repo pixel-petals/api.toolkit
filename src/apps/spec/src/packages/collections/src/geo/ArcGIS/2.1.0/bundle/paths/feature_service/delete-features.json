@@ -1,0 +1,81 @@
+{
+  "post": {
+    "tags": [
+      "Feature Service"
+    ],
+    "operationId": "deleteFeatures",
+    "summary": "Delete features from a layer",
+    "description": "Deletes one or more features by object IDs or a WHERE clause filter.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/serviceName.json"
+      },
+      {
+        "$ref": "../../components/parameters/layerId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "objectIds": {
+                "type": "string",
+                "description": "Comma-separated object IDs to delete."
+              },
+              "where": {
+                "type": "string",
+                "description": "SQL WHERE clause for bulk delete."
+              },
+              "geometry": {
+                "type": "string"
+              },
+              "geometryType": {
+                "type": "string"
+              },
+              "spatialRel": {
+                "type": "string"
+              },
+              "rollbackOnFailure": {
+                "type": "boolean",
+                "default": true
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Delete results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "deleteResults": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../../components/schemas/EditResult.json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

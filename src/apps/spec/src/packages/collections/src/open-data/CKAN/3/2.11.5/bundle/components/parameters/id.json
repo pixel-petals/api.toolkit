@@ -1,0 +1,8 @@
+{
+  "name": "id",
+  "in": "query",
+  "description": "The id or name of the object.",
+  "schema": {
+    "type": "string"
+  }
+}

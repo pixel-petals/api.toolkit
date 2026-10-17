@@ -1,0 +1,64 @@
+{
+  "delete": {
+    "operationId": "hideChangesetComment",
+    "summary": "Hide a changeset comment (moderator only)",
+    "description": "Sets the visible flag on a changeset comment to false. Requires moderator role.",
+    "tags": [
+      "Changeset Discussion"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Comment successfully hidden"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "unhideChangesetComment",
+    "summary": "Unhide a changeset comment (moderator only)",
+    "description": "Sets the visible flag on a changeset comment to true. Requires moderator role.",
+    "tags": [
+      "Changeset Discussion"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Comment successfully unhidden"
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

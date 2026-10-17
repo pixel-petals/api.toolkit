@@ -1,0 +1,7 @@
+{
+  "description": "A unique ID for this request. Include when asking for support.",
+  "schema": {
+    "type": "string",
+    "example": "aqe1bgaxzvhitfgrsvy6semhi"
+  }
+}

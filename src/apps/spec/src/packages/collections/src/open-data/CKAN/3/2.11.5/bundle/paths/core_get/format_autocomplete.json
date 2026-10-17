@@ -1,0 +1,40 @@
+{
+  "get": {
+    "tags": [
+      "Resources"
+    ],
+    "operationId": "format_autocomplete",
+    "summary": "Autocomplete resource formats",
+    "description": "Return a list of resource formats whose names match a string.",
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 5
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Matching format strings",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

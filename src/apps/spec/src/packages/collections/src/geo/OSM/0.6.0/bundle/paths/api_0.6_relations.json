@@ -1,0 +1,96 @@
+{
+  "get": {
+    "operationId": "getRelations",
+    "summary": "Fetch multiple relations",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "relations",
+        "in": "query",
+        "required": true,
+        "description": "Comma-separated list of relation IDs, optionally versioned",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Requested relations",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "414": {
+        "$ref": "../components/responses/414.json"
+      }
+    }
+  },
+  "post": {
+    "operationId": "createRelation",
+    "summary": "Create a new relation",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "ID of the newly created relation",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      },
+      "412": {
+        "$ref": "../components/responses/412.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429.json"
+      }
+    }
+  }
+}

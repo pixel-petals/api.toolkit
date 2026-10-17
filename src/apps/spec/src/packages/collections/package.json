@@ -1,0 +1,9 @@
+{
+  "name": "@package/collections",
+  "private": true,
+  "description": "Third-party API definitions (OpenAPI, Postman) collected for reference, grouped by category.",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "type": "module"
+}

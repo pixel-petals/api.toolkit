@@ -1,0 +1,35 @@
+{
+  "get": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "vocabulary_show",
+    "summary": "Get a vocabulary",
+    "description": "Return a single tag vocabulary.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Vocabulary dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

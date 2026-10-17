@@ -1,0 +1,44 @@
+{
+  "get": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "activity_show",
+    "summary": "Get a single activity",
+    "description": "Return a single activity by id.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Activity id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_data",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Activity dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

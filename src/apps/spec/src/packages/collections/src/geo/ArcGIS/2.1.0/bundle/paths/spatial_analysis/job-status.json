@@ -1,0 +1,47 @@
+{
+  "get": {
+    "tags": [
+      "Spatial Analysis Service"
+    ],
+    "operationId": "getSpatialAnalysisJobStatus",
+    "summary": "Poll spatial analysis job status",
+    "description": "Returns current status of a submitted spatial analysis job. Poll until `jobStatus` is `esriJobSucceeded`. Retrieve results by following URLs in the `results` object.",
+    "parameters": [
+      {
+        "name": "analysisTask",
+        "in": "path",
+        "required": true,
+        "description": "Task name (e.g. `AggregatePoints`, `FindHotSpots`, `CreateBuffers`, `OverlayLayers`, `SummarizeNearby`).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "jobId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Job status and result links.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JobStatus.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

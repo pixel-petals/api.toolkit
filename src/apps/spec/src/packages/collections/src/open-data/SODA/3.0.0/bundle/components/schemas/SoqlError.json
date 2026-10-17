@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "description": "Standard SODA error response body.",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Machine-readable error code, e.g. `soql.analyzer.typechecker.type-mismatch`.",
+      "example": "soql.analyzer.typechecker.type-mismatch"
+    },
+    "error": {
+      "type": "boolean",
+      "description": "Always `true` for error responses.",
+      "example": true
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable description of the error.",
+      "example": "Type mismatch: expected text, but found number"
+    },
+    "status": {
+      "type": "integer",
+      "description": "HTTP status code mirrored in the body.",
+      "example": 400
+    },
+    "data": {
+      "type": "object",
+      "description": "Machine-readable structured detail about the error.",
+      "additionalProperties": true
+    },
+    "source": {
+      "type": "object",
+      "description": "Location information pointing to the part of the query that caused the error.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "anonymous"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "row": {
+              "type": "integer"
+            },
+            "column": {
+              "type": "integer"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

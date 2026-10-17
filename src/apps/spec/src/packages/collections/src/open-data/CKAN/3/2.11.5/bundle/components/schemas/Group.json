@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "description": "A CKAN group (thematic collection of datasets).",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deleted"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "default": "group"
+    },
+    "approval_status": {
+      "type": "string"
+    },
+    "is_organization": {
+      "type": "boolean"
+    },
+    "extras": {
+      "type": "array",
+      "items": {
+        "$ref": "./Extra.json"
+      }
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "$ref": "./Package.json"
+      }
+    },
+    "package_count": {
+      "type": "integer"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "get": {
+    "operationId": "searchNotes",
+    "summary": "Search for notes",
+    "tags": [
+      "Notes"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "description": "Full-text search query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Max results (default 100, max 10000)",
+        "schema": {
+          "type": "integer",
+          "default": 100,
+          "maximum": 10000
+        }
+      },
+      {
+        "name": "closed",
+        "in": "query",
+        "description": "Days since closed (-1=all, 0=open only)",
+        "schema": {
+          "type": "integer",
+          "default": 7
+        }
+      },
+      {
+        "name": "display_name",
+        "in": "query",
+        "description": "Filter by author display name",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "user",
+        "in": "query",
+        "description": "Filter by author user ID",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "bbox",
+        "in": "query",
+        "description": "Bounding box as left,bottom,right,top",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "description": "Filter notes created on or after this date",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "description": "Filter notes created before this date",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Sort field",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "updated_at"
+          ],
+          "default": "updated_at"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "oldest",
+            "newest"
+          ],
+          "default": "newest"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Matching notes",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "description": "Pagination options for `/query` requests.",
+  "properties": {
+    "pageNumber": {
+      "type": "integer",
+      "description": "1-indexed page number.",
+      "minimum": 1,
+      "default": 1,
+      "example": 1
+    },
+    "pageSize": {
+      "type": "integer",
+      "description": "Number of rows per page.",
+      "minimum": 1,
+      "default": 1000,
+      "example": 100
+    }
+  }
+}

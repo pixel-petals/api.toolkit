@@ -1,0 +1,10 @@
+{
+  "description": "403 Forbidden \u2014 Authenticated but missing required scope or insufficient privileges.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

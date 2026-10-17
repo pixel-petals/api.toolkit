@@ -1,0 +1,40 @@
+{
+  "get": {
+    "tags": [
+      "Jobs"
+    ],
+    "operationId": "job_list",
+    "summary": "List background jobs",
+    "description": "Return a list of enqueued background jobs. Sysadmin only.",
+    "parameters": [
+      {
+        "name": "queues",
+        "in": "query",
+        "description": "JSON array of queue names to filter by.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Job list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "post": {
+    "operationId": "oauthAccessToken",
+    "summary": "Exchange authorization code for access token",
+    "description": "Exchange the authorization code returned by `/oauth/authorize` for an OAuth 2.0 access token. The access token is then used in `Authorization: OAuth <token>` headers on subsequent requests.",
+    "tags": [
+      "Authentication"
+    ],
+    "security": [],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "client_id",
+              "client_secret",
+              "grant_type",
+              "redirect_uri",
+              "code"
+            ],
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "description": "Your application's app token."
+              },
+              "client_secret": {
+                "type": "string",
+                "description": "Your application's secret token."
+              },
+              "grant_type": {
+                "type": "string",
+                "enum": [
+                  "authorization_code"
+                ],
+                "description": "Must be `authorization_code`."
+              },
+              "redirect_uri": {
+                "type": "string",
+                "format": "uri",
+                "description": "The same `redirect_uri` used in the authorization request."
+              },
+              "code": {
+                "type": "string",
+                "description": "The authorization code from the `code` query parameter of the redirect."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Access token response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OAuthAccessTokenResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      }
+    }
+  }
+}

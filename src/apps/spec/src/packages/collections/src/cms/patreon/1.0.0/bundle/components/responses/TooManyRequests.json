@@ -1,0 +1,18 @@
+{
+  "description": "429 Too Many Requests \u2014 rate limit exceeded. Check `retry_after_seconds` in the error object.",
+  "headers": {
+    "Retry-After": {
+      "schema": {
+        "type": "integer"
+      },
+      "description": "Seconds to wait before retrying."
+    }
+  },
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ErrorResponse.json"
+      }
+    }
+  }
+}

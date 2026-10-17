@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "description": "A v1 webhook on a campaign (pledge events).",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "webhook"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "last_attempted_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "num_consecutive_times_failed": {
+          "type": "integer"
+        },
+        "paused": {
+          "type": "boolean"
+        },
+        "secret": {
+          "type": "string",
+          "description": "HMAC-MD5 secret used to sign webhook payloads in the X-Patreon-Signature header."
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "v1 triggers: pledges:create, pledges:update, pledges:delete."
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

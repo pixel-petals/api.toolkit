@@ -1,0 +1,135 @@
+{
+  "type": "object",
+  "description": "A Patreon user.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "user"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "about": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The creator's summary of their account. Can be null."
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "discord_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Requires the `users` scope. Can be null."
+        },
+        "facebook": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "facebook_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "first_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "integer",
+          "description": "The user's gender. 0 for unset, 1 for male, 2 for female."
+        },
+        "has_password": {
+          "type": "boolean"
+        },
+        "image_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "is_deleted": {
+          "type": "boolean"
+        },
+        "is_email_verified": {
+          "type": "boolean"
+        },
+        "is_nuked": {
+          "type": "boolean"
+        },
+        "is_suspended": {
+          "type": "boolean"
+        },
+        "last_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "social_connections": {
+          "type": "object",
+          "description": "Map of connected social accounts.",
+          "additionalProperties": true
+        },
+        "thumb_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "twitch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "twitter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Profile URL on patreon.com."
+        },
+        "vanity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "$ref": "./Relationship.json"
+        },
+        "pledges": {
+          "$ref": "./Relationship.json"
+        }
+      }
+    }
+  }
+}

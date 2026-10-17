@@ -1,0 +1,41 @@
+{
+  "value": {
+    "links": [],
+    "facets": [
+      {
+        "facets": [
+          {
+            "count": 68888,
+            "state": "displayed",
+            "name": "Europe",
+            "value": "Europe"
+          },
+          {
+            "count": 36276,
+            "state": "displayed",
+            "name": "America",
+            "value": "America"
+          }
+        ],
+        "name": "timezone"
+      },
+      {
+        "facets": [
+          {
+            "count": 313,
+            "state": "displayed",
+            "name": "Afghanistan",
+            "value": "Afghanistan"
+          },
+          {
+            "count": 356,
+            "state": "displayed",
+            "name": "Albania",
+            "value": "Albania"
+          }
+        ],
+        "name": "cou_name_en"
+      }
+    ]
+  }
+}

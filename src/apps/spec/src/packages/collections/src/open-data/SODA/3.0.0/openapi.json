@@ -1,0 +1,1181 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Socrata API (3.0.0)",
+    "version": "3.0.0",
+    "description": "The Socrata Open Data API (SODA3) provides programmatic access to open data hosted on Socrata-powered portals (now Tyler Technologies Data & Insights).\n\nEvery dataset has a unique 4x4 identifier (e.g. `ydr8-5enu`). SODA3 exposes two primary endpoints per dataset:\n\n- **`/query`** — Machine-readable querying via SoQL. Supports pagination, field selection, filtering, grouping, and aggregation.\n- **`/export`** — Full-dataset export in human-readable formats (CSV, JSON, GeoJSON, etc.).\n\nWrite operations (POST/PUT/DELETE on `/resource/`) use the legacy SODA Producer API path, which remains fully supported.\n\n**Authentication:** All SODA3 query requests require either an `X-App-Token` header or full user authentication (HTTP Basic or OAuth 2.0 Bearer). Write operations require user authentication.\n\n**Base URL:** This spec uses `https://{domain}` as the server — substitute your portal's hostname (e.g. `data.cityofchicago.org`, `soda.demo.socrata.com`).",
+    "contact": {
+      "name": "Socrata Developer Portal",
+      "url": "https://dev.socrata.com"
+    },
+    "license": {
+      "name": "CC BY-NC-SA 3.0",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://soda.demo.socrata.com",
+      "description": "Socrata public demo server"
+    },
+    {
+      "url": "https://{domain}",
+      "description": "Your Socrata-powered open data portal",
+      "variables": {
+        "domain": {
+          "default": "data.cityofchicago.org",
+          "description": "The hostname of your Socrata portal (e.g. data.cityofchicago.org)"
+        }
+      }
+    }
+  ],
+  "security": [{ "AppToken": [] }, { "BasicAuth": [] }, { "OAuth2": [] }],
+  "tags": [
+    {
+      "name": "Query (SODA3)",
+      "description": "SODA3 `/query` endpoint for machine-readable SoQL queries against a dataset. Supports POST (preferred) and GET. Requires an app token or authentication."
+    },
+    {
+      "name": "Export (SODA3)",
+      "description": "SODA3 `/export` endpoint for full-dataset downloads in various formats. Supports POST (preferred) and GET."
+    },
+    {
+      "name": "Read Rows (SODA 2.x)",
+      "description": "Legacy SODA 2.x `/resource/` endpoint for reading rows. Still widely supported and used for backwards compatibility."
+    },
+    {
+      "name": "Write Rows (SODA Producer)",
+      "description": "SODA Producer API for creating, upserting, replacing, and deleting rows. Requires authentication. Uses the `/resource/` path."
+    },
+    {
+      "name": "Single Row (SODA Producer)",
+      "description": "Read, update, or delete a single row by its row identifier via the `/resource/` path."
+    },
+    {
+      "name": "Authentication",
+      "description": "OAuth 2.0 authorization flow endpoints and current-user lookup."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "AppToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-App-Token",
+        "description": "A Socrata application token. Increases throttling limits. Required for all SODA3 queries (can be combined with authentication)."
+      },
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "HTTP Basic Authentication using your Socrata username+password, or an API key ID + secret pair. Must be used over HTTPS."
+      },
+      "OAuth2": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "OAuth",
+        "description": "OAuth 2.0 bearer token. Pass as `Authorization: OAuth <access_token>`. Must be used over HTTPS."
+      }
+    },
+    "parameters": {
+      "datasetId": {
+        "name": "datasetId",
+        "in": "path",
+        "required": true,
+        "description": "The unique 4x4 dataset identifier (eight alphanumeric characters split by a dash, e.g. `ydr8-5enu`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z0-9]{4}-[a-z0-9]{4}$",
+          "example": "4tka-6guv"
+        }
+      },
+      "rowId": {
+        "name": "rowId",
+        "in": "path",
+        "required": true,
+        "description": "The row identifier value. Can be the internal Socrata `:id` (e.g. `row-evac~sxbs~gm8t`) or a publisher-defined row identifier column value.",
+        "schema": {
+          "type": "string",
+          "example": "row-evac~sxbs~gm8t"
+        }
+      },
+      "queryFormat": {
+        "name": "format",
+        "in": "path",
+        "required": true,
+        "description": "Response format. Use `.json` for JSON, `.geojson` for GeoJSON, `.csv` for CSV.",
+        "schema": {
+          "type": "string",
+          "enum": ["json", "geojson", "csv"],
+          "default": "json"
+        }
+      }
+    },
+    "headers": {
+      "X-Socrata-RequestId": {
+        "description": "A unique ID for this request. Include when asking for support.",
+        "schema": { "type": "string", "example": "aqe1bgaxzvhitfgrsvy6semhi" }
+      },
+      "X-SODA2-Fields": {
+        "description": "JSON array of field names in the response (may be omitted for wide datasets).",
+        "schema": { "type": "string", "example": "[\"business\",\"category\"]" }
+      },
+      "X-SODA2-Types": {
+        "description": "JSON array of SoQL data types for fields in the response.",
+        "schema": { "type": "string", "example": "[\"text\",\"text\"]" }
+      },
+      "X-SODA2-Legacy-Types": {
+        "description": "Presence of `true` indicates a legacy SODA 2.0 API (case-insensitive text comparisons, Location-only geo).",
+        "schema": { "type": "boolean" }
+      },
+      "Last-Modified": {
+        "description": "When the underlying dataset was last updated. Useful for caching.",
+        "schema": { "type": "string", "format": "date-time" }
+      },
+      "ETag": {
+        "description": "HTTP ETag for cache validation.",
+        "schema": { "type": "string" }
+      }
+    },
+    "schemas": {
+      "SoqlError": {
+        "type": "object",
+        "description": "Standard SODA error response body.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Machine-readable error code, e.g. `soql.analyzer.typechecker.type-mismatch`.",
+            "example": "soql.analyzer.typechecker.type-mismatch"
+          },
+          "error": {
+            "type": "boolean",
+            "description": "Always `true` for error responses.",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable description of the error.",
+            "example": "Type mismatch: expected text, but found number"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code mirrored in the body.",
+            "example": 400
+          },
+          "data": {
+            "type": "object",
+            "description": "Machine-readable structured detail about the error.",
+            "additionalProperties": true
+          },
+          "source": {
+            "type": "object",
+            "description": "Location information pointing to the part of the query that caused the error.",
+            "properties": {
+              "type": { "type": "string", "example": "anonymous" },
+              "position": {
+                "type": "object",
+                "properties": {
+                  "row": { "type": "integer" },
+                  "column": { "type": "integer" },
+                  "text": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpsertResult": {
+        "type": "object",
+        "description": "Summary returned after a POST (upsert) or PUT (replace) write operation.",
+        "properties": {
+          "Rows Created": {
+            "type": "integer",
+            "description": "Number of net-new rows inserted.",
+            "example": 1
+          },
+          "Rows Updated": {
+            "type": "integer",
+            "description": "Number of rows matched and updated.",
+            "example": 1
+          },
+          "Rows Deleted": {
+            "type": "integer",
+            "description": "Number of rows deleted (upsert only, via `:deleted: true`).",
+            "example": 1
+          },
+          "Errors": {
+            "type": "integer",
+            "description": "Number of rows that could not be processed.",
+            "example": 0
+          }
+        },
+        "required": ["Rows Created", "Rows Updated", "Rows Deleted"]
+      },
+      "DeleteRowResult": {
+        "type": "array",
+        "description": "Confirmation list returned after deleting a single row.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "typ": { "type": "string", "example": "delete" },
+            "id": { "type": "string", "example": "row-evac~sxbs~gm8t" }
+          }
+        }
+      },
+      "PageOptions": {
+        "type": "object",
+        "description": "Pagination options for `/query` requests.",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "1-indexed page number.",
+            "minimum": 1,
+            "default": 1,
+            "example": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of rows per page.",
+            "minimum": 1,
+            "default": 1000,
+            "example": 100
+          }
+        }
+      },
+      "SerializationOptions": {
+        "type": "object",
+        "description": "Format-specific serialization options for `/export` requests.",
+        "properties": {
+          "separator": {
+            "type": "string",
+            "description": "Column delimiter character. Defaults to comma for CSV.",
+            "example": "\t"
+          },
+          "bom": {
+            "type": "boolean",
+            "description": "If true, prepend a UTF-8 byte-order mark (BOM) to the output.",
+            "example": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "OrderingSpecifier": {
+        "type": "string",
+        "description": "Controls row ordering. `total` (default) preserves ORDER BY semantics; `discard` skips ordering for a significant performance gain when order is irrelevant.",
+        "enum": ["total", "discard"],
+        "default": "total"
+      },
+      "QueryRequest": {
+        "type": "object",
+        "description": "Request body for a SODA3 `/query` request.",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "A SoQL query string (SELECT/WHERE/GROUP BY/ORDER BY/LIMIT/OFFSET/HAVING). Defaults to `SELECT *`.",
+            "example": "SELECT region, count(*) AS quake_count WHERE magnitude > 3.0 GROUP BY region ORDER BY quake_count DESC"
+          },
+          "page": {
+            "$ref": "#/components/schemas/PageOptions"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Named parameters required by parameterized views.",
+            "additionalProperties": true
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Request timeout in seconds. Default is 600 (10 minutes).",
+            "default": 600,
+            "example": 60
+          },
+          "includeSystem": {
+            "type": "boolean",
+            "description": "Whether to include system columns (`:id`, `:created_at`, `:updated_at`). Defaults to true.",
+            "default": true
+          },
+          "includeSynthetic": {
+            "type": "boolean",
+            "description": "Whether to include computed/synthetic columns not explicitly requested. Defaults to true.",
+            "default": true
+          },
+          "orderingSpecifier": {
+            "$ref": "#/components/schemas/OrderingSpecifier"
+          }
+        }
+      },
+      "ExportRequest": {
+        "type": "object",
+        "description": "Request body for a SODA3 `/export` request.",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "A SoQL query string to filter the export.",
+            "example": "SELECT * WHERE region = 'Northern California'"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Named parameters required by parameterized views.",
+            "additionalProperties": true
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Request timeout in seconds. Default is 600.",
+            "default": 600
+          },
+          "orderingSpecifier": {
+            "$ref": "#/components/schemas/OrderingSpecifier"
+          },
+          "serializationOptions": {
+            "$ref": "#/components/schemas/SerializationOptions"
+          }
+        }
+      },
+      "DataRow": {
+        "type": "object",
+        "description": "A single dataset row returned as a JSON object. Field names and types are dataset-specific. System fields (:id, :created_at, :updated_at) may also be present.",
+        "additionalProperties": true,
+        "properties": {
+          ":id": {
+            "type": "string",
+            "description": "Socrata internal row identifier.",
+            "example": "row-evac~sxbs~gm8t"
+          },
+          ":created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of when this row was created."
+          },
+          ":updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of when this row was last updated."
+          }
+        }
+      },
+      "UpsertRow": {
+        "type": "object",
+        "description": "A single row payload for upsert/create. Include `:deleted: true` to delete a row by its identifier. Include `:id` (or the dataset's row identifier column) to target an existing row for update. Omit both to create a new row.",
+        "additionalProperties": true,
+        "properties": {
+          ":id": {
+            "type": "string",
+            "description": "Internal Socrata row ID to target for update/delete.",
+            "example": "row-evac~sxbs~gm8t"
+          },
+          ":deleted": {
+            "type": "boolean",
+            "description": "Set to `true` to delete the row matching this row's identifier.",
+            "example": true
+          }
+        }
+      },
+      "CurrentUser": {
+        "type": "object",
+        "description": "Details of the currently authenticated user.",
+        "properties": {
+          "id": { "type": "string" },
+          "screenName": { "type": "string" },
+          "displayName": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "emailUnsubscribed": { "type": "boolean" },
+          "privilegesOnThisDomain": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "flags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "OAuthAccessTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "The OAuth 2.0 access token to use in subsequent `Authorization: OAuth <token>` headers."
+          }
+        },
+        "required": ["access_token"]
+      }
+    },
+    "responses": {
+      "400BadRequest": {
+        "description": "Bad Request — malformed query, invalid parameters, or unparseable body.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      },
+      "401Unauthorized": {
+        "description": "Unauthorized — authentication failed or credentials were not provided.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      },
+      "403Forbidden": {
+        "description": "Forbidden — authenticated but not authorized to access this resource (e.g. private dataset).",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      },
+      "404NotFound": {
+        "description": "Not Found — dataset or row does not exist.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      },
+      "429TooManyRequests": {
+        "description": "Too Many Requests — client is being rate-limited. Use an app token to raise your limit.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      },
+      "500ServerError": {
+        "description": "Internal Server Error — something went wrong on Socrata's platform.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SoqlError" }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v3/views/{datasetId}/query.{format}": {
+      "post": {
+        "operationId": "queryDatasetPost",
+        "summary": "Query a dataset (POST, preferred)",
+        "description": "Execute a SoQL query against a dataset using an HTTP POST body. POST is preferred over GET for SODA3 because it supports longer queries and clearer options. Requires an app token or user authentication.",
+        "tags": ["Query (SODA3)"],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "requestBody": {
+          "required": false,
+          "description": "Query options. All fields are optional; omitting the body returns all rows with defaults.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QueryRequest" },
+              "examples": {
+                "simpleSelect": {
+                  "summary": "First 100 rows",
+                  "value": {
+                    "query": "SELECT *",
+                    "page": { "pageNumber": 1, "pageSize": 100 },
+                    "includeSynthetic": false
+                  }
+                },
+                "aggregation": {
+                  "summary": "Count by region where magnitude > 3",
+                  "value": {
+                    "query": "SELECT region, count(*) AS quake_count WHERE magnitude > 3.0 GROUP BY region ORDER BY quake_count DESC",
+                    "page": { "pageNumber": 1, "pageSize": 50 }
+                  }
+                },
+                "withSystemFields": {
+                  "summary": "Include system fields",
+                  "value": {
+                    "query": "SELECT :id, :created_at, :updated_at, *",
+                    "includeSystem": true
+                  }
+                },
+                "fastNoOrder": {
+                  "summary": "Discard ordering for performance",
+                  "value": {
+                    "query": "SELECT *",
+                    "orderingSpecifier": "discard"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results in the requested format.",
+            "headers": {
+              "X-Socrata-RequestId": { "$ref": "#/components/headers/X-Socrata-RequestId" },
+              "X-SODA2-Fields": { "$ref": "#/components/headers/X-SODA2-Fields" },
+              "X-SODA2-Types": { "$ref": "#/components/headers/X-SODA2-Types" },
+              "Last-Modified": { "$ref": "#/components/headers/Last-Modified" },
+              "ETag": { "$ref": "#/components/headers/ETag" }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DataRow" }
+                }
+              },
+              "application/geo+json": {
+                "schema": { "type": "object", "description": "GeoJSON FeatureCollection" }
+              },
+              "text/csv": {
+                "schema": { "type": "string", "description": "RFC 4180-compliant CSV with header row" }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted — request is still processing. Retry to get a 200 response."
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "get": {
+        "operationId": "queryDatasetGet",
+        "summary": "Query a dataset (GET)",
+        "description": "Execute a SoQL query via a GET request. The query body is passed as a JSON-encoded `body` query parameter (or individual parameters). POST is preferred for longer queries. Requires an app token or user authentication.",
+        "tags": ["Query (SODA3)"],
+        "parameters": [
+          { "$ref": "#/components/parameters/datasetId" },
+          { "$ref": "#/components/parameters/queryFormat" },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "SoQL query string (e.g. `SELECT * WHERE magnitude > 3`). Alternatively pass the full JSON body as the `body` parameter.",
+            "schema": { "type": "string" },
+            "example": "SELECT region, count(*) GROUP BY region"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "1-indexed page number.",
+            "schema": { "type": "integer", "minimum": 1, "default": 1 }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Rows per page.",
+            "schema": { "type": "integer", "minimum": 1, "default": 1000 }
+          },
+          {
+            "name": "includeSystem",
+            "in": "query",
+            "description": "Include system columns (:id, :created_at, :updated_at). Default true.",
+            "schema": { "type": "boolean", "default": true }
+          },
+          {
+            "name": "includeSynthetic",
+            "in": "query",
+            "description": "Include synthetic/computed columns not explicitly requested. Default true.",
+            "schema": { "type": "boolean", "default": true }
+          },
+          {
+            "name": "orderingSpecifier",
+            "in": "query",
+            "description": "Set to `discard` to skip ordering and improve performance.",
+            "schema": { "$ref": "#/components/schemas/OrderingSpecifier" }
+          },
+          {
+            "name": "timeout",
+            "in": "query",
+            "description": "Timeout in seconds (default 600).",
+            "schema": { "type": "integer", "default": 600 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query results.",
+            "headers": {
+              "X-Socrata-RequestId": { "$ref": "#/components/headers/X-Socrata-RequestId" },
+              "X-SODA2-Fields": { "$ref": "#/components/headers/X-SODA2-Fields" },
+              "X-SODA2-Types": { "$ref": "#/components/headers/X-SODA2-Types" },
+              "Last-Modified": { "$ref": "#/components/headers/Last-Modified" },
+              "ETag": { "$ref": "#/components/headers/ETag" }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DataRow" }
+                }
+              },
+              "application/geo+json": {
+                "schema": { "type": "object" }
+              },
+              "text/csv": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "202": { "description": "Accepted — retry to get a 200." },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      }
+    },
+    "/api/v3/views/{datasetId}/export.{format}": {
+      "post": {
+        "operationId": "exportDatasetPost",
+        "summary": "Export a dataset (POST, preferred)",
+        "description": "Export a full dataset in the specified format. Focuses on human-readable output (e.g. for Excel/CSV download). Supports serialization options like custom delimiters and BOM. Does not support pagination — use `/query` for paginated access. Requires an app token or user authentication.",
+        "tags": ["Export (SODA3)"],
+        "parameters": [
+          { "$ref": "#/components/parameters/datasetId" },
+          {
+            "name": "format",
+            "in": "path",
+            "required": true,
+            "description": "Export file format.",
+            "schema": {
+              "type": "string",
+              "enum": ["json", "csv", "geojson", "tsv"],
+              "example": "csv"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "description": "Optional export options.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ExportRequest" },
+              "examples": {
+                "csvWithTab": {
+                  "summary": "TSV export with BOM",
+                  "value": {
+                    "serializationOptions": { "separator": "\t", "bom": true }
+                  }
+                },
+                "filteredExport": {
+                  "summary": "Filtered CSV export",
+                  "value": {
+                    "query": "SELECT * WHERE status = 'ACTIVE'",
+                    "serializationOptions": { "separator": "," }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Full dataset in the requested export format.",
+            "headers": {
+              "X-Socrata-RequestId": { "$ref": "#/components/headers/X-Socrata-RequestId" },
+              "Last-Modified": { "$ref": "#/components/headers/Last-Modified" }
+            },
+            "content": {
+              "text/csv": {
+                "schema": { "type": "string", "description": "RFC 4180 CSV data" }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DataRow" }
+                }
+              },
+              "application/geo+json": {
+                "schema": { "type": "object", "description": "GeoJSON FeatureCollection" }
+              }
+            }
+          },
+          "202": { "description": "Accepted — retry to receive the completed export." },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "get": {
+        "operationId": "exportDatasetGet",
+        "summary": "Export a dataset (GET)",
+        "description": "Export a full dataset via GET. POST is preferred. Pass `query` as a query parameter for optional SoQL filtering.",
+        "tags": ["Export (SODA3)"],
+        "parameters": [
+          { "$ref": "#/components/parameters/datasetId" },
+          {
+            "name": "format",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "enum": ["json", "csv", "geojson", "tsv"] }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Optional SoQL filter query.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "timeout",
+            "in": "query",
+            "schema": { "type": "integer", "default": 600 }
+          },
+          {
+            "name": "orderingSpecifier",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/OrderingSpecifier" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exported dataset.",
+            "content": {
+              "text/csv": { "schema": { "type": "string" } },
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/DataRow" } } },
+              "application/geo+json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      }
+    },
+    "/resource/{datasetId}.{format}": {
+      "get": {
+        "operationId": "getRows",
+        "summary": "Query rows (SODA 2.x GET)",
+        "description": "Read rows from a dataset using legacy SODA 2.x SoQL query parameters. Results can be filtered, sorted, paginated, and aggregated via query string parameters.\n\nSoQL clauses map to `$select`, `$where`, `$order`, `$group`, `$having`, `$limit`, `$offset`, `$q` (full-text search), and `$search` parameters.\n\nSystem fields can be included by adding them to `$select` (SODA 2.1) or by adding `$$exclude_system_fields=false` (SODA 2.0).",
+        "tags": ["Read Rows (SODA 2.x)"],
+        "parameters": [
+          { "$ref": "#/components/parameters/datasetId" },
+          { "$ref": "#/components/parameters/queryFormat" },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Comma-separated list of columns or SoQL expressions to return. Use `*` for all columns. Include `:*` to include system fields. E.g. `$select=:id,:updated_at,name,amount`.",
+            "schema": { "type": "string" },
+            "example": "region, count(*) AS count"
+          },
+          {
+            "name": "$where",
+            "in": "query",
+            "description": "SoQL WHERE clause filter. E.g. `magnitude > 3.0 AND region = 'Northern California'`.",
+            "schema": { "type": "string" },
+            "example": "magnitude > 3.0"
+          },
+          {
+            "name": "$order",
+            "in": "query",
+            "description": "Sort expression. E.g. `magnitude DESC`, `region ASC, datetime DESC`.",
+            "schema": { "type": "string" },
+            "example": "magnitude DESC"
+          },
+          {
+            "name": "$group",
+            "in": "query",
+            "description": "GROUP BY expression. E.g. `region`.",
+            "schema": { "type": "string" },
+            "example": "region"
+          },
+          {
+            "name": "$having",
+            "in": "query",
+            "description": "HAVING clause to filter groups after aggregation. Requires `$group`.",
+            "schema": { "type": "string" },
+            "example": "count > 5"
+          },
+          {
+            "name": "$limit",
+            "in": "query",
+            "description": "Maximum number of rows to return. Default is 1000. Use with `$offset` for pagination.",
+            "schema": { "type": "integer", "minimum": 0, "default": 1000 },
+            "example": 100
+          },
+          {
+            "name": "$offset",
+            "in": "query",
+            "description": "Number of rows to skip before returning results. Default is 0.",
+            "schema": { "type": "integer", "minimum": 0, "default": 0 },
+            "example": 1000
+          },
+          {
+            "name": "$q",
+            "in": "query",
+            "description": "Full-text search across all text columns.",
+            "schema": { "type": "string" },
+            "example": "chicago taxi"
+          },
+          {
+            "name": "$search",
+            "in": "query",
+            "description": "Alternative full-text search parameter.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "$$exclude_system_fields",
+            "in": "query",
+            "description": "SODA 2.0 only. Set to `false` to include system fields (`:id`, `:created_at`, `:updated_at`) in the response.",
+            "schema": { "type": "boolean", "default": true }
+          },
+          {
+            "name": "$$app_token",
+            "in": "query",
+            "description": "Application token as a query parameter (alternative to the `X-App-Token` header).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "$jsonp",
+            "in": "query",
+            "description": "JSONP callback function name (wraps the JSON response for cross-origin browser use).",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of rows matching the query.",
+            "headers": {
+              "X-Socrata-RequestId": { "$ref": "#/components/headers/X-Socrata-RequestId" },
+              "X-SODA2-Fields": { "$ref": "#/components/headers/X-SODA2-Fields" },
+              "X-SODA2-Types": { "$ref": "#/components/headers/X-SODA2-Types" },
+              "X-SODA2-Legacy-Types": { "$ref": "#/components/headers/X-SODA2-Legacy-Types" },
+              "Last-Modified": { "$ref": "#/components/headers/Last-Modified" },
+              "ETag": { "$ref": "#/components/headers/ETag" }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DataRow" }
+                }
+              },
+              "application/geo+json": { "schema": { "type": "object" } },
+              "text/csv": { "schema": { "type": "string" } }
+            }
+          },
+          "202": { "description": "Accepted — retry for 200." },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "post": {
+        "operationId": "upsertRows",
+        "summary": "Upsert rows (create / update / delete in bulk)",
+        "description": "Upsert (insert + update + delete) rows in a dataset in a single operation. The payload is a JSON array or CSV data.\n\n**Logic:**\n- A row without a matching row identifier → **created**.\n- A row with a matching row identifier → **updated**.\n- A row with `\":deleted\": true` → **deleted** by its row identifier.\n\nThis operation is idempotent when a row identifier is configured on the dataset. Requires authentication.",
+        "tags": ["Write Rows (SODA Producer)"],
+        "security": [{ "BasicAuth": [] }, { "OAuth2": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "requestBody": {
+          "required": true,
+          "description": "Array of rows to upsert. Use JSON or CSV. To delete a row include `\":deleted\": true` alongside its row identifier.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/UpsertRow" }
+              },
+              "example": [
+                {
+                  "earthquake_id": "demo1234",
+                  "region": "Washington",
+                  "magnitude": 1.2
+                },
+                {
+                  "earthquake_id": "71842370",
+                  "region": "Northern California",
+                  "magnitude": 1.4
+                },
+                {
+                  "earthquake_id": "00388609",
+                  ":deleted": true
+                }
+              ]
+            },
+            "text/csv": {
+              "schema": {
+                "type": "string",
+                "description": "RFC 4180 CSV with a header row containing API field names. Add a `:deleted` column to mark rows for deletion."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upsert summary.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpsertResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "put": {
+        "operationId": "replaceRows",
+        "summary": "Replace all rows in a dataset",
+        "description": "Completely replaces the contents of the dataset with the provided rows. All existing rows are deleted and the new rows are inserted atomically. Requires authentication.\n\nUse this for full dataset refreshes. For incremental updates, use the upsert (POST) operation instead.",
+        "tags": ["Write Rows (SODA Producer)"],
+        "security": [{ "BasicAuth": [] }, { "OAuth2": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "requestBody": {
+          "required": true,
+          "description": "Full replacement dataset as a JSON array or CSV.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/DataRow" }
+              }
+            },
+            "text/csv": {
+              "schema": { "type": "string", "description": "RFC 4180 CSV with header row" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replace summary.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpsertResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      }
+    },
+    "/resource/{datasetId}/{rowId}.{format}": {
+      "get": {
+        "operationId": "getRow",
+        "summary": "Get a single row by identifier",
+        "description": "Retrieve one row from the dataset by its row identifier (internal `:id` or publisher-configured row identifier column value).",
+        "tags": ["Single Row (SODA Producer)"],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/rowId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "responses": {
+          "200": {
+            "description": "The matching row.",
+            "headers": {
+              "X-Socrata-RequestId": { "$ref": "#/components/headers/X-Socrata-RequestId" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DataRow" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "post": {
+        "operationId": "updateRowPost",
+        "summary": "Update a single row (via POST upsert)",
+        "description": "Update a specific row by submitting a single-element JSON array with the row's identifier included. The server performs an upsert: it updates the existing row if found, or creates a new one if the identifier doesn't match any existing row.",
+        "tags": ["Single Row (SODA Producer)"],
+        "security": [{ "BasicAuth": [] }, { "OAuth2": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/rowId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "items": { "$ref": "#/components/schemas/UpsertRow" }
+              },
+              "example": [
+                {
+                  ":id": "row-evac~sxbs~gm8t",
+                  "status": "ACTIVE"
+                }
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update summary (Rows Updated: 1).",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpsertResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteRow",
+        "summary": "Delete a single row",
+        "description": "Permanently delete a row from the dataset by its row identifier. Requires authentication.",
+        "tags": ["Single Row (SODA Producer)"],
+        "security": [{ "BasicAuth": [] }, { "OAuth2": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/datasetId" }, { "$ref": "#/components/parameters/rowId" }, { "$ref": "#/components/parameters/queryFormat" }],
+        "responses": {
+          "200": {
+            "description": "Confirmation of deletion.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteRowResult" },
+                "example": [{ "typ": "delete", "id": "row-evac~sxbs~gm8t" }]
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" },
+          "403": { "$ref": "#/components/responses/403Forbidden" },
+          "404": { "$ref": "#/components/responses/404NotFound" },
+          "429": { "$ref": "#/components/responses/429TooManyRequests" },
+          "500": { "$ref": "#/components/responses/500ServerError" }
+        }
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "operationId": "oauthAuthorize",
+        "summary": "OAuth 2.0 authorization endpoint",
+        "description": "Redirect the user here to begin the OAuth 2.0 authorization code flow. After the user logs in and approves your application, they are redirected to your `redirect_uri` with a `code` parameter.",
+        "tags": ["Authentication"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "description": "Your application's app token (client ID).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "response_type",
+            "in": "query",
+            "required": true,
+            "description": "Must be `code`.",
+            "schema": { "type": "string", "enum": ["code"] }
+          },
+          {
+            "name": "redirect_uri",
+            "in": "query",
+            "required": true,
+            "description": "Absolute HTTPS URI that must start with the Callback Prefix registered for your application.",
+            "schema": { "type": "string", "format": "uri" }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Optional opaque value preserved through the redirect for CSRF protection.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to `redirect_uri?code=CODE` on user approval, or an error page on failure."
+          }
+        }
+      }
+    },
+    "/oauth/access_token": {
+      "post": {
+        "operationId": "oauthAccessToken",
+        "summary": "Exchange authorization code for access token",
+        "description": "Exchange the authorization code returned by `/oauth/authorize` for an OAuth 2.0 access token. The access token is then used in `Authorization: OAuth <token>` headers on subsequent requests.",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["client_id", "client_secret", "grant_type", "redirect_uri", "code"],
+                "properties": {
+                  "client_id": {
+                    "type": "string",
+                    "description": "Your application's app token."
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "description": "Your application's secret token."
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": ["authorization_code"],
+                    "description": "Must be `authorization_code`."
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The same `redirect_uri` used in the authorization request."
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "The authorization code from the `code` query parameter of the redirect."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access token response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OAuthAccessTokenResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400BadRequest" },
+          "401": { "$ref": "#/components/responses/401Unauthorized" }
+        }
+      }
+    },
+    "/api/users/current.json": {
+      "get": {
+        "operationId": "getCurrentUser",
+        "summary": "Get the currently authenticated user",
+        "description": "Returns details about the currently authenticated user. Useful after OAuth authentication to identify who granted access.",
+        "tags": ["Authentication"],
+        "security": [{ "BasicAuth": [] }, { "OAuth2": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user details.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CurrentUser" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/401Unauthorized" }
+        }
+      }
+    }
+  }
+}

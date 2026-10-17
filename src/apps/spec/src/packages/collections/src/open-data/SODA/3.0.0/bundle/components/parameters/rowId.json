@@ -1,0 +1,10 @@
+{
+  "name": "rowId",
+  "in": "path",
+  "required": true,
+  "description": "The row identifier value. Can be the internal Socrata `:id` (e.g. `row-evac~sxbs~gm8t`) or a publisher-defined row identifier column value.",
+  "schema": {
+    "type": "string",
+    "example": "row-evac~sxbs~gm8t"
+  }
+}

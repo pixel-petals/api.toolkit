@@ -1,0 +1,74 @@
+{
+  "post": {
+    "tags": [
+      "Elevation Service"
+    ],
+    "operationId": "getElevationAtManyPoints",
+    "summary": "Get elevation at multiple coordinates",
+    "description": "Returns elevation values for up to 100 coordinate pairs in a single request.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "coordinates"
+            ],
+            "properties": {
+              "coordinates": {
+                "type": "array",
+                "description": "Array of `[longitude, latitude]` pairs.",
+                "maxItems": 100,
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "example": [
+                  [
+                    -117.196,
+                    34.057
+                  ],
+                  [
+                    -118.243,
+                    34.052
+                  ]
+                ]
+              },
+              "relativeTo": {
+                "type": "string",
+                "enum": [
+                  "ellipsoidalHeight",
+                  "meanSeaLevel"
+                ],
+                "default": "ellipsoidalHeight"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Elevation values per input coordinate.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ElevationAtManyPointsResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

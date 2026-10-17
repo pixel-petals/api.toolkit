@@ -1,0 +1,57 @@
+{
+  "get": {
+    "summary": "Export a catalog in RDF/XML (DCAT)",
+    "operationId": "exportCatalogDCAT",
+    "tags": [
+      "Catalog"
+    ],
+    "description": "Export a catalog in RDF/XML described with DCAT (Data Catalog Vocabulary). Specific parameters are described here",
+    "parameters": [
+      {
+        "$ref": "../components/parameters/dcat_format.json"
+      },
+      {
+        "name": "include_exports",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "../components/schemas/enum-format-datasets.json"
+        },
+        "description": "Sets the datasets exports exposed in the DCAT export. By default, all exports are exposed.",
+        "examples": {
+          "legacy": {
+            "summary": "Only expose csv, json and geojson datasets exports",
+            "value": "csv,json,geojson"
+          }
+        }
+      },
+      {
+        "name": "use_labels_in_exports",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": true
+        },
+        "description": "If set to `true`, this parameter will make distributions output the label of each field rather than its name. This parameter only applies on distributions that contain a list of the fields in their output (e.g., CSV, XLSX)."
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Return a file"
+      },
+      "400": {
+        "$ref": "../components/responses/bad_request.json"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "429": {
+        "$ref": "../components/responses/quota.json"
+      },
+      "500": {
+        "description": "Internal Server Error"
+      }
+    }
+  }
+}

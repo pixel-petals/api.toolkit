@@ -1,0 +1,53 @@
+{
+  "get": {
+    "tags": [
+      "Campaigns"
+    ],
+    "operationId": "getCurrentUserCampaigns",
+    "summary": "Get the current user's campaigns",
+    "description": "Returns a JSON representation of the current creator's campaigns, including rewards, goals, and the first page of pledges. Requires the `my-campaign` scope.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/includes.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The campaign list resource with optional includes.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

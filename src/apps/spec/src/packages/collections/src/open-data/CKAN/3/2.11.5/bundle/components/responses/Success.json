@@ -1,0 +1,10 @@
+{
+  "description": "Action succeeded. Check `success: true` in body.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ActionResponse.json"
+      }
+    }
+  }
+}

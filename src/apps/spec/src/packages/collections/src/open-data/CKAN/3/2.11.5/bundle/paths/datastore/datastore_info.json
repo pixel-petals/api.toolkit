@@ -1,0 +1,54 @@
+{
+  "get": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_info",
+    "summary": "Get DataStore table metadata",
+    "description": "Return detailed metadata about a DataStore table including fields, indexes, aliases, row count, and storage size.",
+    "parameters": [
+      {
+        "name": "resource_id",
+        "in": "query",
+        "required": true,
+        "description": "Resource id or alias.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_meta",
+        "in": "query",
+        "description": "Include size, count, aliases.",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      {
+        "name": "include_fields_schema",
+        "in": "query",
+        "description": "Include index/unique/notnull per field.",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "DataStore info dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

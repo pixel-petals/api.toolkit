@@ -1,0 +1,119 @@
+{
+  "get": {
+    "operationId": "getUserPreference",
+    "summary": "Get a single user preference",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_prefs"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "name": "key",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Preference key"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Preference value",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "setUserPreference",
+    "summary": "Set a single user preference",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_prefs"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "name": "key",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "text/plain": {
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Preference set"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "deleteUserPreference",
+    "summary": "Delete a single user preference",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_prefs"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "name": "key",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Preference deleted"
+      },
+      "401": {
+        "$ref": "../components/responses/401.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$ref": "../../schema.json#/definitions/bindings-anypointmq-0.0.1-message"
+}

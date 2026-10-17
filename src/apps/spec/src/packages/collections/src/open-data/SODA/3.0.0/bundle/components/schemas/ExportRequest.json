@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "description": "Request body for a SODA3 `/export` request.",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "A SoQL query string to filter the export.",
+      "example": "SELECT * WHERE region = 'Northern California'"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Named parameters required by parameterized views.",
+      "additionalProperties": true
+    },
+    "timeout": {
+      "type": "integer",
+      "description": "Request timeout in seconds. Default is 600.",
+      "default": 600
+    },
+    "orderingSpecifier": {
+      "$ref": "./OrderingSpecifier.json"
+    },
+    "serializationOptions": {
+      "$ref": "./SerializationOptions.json"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "get": {
+    "operationId": "getWay",
+    "summary": "Read a way",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Way data",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "410": {
+        "$ref": "../components/responses/410.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "updateWay",
+    "summary": "Update a way",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "New version number",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      },
+      "412": {
+        "$ref": "../components/responses/412.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429.json"
+      }
+    }
+  },
+  "delete": {
+    "operationId": "deleteWay",
+    "summary": "Delete a way",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "New version number",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      },
+      "410": {
+        "$ref": "../components/responses/410.json"
+      },
+      "412": {
+        "$ref": "../components/responses/412.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429.json"
+      }
+    }
+  }
+}

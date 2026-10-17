@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/exports?apikey=<API Key>"
+  method: GET
+  headers:
+    Accept: application/json; charset=utf-8
+  queryParams:
+    - key: apikey
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "message": "ODSQL query is malformed: invalid_function() Clause(s) containing the error(s): select.",
+        "error_code": "ODSQLError"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "error_code": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "message",
+          "error_code"
+        ]
+      }
+order: 2000

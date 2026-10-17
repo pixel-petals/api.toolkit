@@ -1,0 +1,27 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "getBasemapServiceSelf",
+    "summary": "Get basemap styles service metadata",
+    "description": "Returns metadata about the service including available styles, supported languages, and worldviews.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Service metadata.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

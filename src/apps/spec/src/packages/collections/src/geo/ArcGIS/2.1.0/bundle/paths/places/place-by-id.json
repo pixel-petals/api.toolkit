@@ -1,0 +1,56 @@
+{
+  "get": {
+    "tags": [
+      "Places Service"
+    ],
+    "operationId": "getPlaceDetails",
+    "summary": "Get place details by place ID",
+    "description": "Returns detailed attributes for a specific place.\n\n**Field groups (priced separately):**\n- Place: `name`, `categories`\n- Location: `location`, `additionalLocations:*`\n- Address: `address:*`\n- Details: `contactInfo:*`, `hours:*`, `rating:*`, `socialMedia:*`, `description`, `chains`",
+    "parameters": [
+      {
+        "name": "placeId",
+        "in": "path",
+        "required": true,
+        "description": "Unique place identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "requestedFields",
+        "in": "query",
+        "description": "Comma-separated fields or `all`.",
+        "schema": {
+          "type": "string",
+          "example": "name,categories,location,address:streetAddress"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Place details.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "../../components/schemas/PlaceDetails.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

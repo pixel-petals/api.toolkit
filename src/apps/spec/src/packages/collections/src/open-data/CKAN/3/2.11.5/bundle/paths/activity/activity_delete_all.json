@@ -1,0 +1,49 @@
+{
+  "post": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "activity_delete_all",
+    "summary": "Delete all activities for an object",
+    "description": "Delete all activity records associated with a given object. Sysadmin only.",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "object_id": {
+                "type": "string",
+                "description": "Id of the object whose activities to delete."
+              }
+            },
+            "required": [
+              "object_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

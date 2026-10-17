@@ -1,0 +1,54 @@
+{
+  "name": "EnumValueOptions",
+  "fullName": "google.protobuf.EnumValueOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/EnumValueOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "deprecated": {
+        "type": "bool",
+        "id": 1,
+        "options": {
+          "default": false
+        },
+        "comment": "Is this enum value deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the enum value, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating enum values."
+      },
+      "features": {
+        "type": "FeatureSet",
+        "id": 2,
+        "comment": "Any features defined in the specific edition.\nWARNING: This field should only be used by protobuf plugins or special\ncases like the proto compiler. Other uses are discouraged and\ndevelopers should rely on the protoreflect APIs for their client language."
+      },
+      "debug_redact": {
+        "type": "bool",
+        "id": 3,
+        "options": {
+          "default": false
+        },
+        "comment": "Indicate that fields annotated with this enum value should not be printed\nout when using debug formats, e.g. when the field contains sensitive\ncredentials."
+      },
+      "feature_support": {
+        "type": "FieldOptions.FeatureSupport",
+        "id": 4,
+        "comment": "Information about the support window of a feature value."
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        990,
+        998
+      ],
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "comment": null
+  }
+}

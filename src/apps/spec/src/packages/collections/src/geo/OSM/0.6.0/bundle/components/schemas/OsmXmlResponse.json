@@ -1,0 +1,4 @@
+{
+  "type": "string",
+  "description": "OSM XML document, content wrapped in an <osm> root element"
+}

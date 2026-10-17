@@ -1,0 +1,203 @@
+{
+  "get": {
+    "tags": [
+      "Geocoding Service"
+    ],
+    "operationId": "findAddressCandidates",
+    "summary": "Geocode an address or place name",
+    "description": "Converts text describing a location into candidate locations with coordinates and match scores. Supports single-line or component-based address input.",
+    "parameters": [
+      {
+        "name": "singleLine",
+        "in": "query",
+        "description": "Single-line address or place name.",
+        "schema": {
+          "type": "string",
+          "example": "380 New York St, Redlands, CA"
+        }
+      },
+      {
+        "name": "address",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "address2",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "address3",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "subregion",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "description": "State, province, or region.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "postal",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "postalExt",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "description": "ISO 3166-1 alpha-2 or alpha-3 country code.",
+        "schema": {
+          "type": "string",
+          "example": "US"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "description": "Preference location as JSON `{x,y}` or `lon,lat`. Biases results toward this area.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "distance",
+        "in": "query",
+        "description": "Radius in meters around `location` for preference bias.",
+        "schema": {
+          "type": "number"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "description": "Category filter: `Address`, `POI`, `Airport`, `City`, etc.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "maxLocations",
+        "in": "query",
+        "description": "Max candidates to return (default 5, max 50).",
+        "schema": {
+          "type": "integer",
+          "default": 5,
+          "maximum": 50
+        }
+      },
+      {
+        "name": "outFields",
+        "in": "query",
+        "description": "Comma-separated attribute fields to return. Use `*` for all.",
+        "schema": {
+          "type": "string",
+          "example": "PlaceName,Place_addr,Phone"
+        }
+      },
+      {
+        "name": "outSR",
+        "in": "query",
+        "description": "Output spatial reference WKID.",
+        "schema": {
+          "type": "integer",
+          "default": 4326
+        }
+      },
+      {
+        "name": "searchExtent",
+        "in": "query",
+        "description": "Bounding box to restrict search (JSON envelope or `xmin,ymin,xmax,ymax`).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "magicKey",
+        "in": "query",
+        "description": "Magic key from a prior `/suggest` response. Retrieves a full candidate at no additional geocoding cost.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "langCode",
+        "in": "query",
+        "description": "Language for result labels (BCP-47).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "locationType",
+        "in": "query",
+        "description": "Preferred result location type: `rooftop` or `street`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rooftop",
+            "street"
+          ]
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Geocoded address candidates.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/GeocodeCandidatesResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

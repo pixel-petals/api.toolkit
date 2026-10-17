@@ -1,0 +1,10 @@
+{
+  "name": "id",
+  "in": "path",
+  "required": true,
+  "schema": {
+    "type": "integer",
+    "format": "int64"
+  },
+  "description": "The numeric ID of the changeset"
+}

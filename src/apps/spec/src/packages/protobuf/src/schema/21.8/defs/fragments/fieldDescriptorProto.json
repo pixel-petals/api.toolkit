@@ -1,0 +1,125 @@
+{
+  "name": "FieldDescriptorProto",
+  "fullName": "google.protobuf.FieldDescriptorProto",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/FieldDescriptorProto",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "name": {
+        "type": "string",
+        "id": 1,
+        "comment": null
+      },
+      "number": {
+        "type": "int32",
+        "id": 3,
+        "comment": null
+      },
+      "label": {
+        "type": "Label",
+        "id": 4,
+        "comment": null
+      },
+      "type": {
+        "type": "Type",
+        "id": 5,
+        "comment": "If type_name is set, this need not be set.  If both this and type_name\nare set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP."
+      },
+      "type_name": {
+        "type": "string",
+        "id": 6,
+        "comment": "For message and enum types, this is the name of the type.  If the name\nstarts with a '.', it is fully-qualified.  Otherwise, C++-like scoping\nrules are used to find the type (i.e. first the nested types within this\nmessage are searched, then within the parent, on up to the root\nnamespace)."
+      },
+      "extendee": {
+        "type": "string",
+        "id": 2,
+        "comment": "For extensions, this is the name of the type being extended.  It is\nresolved in the same manner as type_name."
+      },
+      "default_value": {
+        "type": "string",
+        "id": 7,
+        "comment": "For numeric types, contains the original text representation of the value.\nFor booleans, \"true\" or \"false\".\nFor strings, contains the default text contents (not escaped in any way).\nFor bytes, contains the C escaped value.  All bytes >= 128 are escaped."
+      },
+      "oneof_index": {
+        "type": "int32",
+        "id": 9,
+        "comment": "If set, gives the index of a oneof in the containing type's oneof_decl\nlist.  This field is a member of that oneof."
+      },
+      "json_name": {
+        "type": "string",
+        "id": 10,
+        "comment": "JSON name of this field. The value is set by protocol compiler. If the\nuser has set a \"json_name\" option on this field, that option's value\nwill be used. Otherwise, it's deduced from the field's name by converting\nit to camelCase."
+      },
+      "options": {
+        "type": "FieldOptions",
+        "id": 8,
+        "comment": null
+      },
+      "proto3_optional": {
+        "type": "bool",
+        "id": 17,
+        "comment": "If true, this is a proto3 \"optional\". When a proto3 field is optional, it\ntracks presence regardless of field type.\n\nWhen proto3_optional is true, this field must be belong to a oneof to\nsignal to old proto3 clients that presence is tracked for this field. This\noneof is known as a \"synthetic\" oneof, and this field must be its sole\nmember (each proto3 optional field gets its own synthetic oneof). Synthetic\noneofs exist in the descriptor only, and do not generate any API. Synthetic\noneofs must be ordered after all \"real\" oneofs.\n\nFor message fields, proto3_optional doesn't create any semantic change,\nsince non-repeated message fields always track presence. However it still\nindicates the semantic detail of whether the user wrote \"optional\" or not.\nThis can be useful for round-tripping the .proto file. For consistency we\ngive message fields a synthetic oneof also, even though it is not required\nto track presence. This is especially important because the parser can't\ntell if a field is a message or an enum, so it must always create a\nsynthetic oneof.\n\nProto2 optional fields do not set this flag, because they already indicate\noptional with `LABEL_OPTIONAL`."
+      }
+    },
+    "nested": {
+      "Type": {
+        "values": {
+          "TYPE_DOUBLE": 1,
+          "TYPE_FLOAT": 2,
+          "TYPE_INT64": 3,
+          "TYPE_UINT64": 4,
+          "TYPE_INT32": 5,
+          "TYPE_FIXED64": 6,
+          "TYPE_FIXED32": 7,
+          "TYPE_BOOL": 8,
+          "TYPE_STRING": 9,
+          "TYPE_GROUP": 10,
+          "TYPE_MESSAGE": 11,
+          "TYPE_BYTES": 12,
+          "TYPE_UINT32": 13,
+          "TYPE_ENUM": 14,
+          "TYPE_SFIXED32": 15,
+          "TYPE_SFIXED64": 16,
+          "TYPE_SINT32": 17,
+          "TYPE_SINT64": 18
+        },
+        "comment": null,
+        "comments": {
+          "TYPE_DOUBLE": "0 is reserved for errors.\nOrder is weird for historical reasons.",
+          "TYPE_FLOAT": null,
+          "TYPE_INT64": "Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT64 if\nnegative values are likely.",
+          "TYPE_UINT64": null,
+          "TYPE_INT32": "Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT32 if\nnegative values are likely.",
+          "TYPE_FIXED64": null,
+          "TYPE_FIXED32": null,
+          "TYPE_BOOL": null,
+          "TYPE_STRING": null,
+          "TYPE_GROUP": "Tag-delimited aggregate.\nGroup type is deprecated and not supported in proto3. However, Proto3\nimplementations should still be able to parse the group wire format and\ntreat group fields as unknown fields.",
+          "TYPE_MESSAGE": "Length-delimited aggregate.",
+          "TYPE_BYTES": "New in version 2.",
+          "TYPE_UINT32": null,
+          "TYPE_ENUM": null,
+          "TYPE_SFIXED32": null,
+          "TYPE_SFIXED64": null,
+          "TYPE_SINT32": "Uses ZigZag encoding.",
+          "TYPE_SINT64": "Uses ZigZag encoding."
+        }
+      },
+      "Label": {
+        "values": {
+          "LABEL_OPTIONAL": 1,
+          "LABEL_REQUIRED": 2,
+          "LABEL_REPEATED": 3
+        },
+        "comment": null,
+        "comments": {
+          "LABEL_OPTIONAL": "0 is reserved for errors",
+          "LABEL_REQUIRED": null,
+          "LABEL_REPEATED": null
+        }
+      }
+    },
+    "comment": "Describes a field within a message."
+  }
+}

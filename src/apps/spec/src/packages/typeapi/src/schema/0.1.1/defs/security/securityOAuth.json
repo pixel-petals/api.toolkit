@@ -1,0 +1,48 @@
+{
+  "definitions": {
+    "Security": {
+      "description": "Describes the authentication mechanism used by the API.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "The global security type of the API. Must be one of: httpBasic, httpBearer, apiKey, or oauth2.",
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "SecurityHttpBasic": "httpBasic",
+        "SecurityHttpBearer": "httpBearer",
+        "SecurityApiKey": "apiKey",
+        "SecurityOAuth": "oauth2"
+      }
+    },
+    "SecurityOAuth": {
+      "description": "Describes OAuth 2.0 authentication, defining endpoints and scopes required by the API.",
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Security"
+      },
+      "properties": {
+        "tokenUrl": {
+          "description": "The OAuth2 token endpoint URL.",
+          "type": "string"
+        },
+        "authorizationUrl": {
+          "description": "Optional OAuth2 authorization endpoint URL.",
+          "type": "string"
+        },
+        "scopes": {
+          "description": "Optional OAuth2 scopes required by default.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "root": "SecurityOAuth"
+}

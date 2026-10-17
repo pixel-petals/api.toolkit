@@ -1,0 +1,8 @@
+{
+  "name": "where",
+  "in": "query",
+  "description": "A `where` filter is a text expression performing a simple full-text search that can also include logical operations\n(NOT, AND, OR...) and lots of other functions to perform complex and precise search operations.\n\nFor more information, see [Opendatasoft Query Language (ODSQL)](<https://help.opendatasoft.com/apis/ods-explore-v2/#section/Opendatasoft-Query-Language-(ODSQL)/Where-clause>) reference documentation.",
+  "schema": {
+    "type": "string"
+  }
+}

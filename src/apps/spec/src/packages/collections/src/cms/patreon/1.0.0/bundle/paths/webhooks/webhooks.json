@@ -1,0 +1,147 @@
+{
+  "get": {
+    "tags": [
+      "Webhooks"
+    ],
+    "operationId": "listWebhooks",
+    "summary": "List webhooks for the authenticated client",
+    "description": "Returns all webhooks created by the current client for the authenticated user's campaign.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of webhooks.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiListResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "Webhooks"
+    ],
+    "operationId": "createWebhook",
+    "summary": "Create a webhook",
+    "description": "Create a new webhook on the current user's campaign for pledge events.\n\n**v1 triggers:** `pledges:create`, `pledges:update`, `pledges:delete`.\n\nWebhook payloads are signed with HMAC-MD5 using the webhook secret. Verify the `X-Patreon-Signature` header.",
+    "security": [
+      {
+        "OAuth2": []
+      },
+      {
+        "BearerToken": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "properties": {
+              "data": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "attributes"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "webhook"
+                    ]
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "required": [
+                      "triggers",
+                      "uri"
+                    ],
+                    "properties": {
+                      "triggers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "pledges:create",
+                            "pledges:update",
+                            "pledges:delete"
+                          ]
+                        },
+                        "description": "Events that trigger this webhook."
+                      },
+                      "uri": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "The URL to POST webhook payloads to."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created webhook resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/JsonApiSingleResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/BadRequest.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../../components/responses/Forbidden.json"
+      },
+      "429": {
+        "$ref": "../../components/responses/TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../../components/responses/ServerError.json"
+      }
+    }
+  }
+}

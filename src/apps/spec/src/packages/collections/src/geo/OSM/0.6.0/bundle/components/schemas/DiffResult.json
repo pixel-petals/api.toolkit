@@ -1,0 +1,4 @@
+{
+  "type": "string",
+  "description": "OsmChange diff result XML: <diffResult> with <node|way|relation old_id='#' new_id='#' new_version='#'/> entries"
+}

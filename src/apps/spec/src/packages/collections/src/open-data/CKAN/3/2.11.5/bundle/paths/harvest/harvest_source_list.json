@@ -1,0 +1,48 @@
+{
+  "get": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_source_list",
+    "summary": "List harvest sources",
+    "description": "Return all harvest sources (with a default limit of 100). Optionally filter by organization.\n\n**Endpoint:** `GET /api/action/harvest_source_list`",
+    "parameters": [
+      {
+        "name": "organization_id",
+        "in": "query",
+        "description": "Organization id to filter sources by.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of harvest source dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

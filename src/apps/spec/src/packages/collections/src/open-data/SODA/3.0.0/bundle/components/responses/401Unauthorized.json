@@ -1,0 +1,10 @@
+{
+  "description": "Unauthorized — authentication failed or credentials were not provided.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../schemas/SoqlError.json"
+      }
+    }
+  }
+}

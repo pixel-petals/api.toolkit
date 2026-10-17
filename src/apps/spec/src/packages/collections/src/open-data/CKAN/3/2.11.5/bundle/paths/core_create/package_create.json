@@ -1,0 +1,111 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create a dataset",
+    "description": "Create a new dataset (package). The dataset name must be unique, lowercase, URL-safe. To upload resources, use `resource_create` after creation, or use `resources` array in this call.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Unique URL-safe lowercase name (required)."
+              },
+              "title": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Description (Markdown supported)."
+              },
+              "owner_org": {
+                "type": "string",
+                "description": "Organization id or name."
+              },
+              "private": {
+                "type": "boolean",
+                "default": false
+              },
+              "license_id": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "author_email": {
+                "type": "string"
+              },
+              "maintainer": {
+                "type": "string"
+              },
+              "maintainer_email": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Extra.json"
+                }
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Resource.json"
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created dataset dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

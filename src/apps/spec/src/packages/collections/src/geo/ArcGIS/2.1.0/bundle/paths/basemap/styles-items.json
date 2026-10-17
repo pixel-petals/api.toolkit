@@ -1,0 +1,42 @@
+{
+  "get": {
+    "tags": [
+      "Basemap Styles Service"
+    ],
+    "operationId": "getCustomBasemapStyleByItemId",
+    "summary": "Get a custom basemap style by portal item ID",
+    "description": "Returns the Mapbox GL style for a custom basemap style stored as a portal item.",
+    "parameters": [
+      {
+        "name": "itemId",
+        "in": "path",
+        "required": true,
+        "description": "Portal item ID of the custom basemap style.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Custom basemap style JSON.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/BasemapStyleResponse.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

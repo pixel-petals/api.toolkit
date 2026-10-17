@@ -1,0 +1,42 @@
+{
+  "post": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "config_option_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update runtime config options",
+    "description": "Update CKAN runtime configuration options. Sysadmin only. Changes apply immediately without restart.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Key-value pairs of config options to set."
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated config dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

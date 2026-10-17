@@ -1,0 +1,22 @@
+definitions:
+  Security:
+    description: Describes the authentication mechanism used by the API.
+    type: struct
+    base: true
+    properties:
+      type:
+        description: "The global security type of the API. Must be one of: httpBasic, httpBearer, apiKey, or oauth2."
+        type: string
+    discriminator: type
+    mapping:
+      SecurityHttpBasic: httpBasic
+      SecurityHttpBearer: httpBearer
+      SecurityApiKey: apiKey
+      SecurityOAuth: oauth2
+  SecurityHttpBearer:
+    description: Describes HTTP Bearer authentication, typically using a bearer token (e.g., JWT).
+    type: struct
+    parent:
+      type: reference
+      target: Security
+root: SecurityHttpBearer

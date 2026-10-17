@@ -1,0 +1,51 @@
+{
+  "get": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "tag_show",
+    "summary": "Get a tag",
+    "description": "Return the details of a tag and the datasets tagged with it.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Tag id or name.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "vocabulary_id",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "include_datasets",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Tag dict.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

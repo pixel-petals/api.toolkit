@@ -1,0 +1,75 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_records_delete",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Delete DataStore records (never drops the table)",
+    "description": "Delete rows matching filters from a DataStore table. The table structure is preserved. Pass `filters: {}` to delete all rows.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string"
+              },
+              "filters": {
+                "type": "object",
+                "description": "Row filters. Pass `{}` to delete all rows."
+              },
+              "force": {
+                "type": "boolean",
+                "default": false
+              },
+              "include_deleted_records": {
+                "type": "boolean",
+                "default": false
+              },
+              "calculate_record_count": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "default": "background"
+              }
+            },
+            "required": [
+              "resource_id",
+              "filters"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Original filters dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

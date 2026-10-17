@@ -1,0 +1,9 @@
+{
+  "name": "dataset_id",
+  "in": "path",
+  "description": "The identifier of the dataset to be queried.\n\nYou can find it in the \"Information\" tab of the dataset page or in the dataset URL, right after `/datasets/`.",
+  "required": true,
+  "schema": {
+    "type": "string"
+  }
+}

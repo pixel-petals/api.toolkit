@@ -1,0 +1,9 @@
+{
+  "name": "epsg",
+  "in": "query",
+  "description": "This parameter sets the EPSG code to project shapes into for formats that support geometric features.\n",
+  "schema": {
+    "type": "integer",
+    "default": 4326
+  }
+}

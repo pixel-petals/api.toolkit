@@ -1,0 +1,23 @@
+{
+  "get": {
+    "tags": [
+      "Tags"
+    ],
+    "operationId": "vocabulary_list",
+    "summary": "List tag vocabularies",
+    "description": "Return a list of all the site's tag vocabularies.",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "description": "List of vocabulary dicts",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

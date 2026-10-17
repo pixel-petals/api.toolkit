@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "description": "Mapbox GL / MapLibre GL Style Specification JSON.",
+  "properties": {
+    "version": {
+      "type": "integer",
+      "example": 8
+    },
+    "name": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "sources": {
+      "type": "object"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "glyphs": {
+      "type": "string"
+    },
+    "sprite": {
+      "type": "string"
+    }
+  }
+}

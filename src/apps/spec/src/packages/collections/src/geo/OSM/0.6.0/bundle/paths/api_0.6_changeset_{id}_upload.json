@@ -1,0 +1,63 @@
+{
+  "post": {
+    "operationId": "uploadChangeset",
+    "summary": "Upload an OsmChange diff",
+    "description": "Uploads an OsmChange document to the changeset. This is transactional: either all changes apply or none. Each element must have changeset and version attributes.",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "description": "OsmChange XML document",
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Diff result XML with old/new IDs and versions for each element",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/DiffResult.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "405": {
+        "$ref": "../components/responses/405.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      },
+      "413": {
+        "description": "Payload Too Large – bounding box size limit exceeded"
+      },
+      "429": {
+        "$ref": "../components/responses/429.json"
+      }
+    }
+  }
+}

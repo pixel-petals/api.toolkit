@@ -1,0 +1,6 @@
+{
+  "type": "apiKey",
+  "in": "header",
+  "name": "X-CKAN-API-Key",
+  "description": "Legacy CKAN API key header (still accepted on most instances). Prefer Authorization header with API tokens."
+}

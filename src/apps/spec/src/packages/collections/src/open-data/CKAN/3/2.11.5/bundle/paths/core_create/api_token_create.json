@@ -1,0 +1,54 @@
+{
+  "post": {
+    "tags": [
+      "Auth"
+    ],
+    "operationId": "api_token_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create an API token",
+    "description": "Generate a new API token for the authenticated user. Returns the raw token once \u2014 save it securely.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "string",
+                "description": "User id or name."
+              },
+              "name": {
+                "type": "string",
+                "description": "A label for the token."
+              }
+            },
+            "required": [
+              "user",
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "New token dict with `token` value",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

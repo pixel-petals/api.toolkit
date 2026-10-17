@@ -1,0 +1,48 @@
+{
+  "get": {
+    "operationId": "getMap",
+    "summary": "Retrieve map data by bounding box",
+    "description": "Returns all nodes, ways and relations within the given bounding box. Max bounding box area is 0.25 square degrees. Returns at most 50,000 nodes.",
+    "tags": [
+      "Miscellaneous"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "name": "bbox",
+        "in": "query",
+        "required": true,
+        "description": "Bounding box as left,bottom,right,top (min_lon,min_lat,max_lon,max_lat)",
+        "schema": {
+          "type": "string"
+        },
+        "example": "-0.489,51.28,0.236,51.686"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OSM XML containing nodes, ways and relations in the bounding box",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "$ref": "../components/schemas/OsmJsonResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "509": {
+        "$ref": "../components/responses/509.json"
+      }
+    }
+  }
+}

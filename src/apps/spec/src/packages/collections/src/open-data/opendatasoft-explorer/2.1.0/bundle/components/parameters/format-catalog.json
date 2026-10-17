@@ -1,0 +1,28 @@
+{
+  "name": "format",
+  "in": "path",
+  "required": true,
+  "schema": {
+    "type": "string",
+    "enum": [
+      "csv",
+      "data.json",
+      "dcat",
+      "dcat_ap_ch",
+      "dcat_ap_de",
+      "dcat_ap_se",
+      "dcat_ap_sp",
+      "dcat_ap_it",
+      "dcat_ap_vl",
+      "dcat_ap_benap",
+      "dublin_core",
+      "json",
+      "rdf",
+      "rss",
+      "ttl",
+      "xlsx"
+    ],
+    "description": "Format specifier for the catalog export.\n`dcat_ap_*` formats are only available upon activation.\nSee [here](#tag/Catalog/operation/listExportFormats) to get the list of available export formats"
+  },
+  "style": "simple"
+}

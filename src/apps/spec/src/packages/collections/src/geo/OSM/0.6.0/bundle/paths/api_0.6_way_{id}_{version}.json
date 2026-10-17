@@ -1,0 +1,38 @@
+{
+  "get": {
+    "operationId": "getWayVersion",
+    "summary": "Get a specific version of a way",
+    "tags": [
+      "Elements"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      },
+      {
+        "$ref": "../components/parameters/versionNumber.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Specific version",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../components/responses/403.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

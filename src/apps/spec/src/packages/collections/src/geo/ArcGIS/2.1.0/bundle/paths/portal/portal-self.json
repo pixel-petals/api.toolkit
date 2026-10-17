@@ -1,0 +1,30 @@
+{
+  "get": {
+    "tags": [
+      "Portal Service"
+    ],
+    "operationId": "getPortalSelf",
+    "summary": "Get portal information (self)",
+    "description": "Returns the portal as seen by the authenticated user, including org details, default extent, featured content group IDs, and token service URLs.",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters/f.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Portal self resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/PortalSelf.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

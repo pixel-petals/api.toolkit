@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "description": "A single JSON:API error object.",
+  "properties": {
+    "code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "code_name": {
+      "type": "string",
+      "description": "Machine-readable error code, e.g. RequestThrottled."
+    },
+    "detail": {
+      "type": "string",
+      "description": "Human-readable description of the error."
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "retry_after_seconds": {
+      "type": "integer",
+      "description": "Seconds to wait before retrying (rate-limit responses only)."
+    },
+    "status": {
+      "type": "string",
+      "description": "HTTP status code as a string."
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}

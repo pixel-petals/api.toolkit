@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "description": "A view of a resource (e.g. data table, chart, map).",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "resource_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "view_type": {
+      "type": "string",
+      "example": "datatables_view"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "default": {
+      "type": "boolean"
+    }
+  }
+}

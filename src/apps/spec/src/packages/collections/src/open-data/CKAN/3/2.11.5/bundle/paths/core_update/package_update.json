@@ -1,0 +1,91 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "package_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update a dataset (full replace)",
+    "description": "Update a dataset. All fields present in the `package_create` action are available. Fields not included are reset to their defaults (full replace semantics). Use `package_patch` for partial updates.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Dataset id or name (required)."
+              },
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "owner_org": {
+                "type": "string"
+              },
+              "private": {
+                "type": "boolean"
+              },
+              "license_id": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Extra.json"
+                }
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/Resource.json"
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated dataset dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

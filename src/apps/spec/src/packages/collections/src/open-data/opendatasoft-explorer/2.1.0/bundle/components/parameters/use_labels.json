@@ -1,0 +1,9 @@
+{
+  "name": "use_labels",
+  "in": "query",
+  "description": "If set to `true`, this parameter will make exports output the label of each field rather than its name.\n\nThis parameter only makes sense for formats that contain a list of the fields in their output.\n",
+  "schema": {
+    "type": "boolean",
+    "default": false
+  }
+}

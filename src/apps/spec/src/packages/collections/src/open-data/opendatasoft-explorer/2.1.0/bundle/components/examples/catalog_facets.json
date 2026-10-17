@@ -1,0 +1,58 @@
+{
+  "value": {
+    "links": [],
+    "facets": [
+      {
+        "name": "publisher",
+        "facets": [
+          {
+            "count": 2,
+            "state": "displayed",
+            "name": "Opendatasoft",
+            "value": "Opendatasoft"
+          },
+          {
+            "count": 2,
+            "state": "displayed",
+            "name": "Opendatasoft - Data Team",
+            "value": "Opendatasoft - Data Team"
+          }
+        ]
+      },
+      {
+        "name": "features",
+        "facets": [
+          {
+            "count": 19,
+            "state": "displayed",
+            "name": "analyze",
+            "value": "analyze"
+          },
+          {
+            "count": 13,
+            "state": "displayed",
+            "name": "timeserie",
+            "value": "timeserie"
+          }
+        ]
+      },
+      {
+        "name": "language",
+        "facets": [
+          {
+            "count": 17,
+            "state": "displayed",
+            "name": "en",
+            "value": "en"
+          },
+          {
+            "count": 4,
+            "state": "displayed",
+            "name": "fr",
+            "value": "fr"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "definitions": {
+    "Security": {
+      "description": "Describes the authentication mechanism used by the API.",
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "description": "The global security type of the API. Must be one of: httpBasic, httpBearer, apiKey, or oauth2.",
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "SecurityHttpBasic": "httpBasic",
+        "SecurityHttpBearer": "httpBearer",
+        "SecurityApiKey": "apiKey",
+        "SecurityOAuth": "oauth2"
+      }
+    }
+  },
+  "root": "Security"
+}

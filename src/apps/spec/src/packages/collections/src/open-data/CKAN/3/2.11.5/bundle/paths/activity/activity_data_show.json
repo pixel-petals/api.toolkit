@@ -1,0 +1,44 @@
+{
+  "get": {
+    "tags": [
+      "Activity"
+    ],
+    "operationId": "activity_data_show",
+    "summary": "Get activity snapshot data",
+    "description": "Return the object snapshot stored in an activity. Useful to see what a dataset or resource looked like at the time of the activity.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Activity id.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "object_type",
+        "in": "query",
+        "description": "Type of the object in the snapshot (e.g. `package`, `resource`, `user`).",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Snapshot data dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

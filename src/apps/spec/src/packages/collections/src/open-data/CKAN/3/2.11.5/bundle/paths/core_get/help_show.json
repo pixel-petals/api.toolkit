@@ -1,0 +1,37 @@
+{
+  "get": {
+    "tags": [
+      "System"
+    ],
+    "operationId": "help_show",
+    "summary": "Get action help text",
+    "description": "Return the help string for a particular API action function.",
+    "parameters": [
+      {
+        "name": "name",
+        "in": "query",
+        "required": true,
+        "description": "Action function name.",
+        "schema": {
+          "type": "string",
+          "example": "package_show"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Help text string",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

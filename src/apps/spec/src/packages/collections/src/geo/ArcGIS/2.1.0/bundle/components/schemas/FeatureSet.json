@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "description": "A collection of features returned by a query.",
+  "properties": {
+    "objectIdFieldName": {
+      "type": "string"
+    },
+    "globalIdFieldName": {
+      "type": "string"
+    },
+    "geometryType": {
+      "type": "string",
+      "enum": [
+        "esriGeometryPoint",
+        "esriGeometryPolyline",
+        "esriGeometryPolygon",
+        "esriGeometryMultipoint",
+        "esriGeometryEnvelope"
+      ]
+    },
+    "spatialReference": {
+      "$ref": "./SpatialReference.json"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "./Field.json"
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "$ref": "./Feature.json"
+      }
+    },
+    "exceededTransferLimit": {
+      "type": "boolean"
+    },
+    "nextUrl": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "oneOf": [
+    {
+      "$ref": "../../schema.json#/definitions/Reference"
+    },
+    {
+      "$ref": "../../schema.json#/definitions/SecurityScheme"
+    }
+  ]
+}

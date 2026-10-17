@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "description": "Format-specific serialization options for `/export` requests.",
+  "properties": {
+    "separator": {
+      "type": "string",
+      "description": "Column delimiter character. Defaults to comma for CSV.",
+      "example": "\t"
+    },
+    "bom": {
+      "type": "boolean",
+      "description": "If true, prepend a UTF-8 byte-order mark (BOM) to the output.",
+      "example": true
+    }
+  },
+  "additionalProperties": true
+}

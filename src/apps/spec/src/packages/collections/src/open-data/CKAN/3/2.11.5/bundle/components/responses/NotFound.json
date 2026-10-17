@@ -1,0 +1,17 @@
+{
+  "description": "Not Found \u2014 the requested object does not exist.",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "../../components/schemas/ActionResponse.json"
+      },
+      "example": {
+        "success": false,
+        "error": {
+          "__type": "Not Found Error",
+          "message": "Not found"
+        }
+      }
+    }
+  }
+}

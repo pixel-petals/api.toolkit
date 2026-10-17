@@ -1,0 +1,111 @@
+{
+  "get": {
+    "operationId": "getChangeset",
+    "summary": "Read a changeset",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      },
+      {
+        "name": "include_discussion",
+        "in": "query",
+        "required": false,
+        "description": "If set to any value, includes discussion comments in the response",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Changeset details",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "generator": {
+                  "type": "string"
+                },
+                "changeset": {
+                  "$ref": "../components/schemas/Changeset.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  },
+  "put": {
+    "operationId": "updateChangeset",
+    "summary": "Update changeset tags",
+    "description": "Updates tags on an open changeset. Only the tags provided in this call will remain; omitted tags are deleted.",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "write_api"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/xml": {
+          "schema": {
+            "$ref": "../components/schemas/OsmXmlResponse.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated changeset",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      },
+      "405": {
+        "$ref": "../components/responses/405.json"
+      },
+      "409": {
+        "$ref": "../components/responses/409.json"
+      }
+    }
+  }
+}

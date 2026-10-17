@@ -1,0 +1,48 @@
+{
+  "post": {
+    "tags": [
+      "Jobs"
+    ],
+    "operationId": "job_cancel",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Cancel a background job",
+    "description": "Remove a job from the queue. Sysadmin only.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "limit",
+  "in": "query",
+  "description": "Number of items to return.\n\nTo use with the `offset` parameter to implement pagination.\n\nThe maximum possible value depends on whether the query contains a `group_by` clause or not.\n\nFor a query **without** a `group_by`:\n  - the maximum value for `limit` is 100,\n  - `offset+limit` should be less than 10000\n\nFor a query **with** a `group_by`:\n  - the maximum value for `limit` is 20000,\n  - `offset+limit` should be less than 20000\n\n**Note:** If you need more results, please use the /exports endpoint.\n",
+  "schema": {
+    "maximum": 100,
+    "minimum": -1,
+    "type": "integer",
+    "default": 10
+  }
+}

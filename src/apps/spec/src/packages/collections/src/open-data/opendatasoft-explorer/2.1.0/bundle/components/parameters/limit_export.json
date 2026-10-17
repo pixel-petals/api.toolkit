@@ -1,0 +1,10 @@
+{
+  "name": "limit",
+  "in": "query",
+  "description": "Number of items to return in export.\n\nUse -1 (default) to retrieve all records\n",
+  "schema": {
+    "minimum": -1,
+    "type": "integer",
+    "default": -1
+  }
+}

@@ -1,0 +1,2115 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenStreetMap API v0.6",
+    "version": "0.6.0",
+    "description": "The OpenStreetMap Editing API v0.6. Allows reading and writing of OSM map data (nodes, ways, relations), changesets, GPS traces, notes, user data, and more.\n\nAuthentication uses OAuth 2.0. Read-only endpoints are generally public; write operations require authorization.\n\nBase URL: https://api.openstreetmap.org\n\nTest server: https://master.apis.dev.openstreetmap.org",
+    "contact": {
+      "name": "OpenStreetMap",
+      "url": "https://www.openstreetmap.org"
+    },
+    "license": {
+      "name": "ODbL 1.0",
+      "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.openstreetmap.org",
+      "description": "Production server"
+    },
+    {
+      "url": "https://master.apis.dev.openstreetmap.org",
+      "description": "Development/test server"
+    }
+  ],
+  "security": [
+    {},
+    {
+      "oauth2": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://www.openstreetmap.org/oauth2/authorize",
+            "tokenUrl": "https://www.openstreetmap.org/oauth2/token",
+            "scopes": {
+              "read_prefs": "Read user preferences",
+              "write_prefs": "Modify user preferences",
+              "write_api": "Modify the map (includes write_changeset_comments)",
+              "write_changeset_comments": "Comment on changesets",
+              "read_gpx": "Read private GPS traces",
+              "write_gpx": "Upload GPS traces",
+              "write_notes": "Modify notes",
+              "write_redactions": "Redact element versions",
+              "write_blocks": "Create and revoke user blocks",
+              "consume_messages": "Read, update status and delete user messages",
+              "send_messages": "Send private messages to other users"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "elementId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "format": "int64" },
+        "description": "The numeric ID of the element"
+      },
+      "changesetId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "format": "int64" },
+        "description": "The numeric ID of the changeset"
+      },
+      "versionNumber": {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "format": "int64" },
+        "description": "The version number of the element"
+      }
+    },
+    "schemas": {
+      "OsmXmlResponse": {
+        "type": "string",
+        "description": "OSM XML document, content wrapped in an <osm> root element"
+      },
+      "OsmJsonResponse": {
+        "type": "object",
+        "description": "OSM JSON response envelope",
+        "properties": {
+          "version": { "type": "string", "example": "0.6" },
+          "generator": { "type": "string" },
+          "copyright": { "type": "string" },
+          "attribution": { "type": "string" },
+          "license": { "type": "string" },
+          "elements": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OsmElement" }
+          }
+        }
+      },
+      "OsmElement": {
+        "type": "object",
+        "discriminator": { "propertyName": "type" },
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["node", "way", "relation"]
+          },
+          "id": { "type": "integer", "format": "int64" },
+          "version": { "type": "integer" },
+          "changeset": { "type": "integer", "format": "int64" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "user": { "type": "string" },
+          "uid": { "type": "integer", "format": "int64" },
+          "visible": { "type": "boolean" },
+          "tags": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Key-value tag pairs, each max 255 unicode codepoints"
+          }
+        }
+      },
+      "OsmNode": {
+        "allOf": [
+          { "$ref": "#/components/schemas/OsmElement" },
+          {
+            "type": "object",
+            "properties": {
+              "lat": { "type": "number", "format": "double", "description": "Latitude in decimal degrees (WGS 84)" },
+              "lon": { "type": "number", "format": "double", "description": "Longitude in decimal degrees (WGS 84)" }
+            }
+          }
+        ]
+      },
+      "OsmWay": {
+        "allOf": [
+          { "$ref": "#/components/schemas/OsmElement" },
+          {
+            "type": "object",
+            "properties": {
+              "nodes": {
+                "type": "array",
+                "items": { "type": "integer", "format": "int64" },
+                "description": "Ordered list of node IDs referenced by this way (max 2000)"
+              }
+            }
+          }
+        ]
+      },
+      "OsmRelation": {
+        "allOf": [
+          { "$ref": "#/components/schemas/OsmElement" },
+          {
+            "type": "object",
+            "properties": {
+              "members": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/RelationMember" },
+                "description": "Ordered list of members (max 32000)"
+              }
+            }
+          }
+        ]
+      },
+      "RelationMember": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["node", "way", "relation"] },
+          "ref": { "type": "integer", "format": "int64" },
+          "role": { "type": "string", "default": "" }
+        },
+        "required": ["type", "ref"]
+      },
+      "Changeset": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "closed_at": { "type": "string", "format": "date-time" },
+          "open": { "type": "boolean" },
+          "user": { "type": "string" },
+          "uid": { "type": "integer", "format": "int64" },
+          "min_lon": { "type": "number", "format": "double" },
+          "min_lat": { "type": "number", "format": "double" },
+          "max_lon": { "type": "number", "format": "double" },
+          "max_lat": { "type": "number", "format": "double" },
+          "comments_count": { "type": "integer" },
+          "changes_count": { "type": "integer" },
+          "created_count": { "type": "integer", "description": "Number of elements created in this changeset" },
+          "modified_count": { "type": "integer", "description": "Number of elements modified in this changeset" },
+          "deleted_count": { "type": "integer", "description": "Number of elements deleted in this changeset" },
+          "tags": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "comments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChangesetComment" }
+          }
+        }
+      },
+      "ChangesetComment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "visible": { "type": "boolean" },
+          "date": { "type": "string", "format": "date-time" },
+          "uid": { "type": "integer", "format": "int64" },
+          "user": { "type": "string" },
+          "text": { "type": "string" }
+        }
+      },
+      "Note": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "lon": { "type": "number", "format": "double" },
+          "lat": { "type": "number", "format": "double" },
+          "url": { "type": "string", "format": "uri" },
+          "comment_url": { "type": "string", "format": "uri" },
+          "close_url": { "type": "string", "format": "uri" },
+          "date_created": { "type": "string", "format": "date-time" },
+          "status": { "type": "string", "enum": ["open", "closed"] },
+          "comments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/NoteComment" }
+          }
+        }
+      },
+      "NoteComment": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date-time" },
+          "uid": { "type": "integer", "format": "int64" },
+          "user": { "type": "string" },
+          "user_url": { "type": "string", "format": "uri" },
+          "action": { "type": "string", "enum": ["opened", "commented", "closed", "reopened", "hidden"] },
+          "text": { "type": "string" },
+          "html": { "type": "string" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "display_name": { "type": "string" },
+          "account_created": { "type": "string", "format": "date-time" },
+          "description": { "type": "string" },
+          "contributor_terms": {
+            "type": "object",
+            "properties": {
+              "agreed": { "type": "boolean" }
+            }
+          },
+          "img": {
+            "type": "object",
+            "properties": {
+              "href": { "type": "string", "format": "uri" }
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "changesets": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer" }
+            }
+          },
+          "traces": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer" }
+            }
+          },
+          "blocks": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "object",
+                "properties": {
+                  "count": { "type": "integer" },
+                  "active": { "type": "integer" }
+                }
+              }
+            }
+          },
+          "company": { "type": "string" },
+          "social_links": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      },
+      "GpxTrace": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "tags": { "type": "string" },
+          "visibility": {
+            "type": "string",
+            "enum": ["private", "public", "trackable", "identifiable"]
+          },
+          "pending": { "type": "boolean" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "user": { "type": "string" },
+          "uid": { "type": "integer", "format": "int64" },
+          "points": { "type": "integer" }
+        }
+      },
+      "UserBlock": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "expires_at": { "type": "string", "format": "date-time" },
+          "needs_view": { "type": "boolean" },
+          "user": { "type": "string" },
+          "uid": { "type": "integer", "format": "int64" },
+          "creator": { "type": "string" },
+          "creator_uid": { "type": "integer", "format": "int64" },
+          "reason": { "type": "string" }
+        }
+      },
+      "DiffResult": {
+        "type": "string",
+        "description": "OsmChange diff result XML: <diffResult> with <node|way|relation old_id='#' new_id='#' new_version='#'/> entries"
+      },
+      "Permissions": {
+        "type": "object",
+        "properties": {
+          "version": { "type": "string" },
+          "generator": { "type": "string" },
+          "permissions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["allow_read_prefs", "allow_write_api", "allow_read_gpx"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad Request – malformed XML, missing parameters, or constraint violation"
+      },
+      "401": {
+        "description": "Unauthorized – authentication required or failed"
+      },
+      "403": {
+        "description": "Forbidden – authenticated but not permitted (e.g. blocked user or missing OAuth scope)"
+      },
+      "404": {
+        "description": "Not Found – requested resource does not exist"
+      },
+      "405": {
+        "description": "Method Not Allowed – wrong HTTP method used"
+      },
+      "409": {
+        "description": "Conflict – version mismatch, closed changeset, or wrong changeset owner"
+      },
+      "410": {
+        "description": "Gone – resource existed but has been deleted"
+      },
+      "412": {
+        "description": "Precondition Failed – referenced element does not exist or is still in use"
+      },
+      "414": {
+        "description": "Request-URI Too Large – too many IDs in multi-fetch request"
+      },
+      "429": {
+        "description": "Too Many Requests – rate limit exceeded"
+      },
+      "509": {
+        "description": "Bandwidth Limit Exceeded – downloaded too much data"
+      }
+    }
+  },
+  "tags": [
+    { "name": "Miscellaneous", "description": "API info, capabilities, map data, permissions" },
+    { "name": "Changesets", "description": "Create, read, update, close, query changesets and upload diffs" },
+    { "name": "Changeset Discussion", "description": "Comments and subscriptions on changesets" },
+    { "name": "Elements", "description": "CRUD operations on nodes, ways and relations" },
+    { "name": "GPS Traces", "description": "Upload and download GPS track data" },
+    { "name": "Users", "description": "User details and preferences" },
+    { "name": "Notes", "description": "Map notes (bug reports / field notes)" },
+    { "name": "User Blocks", "description": "User block management" }
+  ],
+  "paths": {
+    "/api/versions": {
+      "get": {
+        "operationId": "getApiVersions",
+        "summary": "Get supported API versions",
+        "tags": ["Miscellaneous"],
+        "security": [{}],
+        "responses": {
+          "200": {
+            "description": "List of supported API versions",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": { "type": "string" },
+                    "generator": { "type": "string" },
+                    "api": {
+                      "type": "object",
+                      "properties": {
+                        "versions": { "type": "array", "items": { "type": "string" } }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "summary": "Get API capabilities and limitations",
+        "tags": ["Miscellaneous"],
+        "security": [{}],
+        "responses": {
+          "200": {
+            "description": "API capabilities including limits for areas, changesets, ways, etc.",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/map": {
+      "get": {
+        "operationId": "getMap",
+        "summary": "Retrieve map data by bounding box",
+        "description": "Returns all nodes, ways and relations within the given bounding box. Max bounding box area is 0.25 square degrees. Returns at most 50,000 nodes.",
+        "tags": ["Miscellaneous"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "required": true,
+            "description": "Bounding box as left,bottom,right,top (min_lon,min_lat,max_lon,max_lat)",
+            "schema": { "type": "string" },
+            "example": "-0.489,51.28,0.236,51.686"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OSM XML containing nodes, ways and relations in the bounding box",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "509": { "$ref": "#/components/responses/509" }
+        }
+      }
+    },
+    "/api/0.6/permissions": {
+      "get": {
+        "operationId": "getPermissions",
+        "summary": "Retrieve current OAuth permissions",
+        "description": "Returns the permissions granted to the current API connection. Returns an empty list if not authenticated.",
+        "tags": ["Miscellaneous"],
+        "security": [{}, { "oauth2": [] }],
+        "responses": {
+          "200": {
+            "description": "List of permissions (prefixed with allow_)",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/Permissions" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/changeset/create": {
+      "put": {
+        "operationId": "createChangeset",
+        "summary": "Create a new changeset",
+        "tags": ["Changesets"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "requestBody": {
+          "required": true,
+          "description": "OSM XML containing one or more <changeset> elements with tags",
+          "content": {
+            "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ID of the newly created changeset",
+            "content": {
+              "text/plain": { "schema": { "type": "integer", "format": "int64" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" },
+          "405": { "$ref": "#/components/responses/405" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}": {
+      "get": {
+        "operationId": "getChangeset",
+        "summary": "Read a changeset",
+        "tags": ["Changesets"],
+        "security": [{}],
+        "parameters": [
+          { "$ref": "#/components/parameters/changesetId" },
+          {
+            "name": "include_discussion",
+            "in": "query",
+            "required": false,
+            "description": "If set to any value, includes discussion comments in the response",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changeset details",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": { "type": "string" },
+                    "generator": { "type": "string" },
+                    "changeset": { "$ref": "#/components/schemas/Changeset" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "put": {
+        "operationId": "updateChangeset",
+        "summary": "Update changeset tags",
+        "description": "Updates tags on an open changeset. Only the tags provided in this call will remain; omitted tags are deleted.",
+        "tags": ["Changesets"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated changeset",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "405": { "$ref": "#/components/responses/405" },
+          "409": { "$ref": "#/components/responses/409" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}/close": {
+      "put": {
+        "operationId": "closeChangeset",
+        "summary": "Close a changeset",
+        "tags": ["Changesets"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "responses": {
+          "200": { "description": "Changeset successfully closed" },
+          "404": { "$ref": "#/components/responses/404" },
+          "405": { "$ref": "#/components/responses/405" },
+          "409": { "$ref": "#/components/responses/409" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}/download": {
+      "get": {
+        "operationId": "downloadChangeset",
+        "summary": "Download OsmChange document for a changeset",
+        "description": "Returns an OsmChange XML document with all changes in the changeset, sorted by timestamp and version.",
+        "tags": ["Changesets"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "responses": {
+          "200": {
+            "description": "OsmChange XML",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/changesets": {
+      "get": {
+        "operationId": "queryChangesets",
+        "summary": "Query changesets",
+        "description": "Returns changesets matching the given filters, ordered by creation time (newest first by default). Returns at most 100 results.",
+        "tags": ["Changesets"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "description": "Bounding box as min_lon,min_lat,max_lon,max_lat",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Filter by user ID. Cannot be combined with display_name.",
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "display_name",
+            "in": "query",
+            "description": "Filter by user display name. Cannot be combined with user.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "T1 to find changesets closed after T1, or T1,T2 to find changesets open during that interval",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Find changesets created at or after this time",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Find changesets created before this time (requires from)",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "open",
+            "in": "query",
+            "description": "If true, return only open changesets",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "closed",
+            "in": "query",
+            "description": "If true, return only closed changesets",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "changesets",
+            "in": "query",
+            "description": "Comma-separated list of changeset IDs to return",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order (newest or oldest)",
+            "schema": { "type": "string", "enum": ["newest", "oldest"], "default": "newest" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results (1–100, default 100)",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 100 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching changesets",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}/upload": {
+      "post": {
+        "operationId": "uploadChangeset",
+        "summary": "Upload an OsmChange diff",
+        "description": "Uploads an OsmChange document to the changeset. This is transactional: either all changes apply or none. Each element must have changeset and version attributes.",
+        "tags": ["Changesets"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "requestBody": {
+          "required": true,
+          "description": "OsmChange XML document",
+          "content": {
+            "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Diff result XML with old/new IDs and versions for each element",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/DiffResult" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "405": { "$ref": "#/components/responses/405" },
+          "409": { "$ref": "#/components/responses/409" },
+          "413": { "description": "Payload Too Large – bounding box size limit exceeded" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}/comment": {
+      "post": {
+        "operationId": "commentOnChangeset",
+        "summary": "Add a comment to a closed changeset",
+        "tags": ["Changeset Discussion"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": { "type": "string", "description": "The comment text" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated changeset with the new comment",
+            "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "description": "Changeset is not closed" }
+        }
+      }
+    },
+    "/api/0.6/changeset/{id}/subscription": {
+      "post": {
+        "operationId": "subscribeToChangeset",
+        "summary": "Subscribe to changeset discussion notifications",
+        "tags": ["Changeset Discussion"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "responses": {
+          "200": { "description": "Successfully subscribed" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "description": "User is already subscribed to this changeset" }
+        }
+      },
+      "delete": {
+        "operationId": "unsubscribeFromChangeset",
+        "summary": "Unsubscribe from changeset discussion notifications",
+        "tags": ["Changeset Discussion"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/changesetId" }],
+        "responses": {
+          "200": { "description": "Successfully unsubscribed" },
+          "401": { "$ref": "#/components/responses/401" },
+          "404": { "description": "User was not subscribed to this changeset" }
+        }
+      }
+    },
+    "/api/0.6/changeset_comments": {
+      "get": {
+        "operationId": "searchChangesetComments",
+        "summary": "Search changeset comments",
+        "description": "Returns changeset comments matching the query. If no query is provided, returns the most recent comments.",
+        "tags": ["Changeset Discussion"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "display_name",
+            "in": "query",
+            "description": "Filter by user display name",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Filter by user ID. display_name takes priority if both are supplied.",
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Beginning of date range (ISO 8601 preferred)",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "End of date range (ISO 8601 preferred). Requires from.",
+            "schema": { "type": "string", "format": "date-time" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching changeset comments",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" }
+        }
+      }
+    },
+    "/api/0.6/changeset_comments/{id}/visibility": {
+      "delete": {
+        "operationId": "hideChangesetComment",
+        "summary": "Hide a changeset comment (moderator only)",
+        "description": "Sets the visible flag on a changeset comment to false. Requires moderator role.",
+        "tags": ["Changeset Discussion"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Comment successfully hidden" },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "post": {
+        "operationId": "unhideChangesetComment",
+        "summary": "Unhide a changeset comment (moderator only)",
+        "description": "Sets the visible flag on a changeset comment to true. Requires moderator role.",
+        "tags": ["Changeset Discussion"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Comment successfully unhidden" },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/nodes": {
+      "get": {
+        "operationId": "getNodes",
+        "summary": "Fetch multiple nodes",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "nodes",
+            "in": "query",
+            "required": true,
+            "description": "Comma-separated list of node IDs, optionally versioned (e.g. 123,456v2)",
+            "schema": { "type": "string" },
+            "example": "123,456,789"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OSM XML or JSON with requested nodes",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "414": { "$ref": "#/components/responses/414" }
+        }
+      },
+      "post": {
+        "operationId": "createNode",
+        "summary": "Create a new node",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "requestBody": {
+          "required": true,
+          "description": "OSM XML with a <node> element including changeset, lat, lon and optional tags",
+          "content": {
+            "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ID of the newly created node",
+            "content": { "text/plain": { "schema": { "type": "integer", "format": "int64" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/node/{id}": {
+      "get": {
+        "operationId": "getNode",
+        "summary": "Read a node",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "Node data",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" },
+          "410": { "$ref": "#/components/responses/410" }
+        }
+      },
+      "put": {
+        "operationId": "updateNode",
+        "summary": "Update a node",
+        "description": "Full replacement of node data. Must include correct version number for optimistic locking.",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "New version number",
+            "content": { "text/plain": { "schema": { "type": "integer" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteNode",
+        "summary": "Delete a node",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "New version number",
+            "content": { "text/plain": { "schema": { "type": "integer" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "410": { "$ref": "#/components/responses/410" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/node/{id}/history": {
+      "get": {
+        "operationId": "getNodeHistory",
+        "summary": "Get all versions of a node",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "All historical versions of the node",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/node/{id}/{version}": {
+      "get": {
+        "operationId": "getNodeVersion",
+        "summary": "Get a specific version of a node",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Specific version of the node",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/node/{id}/relations": {
+      "get": {
+        "operationId": "getNodeRelations",
+        "summary": "Get relations containing a node",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "All relations that include this node as a member",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/node/{id}/ways": {
+      "get": {
+        "operationId": "getNodeWays",
+        "summary": "Get ways that use a node",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "All ways that reference this node",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/node/{id}/{version}/redact": {
+      "post": {
+        "operationId": "redactNodeVersion",
+        "summary": "Redact a specific version of a node (moderator only)",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_redactions"] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" },
+          {
+            "name": "redaction",
+            "in": "query",
+            "required": true,
+            "description": "ID of the redaction to apply",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Version successfully redacted" },
+          "400": { "$ref": "#/components/responses/400" },
+          "403": { "$ref": "#/components/responses/403" }
+        }
+      }
+    },
+    "/api/0.6/ways": {
+      "get": {
+        "operationId": "getWays",
+        "summary": "Fetch multiple ways",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "ways",
+            "in": "query",
+            "required": true,
+            "description": "Comma-separated list of way IDs, optionally versioned",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requested ways",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "414": { "$ref": "#/components/responses/414" }
+        }
+      },
+      "post": {
+        "operationId": "createWay",
+        "summary": "Create a new way",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "ID of the newly created way",
+            "content": { "text/plain": { "schema": { "type": "integer", "format": "int64" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/way/{id}": {
+      "get": {
+        "operationId": "getWay",
+        "summary": "Read a way",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "Way data",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" },
+          "410": { "$ref": "#/components/responses/410" }
+        }
+      },
+      "put": {
+        "operationId": "updateWay",
+        "summary": "Update a way",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "New version number", "content": { "text/plain": { "schema": { "type": "integer" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteWay",
+        "summary": "Delete a way",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "New version number", "content": { "text/plain": { "schema": { "type": "integer" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "410": { "$ref": "#/components/responses/410" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/way/{id}/history": {
+      "get": {
+        "operationId": "getWayHistory",
+        "summary": "Get all versions of a way",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "All historical versions", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/way/{id}/{version}": {
+      "get": {
+        "operationId": "getWayVersion",
+        "summary": "Get a specific version of a way",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" }
+        ],
+        "responses": {
+          "200": { "description": "Specific version", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/way/{id}/relations": {
+      "get": {
+        "operationId": "getWayRelations",
+        "summary": "Get relations containing a way",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Relations containing this way", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } }
+        }
+      }
+    },
+    "/api/0.6/way/{id}/full": {
+      "get": {
+        "operationId": "getWayFull",
+        "summary": "Get a way and all its nodes",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "Way plus all referenced nodes",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" },
+          "410": { "$ref": "#/components/responses/410" }
+        }
+      }
+    },
+    "/api/0.6/way/{id}/{version}/redact": {
+      "post": {
+        "operationId": "redactWayVersion",
+        "summary": "Redact a specific version of a way (moderator only)",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_redactions"] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" },
+          { "name": "redaction", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Version successfully redacted" },
+          "400": { "$ref": "#/components/responses/400" },
+          "403": { "$ref": "#/components/responses/403" }
+        }
+      }
+    },
+    "/api/0.6/relations": {
+      "get": {
+        "operationId": "getRelations",
+        "summary": "Fetch multiple relations",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "relations",
+            "in": "query",
+            "required": true,
+            "description": "Comma-separated list of relation IDs, optionally versioned",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Requested relations", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "414": { "$ref": "#/components/responses/414" }
+        }
+      },
+      "post": {
+        "operationId": "createRelation",
+        "summary": "Create a new relation",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "ID of the newly created relation", "content": { "text/plain": { "schema": { "type": "integer", "format": "int64" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}": {
+      "get": {
+        "operationId": "getRelation",
+        "summary": "Read a relation",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Relation data", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "404": { "$ref": "#/components/responses/404" },
+          "410": { "$ref": "#/components/responses/410" }
+        }
+      },
+      "put": {
+        "operationId": "updateRelation",
+        "summary": "Update a relation",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "New version number", "content": { "text/plain": { "schema": { "type": "integer" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteRelation",
+        "summary": "Delete a relation",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_api"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "New version number", "content": { "text/plain": { "schema": { "type": "integer" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "$ref": "#/components/responses/409" },
+          "410": { "$ref": "#/components/responses/410" },
+          "412": { "$ref": "#/components/responses/412" },
+          "429": { "$ref": "#/components/responses/429" }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}/history": {
+      "get": {
+        "operationId": "getRelationHistory",
+        "summary": "Get all versions of a relation",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "All historical versions", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}/{version}": {
+      "get": {
+        "operationId": "getRelationVersion",
+        "summary": "Get a specific version of a relation",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" }
+        ],
+        "responses": {
+          "200": { "description": "Specific version", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}/relations": {
+      "get": {
+        "operationId": "getRelationRelations",
+        "summary": "Get relations containing a relation",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Relations containing this relation", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}/full": {
+      "get": {
+        "operationId": "getRelationFull",
+        "summary": "Get a relation and all referenced elements",
+        "description": "Returns the relation, all member nodes/ways/relations, and all nodes used by member ways. Recursion does not apply to sub-relations.",
+        "tags": ["Elements"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "Relation and all directly referenced elements",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/OsmJsonResponse" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" },
+          "410": { "$ref": "#/components/responses/410" }
+        }
+      }
+    },
+    "/api/0.6/relation/{id}/{version}/redact": {
+      "post": {
+        "operationId": "redactRelationVersion",
+        "summary": "Redact a specific version of a relation (moderator only)",
+        "tags": ["Elements"],
+        "security": [{ "oauth2": ["write_redactions"] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "$ref": "#/components/parameters/versionNumber" },
+          { "name": "redaction", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Version successfully redacted" },
+          "400": { "$ref": "#/components/responses/400" },
+          "403": { "$ref": "#/components/responses/403" }
+        }
+      }
+    },
+    "/api/0.6/trackpoints": {
+      "get": {
+        "operationId": "getTrackpoints",
+        "summary": "Get GPS track points by bounding box",
+        "description": "Returns GPS track points within the bounding box as GPX 1.0. Returns 5000 points per page. Increment the page parameter to retrieve subsequent pages.",
+        "tags": ["GPS Traces"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "required": true,
+            "description": "Bounding box as left,bottom,right,top. Max width and height is 0.25 degrees.",
+            "schema": { "type": "string" },
+            "example": "0,51.5,0.25,51.75"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number (0-indexed). Each page contains up to 5000 points.",
+            "schema": { "type": "integer", "default": 0 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GPX 1.0 document containing track points",
+            "content": {
+              "application/gpx+xml": { "schema": { "type": "string" } },
+              "text/xml": { "schema": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/gpx": {
+      "post": {
+        "operationId": "createGpxTrace",
+        "summary": "Upload a GPX trace",
+        "description": "Upload a GPX file or archive (.gpx, .tar, .tar.gz, .zip). Processing is asynchronous.",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["write_gpx"] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "description", "visibility"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "GPX file or archive"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Trace description (max 255 characters)",
+                    "maxLength": 255
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "Comma-separated tags for the trace"
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": ["private", "public", "trackable", "identifiable"],
+                    "description": "Visibility level of the trace"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ID of the uploaded trace",
+            "content": { "text/plain": { "schema": { "type": "integer", "format": "int64" } } }
+          },
+          "400": { "$ref": "#/components/responses/400" },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    },
+    "/api/0.6/gpx/{id}": {
+      "get": {
+        "operationId": "getGpxMetadata",
+        "summary": "Download GPX trace metadata",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["read_gpx"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "GPX trace metadata",
+            "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "put": {
+        "operationId": "updateGpxTrace",
+        "summary": "Update a GPX trace",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["write_gpx"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": { "type": "string", "maxLength": 255 },
+                  "tags": { "type": "string" },
+                  "visibility": { "type": "string", "enum": ["private", "public", "trackable", "identifiable"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Trace successfully updated" },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteGpxTrace",
+        "summary": "Delete a GPX trace",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["write_gpx"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Trace successfully deleted" },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/gpx/{id}/data": {
+      "get": {
+        "operationId": "downloadGpxData",
+        "summary": "Download GPX trace data",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["read_gpx"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "GPX file data",
+            "content": {
+              "application/gpx+xml": { "schema": { "type": "string" } },
+              "application/octet-stream": { "schema": { "type": "string", "format": "binary" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/user/gpx_files": {
+      "get": {
+        "operationId": "listUserGpxFiles",
+        "summary": "List GPS traces for the authenticated user",
+        "tags": ["GPS Traces"],
+        "security": [{ "oauth2": ["read_gpx"] }],
+        "responses": {
+          "200": {
+            "description": "List of GPS traces",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    },
+    "/api/0.6/user/{id}": {
+      "get": {
+        "operationId": "getUserById",
+        "summary": "Get details of a user by ID",
+        "tags": ["Users"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": { "type": "string" },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/users": {
+      "get": {
+        "operationId": "getMultipleUsers",
+        "summary": "Get details of multiple users",
+        "tags": ["Users"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "users",
+            "in": "query",
+            "required": true,
+            "description": "Comma-separated list of user IDs",
+            "schema": { "type": "string" },
+            "example": "1,2,3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details for each specified ID",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/0.6/user/details": {
+      "get": {
+        "operationId": "getCurrentUserDetails",
+        "summary": "Get details of the authenticated user",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["read_prefs"] }],
+        "responses": {
+          "200": {
+            "description": "Authenticated user details",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": { "type": "string" },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    },
+    "/api/0.6/user/preferences": {
+      "get": {
+        "operationId": "getUserPreferences",
+        "summary": "Get all preferences of the authenticated user",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["read_prefs"] }],
+        "responses": {
+          "200": {
+            "description": "User preferences as key-value pairs",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "preferences": { "type": "object", "additionalProperties": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      },
+      "put": {
+        "operationId": "setUserPreferences",
+        "summary": "Set all preferences for the authenticated user",
+        "description": "Replaces all existing preferences with the provided set.",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["write_prefs"] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } }
+        },
+        "responses": {
+          "200": { "description": "Preferences successfully updated" },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    },
+    "/api/0.6/user/preferences/{key}": {
+      "get": {
+        "operationId": "getUserPreference",
+        "summary": "Get a single user preference",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["read_prefs"] }],
+        "parameters": [
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Preference key" }
+        ],
+        "responses": {
+          "200": { "description": "Preference value", "content": { "text/plain": { "schema": { "type": "string" } } } },
+          "401": { "$ref": "#/components/responses/401" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "put": {
+        "operationId": "setUserPreference",
+        "summary": "Set a single user preference",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["write_prefs"] }],
+        "parameters": [
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "text/plain": { "schema": { "type": "string" } } }
+        },
+        "responses": {
+          "200": { "description": "Preference set" },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteUserPreference",
+        "summary": "Delete a single user preference",
+        "tags": ["Users"],
+        "security": [{ "oauth2": ["write_prefs"] }],
+        "parameters": [
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Preference deleted" },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    },
+    "/api/0.6/notes": {
+      "get": {
+        "operationId": "getNotesByBbox",
+        "summary": "Retrieve notes by bounding box",
+        "description": "Returns notes within the given bounding box. Max area is 25 square degrees.",
+        "tags": ["Notes"],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "required": true,
+            "description": "Bounding box as left,bottom,right,top",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Max number of results (default 100, max 10000)",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 10000, "default": 100 }
+          },
+          {
+            "name": "closed",
+            "in": "query",
+            "description": "Number of days a closed note is still returned (-1=all, 0=open only, default=7)",
+            "schema": { "type": "integer", "default": 7 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of notes",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" }
+        }
+      },
+      "post": {
+        "operationId": "createNote",
+        "summary": "Create a new note",
+        "tags": ["Notes"],
+        "security": [{}, { "oauth2": ["write_notes"] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["lat", "lon", "text"],
+                "properties": {
+                  "lat": { "type": "number", "format": "double", "description": "Latitude" },
+                  "lon": { "type": "number", "format": "double", "description": "Longitude" },
+                  "text": { "type": "string", "description": "Initial note text" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created note",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/Note" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" }
+        }
+      }
+    },
+    "/api/0.6/notes/{id}": {
+      "get": {
+        "operationId": "getNote",
+        "summary": "Read a note",
+        "tags": ["Notes"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "Note details",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "$ref": "#/components/schemas/Note" } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      },
+      "delete": {
+        "operationId": "hideNote",
+        "summary": "Hide a note (moderator only)",
+        "tags": ["Notes"],
+        "security": [{ "oauth2": ["write_notes"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Note successfully hidden" },
+          "403": { "$ref": "#/components/responses/403" },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/notes/{id}/comment": {
+      "post": {
+        "operationId": "addNoteComment",
+        "summary": "Add a comment to a note",
+        "tags": ["Notes"],
+        "security": [{}, { "oauth2": ["write_notes"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated note", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "description": "Note is already closed" }
+        }
+      }
+    },
+    "/api/0.6/notes/{id}/close": {
+      "post": {
+        "operationId": "closeNote",
+        "summary": "Close a note as resolved",
+        "tags": ["Notes"],
+        "security": [{ "oauth2": ["write_notes"] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "name": "text", "in": "query", "schema": { "type": "string" }, "description": "Optional closing comment" }
+        ],
+        "responses": {
+          "200": { "description": "Note closed", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "401": { "$ref": "#/components/responses/401" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "description": "Note is already closed" }
+        }
+      }
+    },
+    "/api/0.6/notes/{id}/reopen": {
+      "post": {
+        "operationId": "reopenNote",
+        "summary": "Reopen a closed note",
+        "tags": ["Notes"],
+        "security": [{ "oauth2": ["write_notes"] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/elementId" },
+          { "name": "text", "in": "query", "schema": { "type": "string" }, "description": "Optional comment on reopen" }
+        ],
+        "responses": {
+          "200": { "description": "Note reopened", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "401": { "$ref": "#/components/responses/401" },
+          "404": { "$ref": "#/components/responses/404" },
+          "409": { "description": "Note is already open" }
+        }
+      }
+    },
+    "/api/0.6/notes/{id}/subscription": {
+      "post": {
+        "operationId": "subscribeToNote",
+        "summary": "Subscribe to a note for notifications",
+        "tags": ["Notes"],
+        "security": [{ "oauth2": ["write_notes"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Successfully subscribed" },
+          "401": { "$ref": "#/components/responses/401" },
+          "409": { "description": "Already subscribed" }
+        }
+      },
+      "delete": {
+        "operationId": "unsubscribeFromNote",
+        "summary": "Unsubscribe from a note",
+        "tags": ["Notes"],
+        "security": [{ "oauth2": ["write_notes"] }],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": { "description": "Successfully unsubscribed" },
+          "401": { "$ref": "#/components/responses/401" },
+          "404": { "description": "Not subscribed to this note" }
+        }
+      }
+    },
+    "/api/0.6/notes/search": {
+      "get": {
+        "operationId": "searchNotes",
+        "summary": "Search for notes",
+        "tags": ["Notes"],
+        "security": [{}],
+        "parameters": [
+          { "name": "q", "in": "query", "description": "Full-text search query", "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "description": "Max results (default 100, max 10000)", "schema": { "type": "integer", "default": 100, "maximum": 10000 } },
+          { "name": "closed", "in": "query", "description": "Days since closed (-1=all, 0=open only)", "schema": { "type": "integer", "default": 7 } },
+          { "name": "display_name", "in": "query", "description": "Filter by author display name", "schema": { "type": "string" } },
+          { "name": "user", "in": "query", "description": "Filter by author user ID", "schema": { "type": "integer", "format": "int64" } },
+          { "name": "bbox", "in": "query", "description": "Bounding box as left,bottom,right,top", "schema": { "type": "string" } },
+          { "name": "from", "in": "query", "description": "Filter notes created on or after this date", "schema": { "type": "string", "format": "date-time" } },
+          { "name": "to", "in": "query", "description": "Filter notes created before this date", "schema": { "type": "string", "format": "date-time" } },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort field",
+            "schema": { "type": "string", "enum": ["created_at", "updated_at"], "default": "updated_at" }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order",
+            "schema": { "type": "string", "enum": ["oldest", "newest"], "default": "newest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching notes",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": { "$ref": "#/components/responses/400" }
+        }
+      }
+    },
+    "/api/0.6/notes/feed": {
+      "get": {
+        "operationId": "getNotesFeed",
+        "summary": "Get RSS feed of notes",
+        "tags": ["Notes"],
+        "security": [{}],
+        "parameters": [
+          { "name": "bbox", "in": "query", "description": "Bounding box as left,bottom,right,top", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "RSS feed of recent notes",
+            "content": { "application/rss+xml": { "schema": { "type": "string" } } }
+          }
+        }
+      }
+    },
+    "/api/0.6/user_blocks": {
+      "post": {
+        "operationId": "createUserBlock",
+        "summary": "Create a user block (moderator only)",
+        "tags": ["User Blocks"],
+        "security": [{ "oauth2": ["write_blocks"] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["user", "reason", "period"],
+                "properties": {
+                  "user": { "type": "integer", "format": "int64", "description": "ID of user to block" },
+                  "reason": { "type": "string", "description": "Reason for the block (displayed to the user)" },
+                  "period": { "type": "integer", "description": "Duration of the block in hours" },
+                  "needs_view": { "type": "boolean", "description": "If true, user must view the block before they can edit" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Block created", "content": { "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } } } },
+          "400": { "$ref": "#/components/responses/400" },
+          "403": { "$ref": "#/components/responses/403" }
+        }
+      }
+    },
+    "/api/0.6/user_blocks/{id}": {
+      "get": {
+        "operationId": "getUserBlock",
+        "summary": "Read a user block",
+        "tags": ["User Blocks"],
+        "security": [{}],
+        "parameters": [{ "$ref": "#/components/parameters/elementId" }],
+        "responses": {
+          "200": {
+            "description": "User block details",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_block": { "$ref": "#/components/schemas/UserBlock" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/404" }
+        }
+      }
+    },
+    "/api/0.6/user/blocks/active": {
+      "get": {
+        "operationId": "getActiveUserBlocks",
+        "summary": "List active blocks for the authenticated user",
+        "tags": ["User Blocks"],
+        "security": [{ "oauth2": [] }],
+        "responses": {
+          "200": {
+            "description": "Active user blocks",
+            "content": {
+              "application/xml": { "schema": { "$ref": "#/components/schemas/OsmXmlResponse" } },
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/401" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "get": {
+    "operationId": "downloadChangeset",
+    "summary": "Download OsmChange document for a changeset",
+    "description": "Returns an OsmChange XML document with all changes in the changeset, sorted by timestamp and version.",
+    "tags": [
+      "Changesets"
+    ],
+    "security": [
+      {}
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/changesetId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OsmChange XML",
+        "content": {
+          "application/xml": {
+            "schema": {
+              "$ref": "../components/schemas/OsmXmlResponse.json"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

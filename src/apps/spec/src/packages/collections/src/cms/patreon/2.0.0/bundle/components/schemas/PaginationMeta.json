@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "description": "Pagination metadata returned in JSON:API `meta` object.",
+  "properties": {
+    "pagination": {
+      "type": "object",
+      "properties": {
+        "cursors": {
+          "type": "object",
+          "properties": {
+            "next": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Pass as `page[cursor]` to retrieve the next page. Null when no further pages."
+            }
+          }
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "post": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_job_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create and queue a harvest job",
+    "description": "Create a new harvest job for a source, which will be picked up by the next `harvester run` execution.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "description": "Harvest source id or name."
+              }
+            },
+            "required": [
+              "source_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created harvest job dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

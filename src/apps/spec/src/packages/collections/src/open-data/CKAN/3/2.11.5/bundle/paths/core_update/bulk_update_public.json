@@ -1,0 +1,55 @@
+{
+  "post": {
+    "tags": [
+      "Packages"
+    ],
+    "operationId": "bulk_update_public",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Make datasets public in bulk",
+    "description": "Mark datasets in an organization as public.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "datasets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "org_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "datasets",
+              "org_id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      }
+    }
+  }
+}

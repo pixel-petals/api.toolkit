@@ -1,0 +1,88 @@
+{
+  "name": "MessageOptions",
+  "fullName": "google.protobuf.MessageOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/MessageOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "message_set_wire_format": {
+        "type": "bool",
+        "id": 1,
+        "options": {
+          "default": false
+        },
+        "comment": "Set true to use the old proto1 MessageSet wire format for extensions.\nThis is provided for backwards-compatibility with the MessageSet wire\nformat.  You should not use this for any other reason:  It's less\nefficient, has fewer features, and is more complicated.\n\nThe message must be defined exactly as follows:\nmessage Foo {\noption message_set_wire_format = true;\nextensions 4 to max;\n}\nNote that the message cannot have any defined fields; MessageSets only\nhave extensions.\n\nAll extensions of your type must be singular messages; e.g. they cannot\nbe int32s, enums, or repeated messages.\n\nBecause this is an option, the above two restrictions are not enforced by\nthe protocol compiler."
+      },
+      "no_standard_descriptor_accessor": {
+        "type": "bool",
+        "id": 2,
+        "options": {
+          "default": false
+        },
+        "comment": "Disables the generation of the standard \"descriptor()\" accessor, which can\nconflict with a field of the same name.  This is meant to make migration\nfrom proto1 easier; new code should avoid fields named \"descriptor\"."
+      },
+      "deprecated": {
+        "type": "bool",
+        "id": 3,
+        "options": {
+          "default": false
+        },
+        "comment": "Is this message deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the message, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating messages."
+      },
+      "map_entry": {
+        "type": "bool",
+        "id": 7,
+        "comment": "Whether the message is an automatically generated map entry type for the\nmaps field.\n\nFor maps fields:\nmap<KeyType, ValueType> map_field = 1;\nThe parsed descriptor looks like:\nmessage MapFieldEntry {\noption map_entry = true;\noptional KeyType key = 1;\noptional ValueType value = 2;\n}\nrepeated MapFieldEntry map_field = 1;\n\nImplementations may choose not to generate the map_entry=true message, but\nuse a native map in the target language to hold the keys and values.\nThe reflection APIs in such implementations still need to work as\nif the field is a repeated message field.\n\nNOTE: Do not set the option in .proto files. Always use the maps syntax\ninstead. The option should only be implicitly set by the proto compiler\nparser."
+      },
+      "deprecated_legacy_json_field_conflicts": {
+        "type": "bool",
+        "id": 11,
+        "options": {
+          "deprecated": true
+        },
+        "comment": "Enable the legacy handling of JSON field name conflicts.  This lowercases\nand strips underscored from the fields before comparison in proto3 only.\nThe new behavior takes `json_name` into account and applies to proto2 as\nwell.\n\nThis should only be used as a temporary measure against broken builds due\nto the change in behavior for JSON field name conflicts.\n\nTODO This is legacy behavior we plan to remove once downstream\nteams have had time to migrate."
+      },
+      "features": {
+        "type": "FeatureSet",
+        "id": 12,
+        "comment": "Any features defined in the specific edition."
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "reserved": [
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ]
+    ],
+    "comment": null
+  }
+}

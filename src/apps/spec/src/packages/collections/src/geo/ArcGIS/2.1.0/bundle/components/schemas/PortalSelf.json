@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "description": "Portal self resource \u2014 the portal as seen by the authenticated user.",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "culture": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "user": {
+      "$ref": "./PortalUser.json"
+    },
+    "defaultExtent": {
+      "$ref": "./Envelope.json"
+    }
+  }
+}

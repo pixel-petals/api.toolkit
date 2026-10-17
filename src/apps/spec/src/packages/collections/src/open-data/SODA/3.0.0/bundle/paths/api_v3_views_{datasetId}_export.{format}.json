@@ -1,0 +1,211 @@
+{
+  "post": {
+    "operationId": "exportDatasetPost",
+    "summary": "Export a dataset (POST, preferred)",
+    "description": "Export a full dataset in the specified format. Focuses on human-readable output (e.g. for Excel/CSV download). Supports serialization options like custom delimiters and BOM. Does not support pagination — use `/query` for paginated access. Requires an app token or user authentication.",
+    "tags": [
+      "Export (SODA3)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "name": "format",
+        "in": "path",
+        "required": true,
+        "description": "Export file format.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "json",
+            "csv",
+            "geojson",
+            "tsv"
+          ],
+          "example": "csv"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": false,
+      "description": "Optional export options.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../components/schemas/ExportRequest.json"
+          },
+          "examples": {
+            "csvWithTab": {
+              "summary": "TSV export with BOM",
+              "value": {
+                "serializationOptions": {
+                  "separator": "\t",
+                  "bom": true
+                }
+              }
+            },
+            "filteredExport": {
+              "summary": "Filtered CSV export",
+              "value": {
+                "query": "SELECT * WHERE status = 'ACTIVE'",
+                "serializationOptions": {
+                  "separator": ","
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Full dataset in the requested export format.",
+        "headers": {
+          "X-Socrata-RequestId": {
+            "$ref": "../components/headers/X-Socrata-RequestId.json"
+          },
+          "Last-Modified": {
+            "$ref": "../components/headers/Last-Modified.json"
+          }
+        },
+        "content": {
+          "text/csv": {
+            "schema": {
+              "type": "string",
+              "description": "RFC 4180 CSV data"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "../components/schemas/DataRow.json"
+              }
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object",
+              "description": "GeoJSON FeatureCollection"
+            }
+          }
+        }
+      },
+      "202": {
+        "description": "Accepted — retry to receive the completed export."
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  },
+  "get": {
+    "operationId": "exportDatasetGet",
+    "summary": "Export a dataset (GET)",
+    "description": "Export a full dataset via GET. POST is preferred. Pass `query` as a query parameter for optional SoQL filtering.",
+    "tags": [
+      "Export (SODA3)"
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/datasetId.json"
+      },
+      {
+        "name": "format",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "json",
+            "csv",
+            "geojson",
+            "tsv"
+          ]
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "description": "Optional SoQL filter query.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "timeout",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 600
+        }
+      },
+      {
+        "name": "orderingSpecifier",
+        "in": "query",
+        "schema": {
+          "$ref": "../components/schemas/OrderingSpecifier.json"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Exported dataset.",
+        "content": {
+          "text/csv": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "../components/schemas/DataRow.json"
+              }
+            }
+          },
+          "application/geo+json": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../components/responses/400BadRequest.json"
+      },
+      "401": {
+        "$ref": "../components/responses/401Unauthorized.json"
+      },
+      "403": {
+        "$ref": "../components/responses/403Forbidden.json"
+      },
+      "404": {
+        "$ref": "../components/responses/404NotFound.json"
+      },
+      "429": {
+        "$ref": "../components/responses/429TooManyRequests.json"
+      },
+      "500": {
+        "$ref": "../components/responses/500ServerError.json"
+      }
+    }
+  }
+}

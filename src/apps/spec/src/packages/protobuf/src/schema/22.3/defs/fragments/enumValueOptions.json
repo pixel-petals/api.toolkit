@@ -1,0 +1,32 @@
+{
+  "name": "EnumValueOptions",
+  "fullName": "google.protobuf.EnumValueOptions",
+  "kind": "message",
+  "pointer": "../../schema.json#/nested/google/nested/protobuf/nested/EnumValueOptions",
+  "descriptor": {
+    "edition": "proto2",
+    "fields": {
+      "deprecated": {
+        "type": "bool",
+        "id": 1,
+        "options": {
+          "default": false
+        },
+        "comment": "Is this enum value deprecated?\nDepending on the target platform, this can emit Deprecated annotations\nfor the enum value, or it will be completely ignored; in the very least,\nthis is a formalization for deprecating enum values."
+      },
+      "uninterpreted_option": {
+        "rule": "repeated",
+        "type": "UninterpretedOption",
+        "id": 999,
+        "comment": "The parser stores options it doesn't recognize here. See above."
+      }
+    },
+    "extensions": [
+      [
+        1000,
+        536870911
+      ]
+    ],
+    "comment": null
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "includes",
+  "in": "query",
+  "description": "Comma-separated list of related resources to include in the response.",
+  "schema": {
+    "type": "string"
+  }
+}

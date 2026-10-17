@@ -1,0 +1,150 @@
+{
+  "post": {
+    "tags": [
+      "DataStore"
+    ],
+    "operationId": "datastore_create",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Create or alter a DataStore table",
+    "description": "Creates a new table in the DataStore for a resource, or alters an existing one to add/remove fields, change aliases, set indexes, and bulk-insert records.\n\nTo simultaneously create a CKAN resource and its DataStore table, omit `resource_id` and provide a `resource` dict with a valid `package_id`.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "resource_id": {
+                "type": "string",
+                "description": "Id of the existing resource. Omit when using `resource` to create a new resource simultaneously."
+              },
+              "resource": {
+                "type": "object",
+                "description": "Resource dict (used to create a new CKAN resource at the same time). Requires `package_id`."
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "$ref": "../../components/schemas/DatastoreField.json"
+                },
+                "description": "Field/column definitions."
+              },
+              "delete_fields": {
+                "type": "boolean",
+                "default": false,
+                "description": "Remove fields not included in `fields`."
+              },
+              "records": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                },
+                "description": "Rows to insert."
+              },
+              "include_records": {
+                "type": "boolean",
+                "default": false
+              },
+              "primary_key": {
+                "description": "List or comma-separated string of primary key field ids.",
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "indexes": {
+                "description": "Indexes to create.",
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "aliases": {
+                "description": "Read-only alias names for the table.",
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "triggers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "function": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": "PL/pgSQL trigger functions to run on insert/update."
+              },
+              "force": {
+                "type": "boolean",
+                "default": false,
+                "description": "Set True to edit a read-only table."
+              },
+              "calculate_record_count": {
+                "description": "Update record count: True, False, or 'background'.",
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "background"
+                    ]
+                  }
+                ],
+                "default": "background"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Created DataStore table metadata",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "422": {
+        "$ref": "../../components/responses/ValidationError.json"
+      }
+    }
+  }
+}

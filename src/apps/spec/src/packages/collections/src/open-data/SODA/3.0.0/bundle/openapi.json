@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Socrata API (3.0.0)",
+    "version": "3.0.0",
+    "description": "The Socrata Open Data API (SODA3) provides programmatic access to open data hosted on Socrata-powered portals (now Tyler Technologies Data & Insights).\n\nEvery dataset has a unique 4x4 identifier (e.g. `ydr8-5enu`). SODA3 exposes two primary endpoints per dataset:\n\n- **`/query`** — Machine-readable querying via SoQL. Supports pagination, field selection, filtering, grouping, and aggregation.\n- **`/export`** — Full-dataset export in human-readable formats (CSV, JSON, GeoJSON, etc.).\n\nWrite operations (POST/PUT/DELETE on `/resource/`) use the legacy SODA Producer API path, which remains fully supported.\n\n**Authentication:** All SODA3 query requests require either an `X-App-Token` header or full user authentication (HTTP Basic or OAuth 2.0 Bearer). Write operations require user authentication.\n\n**Base URL:** This spec uses `https://{domain}` as the server — substitute your portal's hostname (e.g. `data.cityofchicago.org`, `soda.demo.socrata.com`).",
+    "contact": {
+      "name": "Socrata Developer Portal",
+      "url": "https://dev.socrata.com"
+    },
+    "license": {
+      "name": "CC BY-NC-SA 3.0",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://soda.demo.socrata.com",
+      "description": "Socrata public demo server"
+    },
+    {
+      "url": "https://{domain}",
+      "description": "Your Socrata-powered open data portal",
+      "variables": {
+        "domain": {
+          "default": "data.cityofchicago.org",
+          "description": "The hostname of your Socrata portal (e.g. data.cityofchicago.org)"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "AppToken": []
+    },
+    {
+      "BasicAuth": []
+    },
+    {
+      "OAuth2": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Query (SODA3)",
+      "description": "SODA3 `/query` endpoint for machine-readable SoQL queries against a dataset. Supports POST (preferred) and GET. Requires an app token or authentication."
+    },
+    {
+      "name": "Export (SODA3)",
+      "description": "SODA3 `/export` endpoint for full-dataset downloads in various formats. Supports POST (preferred) and GET."
+    },
+    {
+      "name": "Read Rows (SODA 2.x)",
+      "description": "Legacy SODA 2.x `/resource/` endpoint for reading rows. Still widely supported and used for backwards compatibility."
+    },
+    {
+      "name": "Write Rows (SODA Producer)",
+      "description": "SODA Producer API for creating, upserting, replacing, and deleting rows. Requires authentication. Uses the `/resource/` path."
+    },
+    {
+      "name": "Single Row (SODA Producer)",
+      "description": "Read, update, or delete a single row by its row identifier via the `/resource/` path."
+    },
+    {
+      "name": "Authentication",
+      "description": "OAuth 2.0 authorization flow endpoints and current-user lookup."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "AppToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-App-Token",
+        "description": "A Socrata application token. Increases throttling limits. Required for all SODA3 queries (can be combined with authentication)."
+      },
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "HTTP Basic Authentication using your Socrata username+password, or an API key ID + secret pair. Must be used over HTTPS."
+      },
+      "OAuth2": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "OAuth",
+        "description": "OAuth 2.0 bearer token. Pass as `Authorization: OAuth <access_token>`. Must be used over HTTPS."
+      }
+    }
+  },
+  "paths": {
+    "/api/v3/views/{datasetId}/query.{format}": {
+      "$ref": "paths/api_v3_views_{datasetId}_query.{format}.json"
+    },
+    "/api/v3/views/{datasetId}/export.{format}": {
+      "$ref": "paths/api_v3_views_{datasetId}_export.{format}.json"
+    },
+    "/resource/{datasetId}.{format}": {
+      "$ref": "paths/resource_{datasetId}.{format}.json"
+    },
+    "/resource/{datasetId}/{rowId}.{format}": {
+      "$ref": "paths/resource_{datasetId}_{rowId}.{format}.json"
+    },
+    "/oauth/authorize": {
+      "$ref": "paths/oauth_authorize.json"
+    },
+    "/oauth/access_token": {
+      "$ref": "paths/oauth_access_token.json"
+    },
+    "/api/users/current.json": {
+      "$ref": "paths/api_users_current.json.json"
+    }
+  }
+}

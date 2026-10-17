@@ -1,0 +1,48 @@
+{
+  "description": "Too many requests",
+  "content": {
+    "application/json; charset=utf-8": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "errorcode": {
+            "type": "number"
+          },
+          "reset_time": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit_time_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "call_limit": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "errorcode",
+          "reset_time",
+          "limit_time_unit",
+          "call_limit",
+          "error"
+        ]
+      },
+      "examples": {
+        "quota_exceeded": {
+          "value": {
+            "errorcode": 10002,
+            "reset_time": "2021-01-26T00:00:00Z",
+            "limit_time_unit": "day",
+            "call_limit": 10000,
+            "error": "Too many requests on the domain. Please contact the domain administrator."
+          }
+        }
+      }
+    }
+  }
+}

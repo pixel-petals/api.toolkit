@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "href": {
+      "type": "string"
+    },
+    "metas": {
+      "type": "object",
+      "properties": {
+        "mime-type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

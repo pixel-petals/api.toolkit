@@ -1,0 +1,69 @@
+{
+  "post": {
+    "tags": [
+      "Harvest"
+    ],
+    "operationId": "harvest_source_update",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Update a harvest source",
+    "description": "Update an existing harvest source.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "source_type": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string"
+              },
+              "config": {
+                "type": "string"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Updated harvest source dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

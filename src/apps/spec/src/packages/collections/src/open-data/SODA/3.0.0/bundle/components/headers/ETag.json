@@ -1,0 +1,6 @@
+{
+  "description": "HTTP ETag for cache validation.",
+  "schema": {
+    "type": "string"
+  }
+}

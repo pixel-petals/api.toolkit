@@ -1,0 +1,585 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CKAN REST API",
+    "version": "2.11.0",
+    "description": "OpenAPI 3.1 specification for the CKAN Open Data Portal API, split into subfiles using JSON `$ref` references.\n\n## Architecture\n\nCKAN exposes a single RPC-style **Action API** endpoint. All actions are called by POST (or GET for read-only actions) to:\n\n```\nPOST /api/3/action/{action_name}\nGET  /api/3/action/{action_name}?param=value\n```\n\nEvery response is a JSON envelope `{success, result, error, help}`. Check `success` before using `result`.\n\n## Authentication\n\nPass an API token in the `Authorization` header (preferred) or legacy `X-CKAN-API-Key` header.\nGenerate tokens at **User Profile \u2192 Manage \u2192 API Tokens** or via `api_token_create`.\n\n## Directory structure\n\n```\nopenapi.json                          \u2190 root entry point\ncomponents/\n  schemas/          (23 files)         \u2190 shared data models\n  parameters/       (4 files)          \u2190 shared parameters\n  responses/        (4 files)          \u2190 shared error responses\n  securitySchemes/  (2 files)\npaths/\n  core_get/         (29 files)         \u2190 read-only CKAN core actions\n  core_create/      (14 files)         \u2190 create actions\n  core_update/      (12 files)         \u2190 update/replace actions\n  core_patch/       (5 files)          \u2190 partial update actions\n  core_delete/      (19 files)         \u2190 delete/purge actions\n  core_file/        (6 files)          \u2190 CKAN 2.12+ File API\n  datastore/        (10 files)         \u2190 ckanext-datastore\n  filestore/        (1 file)           \u2190 DataStore dump download\n  activity/         (15 files)         \u2190 ckanext-activity\n  harvest/          (13 files)         \u2190 ckanext-harvest\n  spatial/          (1 file)           \u2190 ckanext-spatial\n  dcat/             (3 files)          \u2190 ckanext-dcat\n```\n\n## Coverage\n\n**Core API** (ckan.logic.action): `package_*`, `resource_*`, `group_*`, `organization_*`, `user_*`, `tag_*`, `vocabulary_*`, `member_*`, `api_token_*`, `config_option_*`, `job_*`, `file_*`\n\n**ckanext-datastore**: `datastore_create`, `datastore_upsert`, `datastore_search`, `datastore_search_sql`, `datastore_delete`, `datastore_records_delete`, `datastore_info`, `datastore_run_triggers`, `datastore_function_create/delete`\n\n**ckanext-activity**: activity stream listing, creating, diffing, deleting, email notifications\n\n**ckanext-harvest**: `harvest_source_*`, `harvest_job_*`, `harvest_object_*`, `harvesters_info_show`\n\n**ckanext-spatial**: `ext_bbox` bounding-box search extension to `package_search`\n\n**ckanext-dcat**: `/catalog.{format}`, `/dataset/{id}.{format}`, Schema.org structured data\n\n**FileStore (dump)**: `GET /datastore/dump/{resource_id}`",
+    "contact": {
+      "name": "CKAN Project",
+      "url": "https://ckan.org",
+      "email": "info@ckan.org"
+    },
+    "license": {
+      "name": "AGPL-3.0",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.en.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://demo.ckan.org",
+      "description": "CKAN public demo instance"
+    },
+    {
+      "url": "https://{ckan_host}",
+      "description": "Your CKAN instance",
+      "variables": {
+        "ckan_host": {
+          "default": "your-ckan-instance.example.com",
+          "description": "Hostname of your CKAN deployment"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "ApiToken": []
+    },
+    {
+      "XCKANHeader": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Packages",
+      "description": "Datasets (packages) \u2014 the core CKAN content unit. Create, read, update, delete, and search datasets."
+    },
+    {
+      "name": "Resources",
+      "description": "Data resources attached to datasets. Supports FileStore uploads (multipart/form-data) and external URL links."
+    },
+    {
+      "name": "Groups",
+      "description": "Thematic collections grouping related datasets."
+    },
+    {
+      "name": "Organizations",
+      "description": "Publisher organizations that own and manage datasets."
+    },
+    {
+      "name": "Users",
+      "description": "User accounts, profiles, and roles."
+    },
+    {
+      "name": "Tags",
+      "description": "Free tags and controlled vocabulary terms for dataset tagging."
+    },
+    {
+      "name": "Members",
+      "description": "Membership management for groups and organizations."
+    },
+    {
+      "name": "Following",
+      "description": "Follow / unfollow datasets, users, and groups."
+    },
+    {
+      "name": "Auth",
+      "description": "API token management (create, list, revoke)."
+    },
+    {
+      "name": "Jobs",
+      "description": "Background job queue (list, show, cancel). Sysadmin only."
+    },
+    {
+      "name": "System",
+      "description": "Site status, license list, configuration options."
+    },
+    {
+      "name": "FileStore",
+      "description": "CKAN FileStore: file uploads via resource_create/update, DataStore dump downloads, and CKAN 2.12+ File API."
+    },
+    {
+      "name": "DataStore",
+      "description": "ckanext-datastore: structured tabular storage with search, filter, upsert, SQL queries, and trigger functions."
+    },
+    {
+      "name": "Activity",
+      "description": "ckanext-activity: activity streams and audit trail for all CKAN objects."
+    },
+    {
+      "name": "Harvest",
+      "description": "ckanext-harvest: remote metadata ingestion from CKAN, WAF, CSW, DCAT, and other sources."
+    },
+    {
+      "name": "Spatial",
+      "description": "ckanext-spatial: spatial bounding box search extension to package_search."
+    },
+    {
+      "name": "DCAT",
+      "description": "ckanext-dcat: RDF/DCAT catalog and dataset serialization endpoints (Turtle, JSON-LD, RDF/XML)."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiToken": {
+        "$ref": "components/securitySchemes/ApiToken.json"
+      },
+      "XCKANHeader": {
+        "$ref": "components/securitySchemes/XCKANHeader.json"
+      }
+    },
+    "parameters": {
+      "actionName": {
+        "$ref": "components/parameters/actionName.json"
+      },
+      "id": {
+        "$ref": "components/parameters/id.json"
+      },
+      "limit": {
+        "$ref": "components/parameters/limit.json"
+      },
+      "offset": {
+        "$ref": "components/parameters/offset.json"
+      }
+    },
+    "responses": {
+      "Success": {
+        "$ref": "components/responses/Success.json"
+      },
+      "AuthError": {
+        "$ref": "components/responses/AuthError.json"
+      },
+      "NotFound": {
+        "$ref": "components/responses/NotFound.json"
+      },
+      "ValidationError": {
+        "$ref": "components/responses/ValidationError.json"
+      }
+    },
+    "schemas": {
+      "ActionResponse": {
+        "$ref": "components/schemas/ActionResponse.json"
+      },
+      "Package": {
+        "$ref": "components/schemas/Package.json"
+      },
+      "Resource": {
+        "$ref": "components/schemas/Resource.json"
+      },
+      "Group": {
+        "$ref": "components/schemas/Group.json"
+      },
+      "Organization": {
+        "$ref": "components/schemas/Organization.json"
+      },
+      "Tag": {
+        "$ref": "components/schemas/Tag.json"
+      },
+      "Vocabulary": {
+        "$ref": "components/schemas/Vocabulary.json"
+      },
+      "User": {
+        "$ref": "components/schemas/User.json"
+      },
+      "Extra": {
+        "$ref": "components/schemas/Extra.json"
+      },
+      "PackageSearchResult": {
+        "$ref": "components/schemas/PackageSearchResult.json"
+      },
+      "DatastoreField": {
+        "$ref": "components/schemas/DatastoreField.json"
+      },
+      "DatastoreSearchResult": {
+        "$ref": "components/schemas/DatastoreSearchResult.json"
+      },
+      "HarvestSource": {
+        "$ref": "components/schemas/HarvestSource.json"
+      },
+      "HarvestJob": {
+        "$ref": "components/schemas/HarvestJob.json"
+      },
+      "ActivityItem": {
+        "$ref": "components/schemas/ActivityItem.json"
+      },
+      "ApiToken": {
+        "$ref": "components/schemas/ApiToken.json"
+      },
+      "ResourceView": {
+        "$ref": "components/schemas/ResourceView.json"
+      }
+    }
+  },
+  "paths": {
+    "/api/3/action/package_list": {
+      "$ref": "paths/core_get/package_list.json"
+    },
+    "/api/3/action/package_show": {
+      "$ref": "paths/core_get/package_show.json"
+    },
+    "/api/3/action/package_search": {
+      "$ref": "paths/core_get/package_search.json"
+    },
+    "/api/3/action/current_package_list_with_resources": {
+      "$ref": "paths/core_get/current_package_list_with_resources.json"
+    },
+    "/api/3/action/package_autocomplete": {
+      "$ref": "paths/core_get/package_autocomplete.json"
+    },
+    "/api/3/action/resource_show": {
+      "$ref": "paths/core_get/resource_show.json"
+    },
+    "/api/3/action/resource_search": {
+      "$ref": "paths/core_get/resource_search.json"
+    },
+    "/api/3/action/resource_view_list": {
+      "$ref": "paths/core_get/resource_view_list.json"
+    },
+    "/api/3/action/format_autocomplete": {
+      "$ref": "paths/core_get/format_autocomplete.json"
+    },
+    "/api/3/action/group_list": {
+      "$ref": "paths/core_get/group_list.json"
+    },
+    "/api/3/action/group_show": {
+      "$ref": "paths/core_get/group_show.json"
+    },
+    "/api/3/action/organization_list": {
+      "$ref": "paths/core_get/organization_list.json"
+    },
+    "/api/3/action/organization_show": {
+      "$ref": "paths/core_get/organization_show.json"
+    },
+    "/api/3/action/organization_autocomplete": {
+      "$ref": "paths/core_get/organization_autocomplete.json"
+    },
+    "/api/3/action/user_list": {
+      "$ref": "paths/core_get/user_list.json"
+    },
+    "/api/3/action/user_show": {
+      "$ref": "paths/core_get/user_show.json"
+    },
+    "/api/3/action/tag_list": {
+      "$ref": "paths/core_get/tag_list.json"
+    },
+    "/api/3/action/tag_show": {
+      "$ref": "paths/core_get/tag_show.json"
+    },
+    "/api/3/action/tag_autocomplete": {
+      "$ref": "paths/core_get/tag_autocomplete.json"
+    },
+    "/api/3/action/vocabulary_list": {
+      "$ref": "paths/core_get/vocabulary_list.json"
+    },
+    "/api/3/action/vocabulary_show": {
+      "$ref": "paths/core_get/vocabulary_show.json"
+    },
+    "/api/3/action/license_list": {
+      "$ref": "paths/core_get/license_list.json"
+    },
+    "/api/3/action/status_show": {
+      "$ref": "paths/core_get/status_show.json"
+    },
+    "/api/3/action/help_show": {
+      "$ref": "paths/core_get/help_show.json"
+    },
+    "/api/3/action/api_token_list": {
+      "$ref": "paths/core_get/api_token_list.json"
+    },
+    "/api/3/action/config_option_list": {
+      "$ref": "paths/core_get/config_option_list.json"
+    },
+    "/api/3/action/config_option_show": {
+      "$ref": "paths/core_get/config_option_show.json"
+    },
+    "/api/3/action/job_list": {
+      "$ref": "paths/core_get/job_list.json"
+    },
+    "/api/3/action/job_show": {
+      "$ref": "paths/core_get/job_show.json"
+    },
+    "/api/3/action/package_create": {
+      "$ref": "paths/core_create/package_create.json"
+    },
+    "/api/3/action/resource_create": {
+      "$ref": "paths/core_create/resource_create.json"
+    },
+    "/api/3/action/group_create": {
+      "$ref": "paths/core_create/group_create.json"
+    },
+    "/api/3/action/organization_create": {
+      "$ref": "paths/core_create/organization_create.json"
+    },
+    "/api/3/action/user_create": {
+      "$ref": "paths/core_create/user_create.json"
+    },
+    "/api/3/action/vocabulary_create": {
+      "$ref": "paths/core_create/vocabulary_create.json"
+    },
+    "/api/3/action/tag_create": {
+      "$ref": "paths/core_create/tag_create.json"
+    },
+    "/api/3/action/member_create": {
+      "$ref": "paths/core_create/member_create.json"
+    },
+    "/api/3/action/package_collaborator_create": {
+      "$ref": "paths/core_create/package_collaborator_create.json"
+    },
+    "/api/3/action/api_token_create": {
+      "$ref": "paths/core_create/api_token_create.json"
+    },
+    "/api/3/action/resource_view_create": {
+      "$ref": "paths/core_create/resource_view_create.json"
+    },
+    "/api/3/action/follow_dataset": {
+      "$ref": "paths/core_create/follow_dataset.json"
+    },
+    "/api/3/action/follow_user": {
+      "$ref": "paths/core_create/follow_user.json"
+    },
+    "/api/3/action/follow_group": {
+      "$ref": "paths/core_create/follow_group.json"
+    },
+    "/api/3/action/package_update": {
+      "$ref": "paths/core_update/package_update.json"
+    },
+    "/api/3/action/package_revise": {
+      "$ref": "paths/core_update/package_revise.json"
+    },
+    "/api/3/action/resource_update": {
+      "$ref": "paths/core_update/resource_update.json"
+    },
+    "/api/3/action/group_update": {
+      "$ref": "paths/core_update/group_update.json"
+    },
+    "/api/3/action/organization_update": {
+      "$ref": "paths/core_update/organization_update.json"
+    },
+    "/api/3/action/user_update": {
+      "$ref": "paths/core_update/user_update.json"
+    },
+    "/api/3/action/vocabulary_update": {
+      "$ref": "paths/core_update/vocabulary_update.json"
+    },
+    "/api/3/action/package_owner_org_update": {
+      "$ref": "paths/core_update/package_owner_org_update.json"
+    },
+    "/api/3/action/bulk_update_private": {
+      "$ref": "paths/core_update/bulk_update_private.json"
+    },
+    "/api/3/action/bulk_update_public": {
+      "$ref": "paths/core_update/bulk_update_public.json"
+    },
+    "/api/3/action/config_option_update": {
+      "$ref": "paths/core_update/config_option_update.json"
+    },
+    "/api/3/action/resource_view_reorder": {
+      "$ref": "paths/core_update/resource_view_reorder.json"
+    },
+    "/api/3/action/package_patch": {
+      "$ref": "paths/core_patch/package_patch.json"
+    },
+    "/api/3/action/resource_patch": {
+      "$ref": "paths/core_patch/resource_patch.json"
+    },
+    "/api/3/action/group_patch": {
+      "$ref": "paths/core_patch/group_patch.json"
+    },
+    "/api/3/action/organization_patch": {
+      "$ref": "paths/core_patch/organization_patch.json"
+    },
+    "/api/3/action/user_patch": {
+      "$ref": "paths/core_patch/user_patch.json"
+    },
+    "/api/3/action/package_delete": {
+      "$ref": "paths/core_delete/package_delete.json"
+    },
+    "/api/3/action/dataset_purge": {
+      "$ref": "paths/core_delete/dataset_purge.json"
+    },
+    "/api/3/action/resource_delete": {
+      "$ref": "paths/core_delete/resource_delete.json"
+    },
+    "/api/3/action/resource_view_delete": {
+      "$ref": "paths/core_delete/resource_view_delete.json"
+    },
+    "/api/3/action/group_delete": {
+      "$ref": "paths/core_delete/group_delete.json"
+    },
+    "/api/3/action/group_purge": {
+      "$ref": "paths/core_delete/group_purge.json"
+    },
+    "/api/3/action/organization_delete": {
+      "$ref": "paths/core_delete/organization_delete.json"
+    },
+    "/api/3/action/organization_purge": {
+      "$ref": "paths/core_delete/organization_purge.json"
+    },
+    "/api/3/action/user_delete": {
+      "$ref": "paths/core_delete/user_delete.json"
+    },
+    "/api/3/action/vocabulary_delete": {
+      "$ref": "paths/core_delete/vocabulary_delete.json"
+    },
+    "/api/3/action/tag_delete": {
+      "$ref": "paths/core_delete/tag_delete.json"
+    },
+    "/api/3/action/member_delete": {
+      "$ref": "paths/core_delete/member_delete.json"
+    },
+    "/api/3/action/package_collaborator_delete": {
+      "$ref": "paths/core_delete/package_collaborator_delete.json"
+    },
+    "/api/3/action/unfollow_dataset": {
+      "$ref": "paths/core_delete/unfollow_dataset.json"
+    },
+    "/api/3/action/unfollow_user": {
+      "$ref": "paths/core_delete/unfollow_user.json"
+    },
+    "/api/3/action/unfollow_group": {
+      "$ref": "paths/core_delete/unfollow_group.json"
+    },
+    "/api/3/action/api_token_revoke": {
+      "$ref": "paths/core_delete/api_token_revoke.json"
+    },
+    "/api/3/action/job_cancel": {
+      "$ref": "paths/core_delete/job_cancel.json"
+    },
+    "/api/3/action/file_create": {
+      "$ref": "paths/core_file/file_create.json"
+    },
+    "/api/3/action/file_show": {
+      "$ref": "paths/core_file/file_show.json"
+    },
+    "/api/3/action/file_delete": {
+      "$ref": "paths/core_file/file_delete.json"
+    },
+    "/api/3/action/file_rename": {
+      "$ref": "paths/core_file/file_rename.json"
+    },
+    "/api/3/action/file_pin": {
+      "$ref": "paths/core_file/file_pin.json"
+    },
+    "/api/3/action/file_unpin": {
+      "$ref": "paths/core_file/file_unpin.json"
+    },
+    "/api/3/action/datastore_create": {
+      "$ref": "paths/datastore/datastore_create.json"
+    },
+    "/api/3/action/datastore_upsert": {
+      "$ref": "paths/datastore/datastore_upsert.json"
+    },
+    "/api/3/action/datastore_search": {
+      "$ref": "paths/datastore/datastore_search.json"
+    },
+    "/api/3/action/datastore_search_sql": {
+      "$ref": "paths/datastore/datastore_search_sql.json"
+    },
+    "/api/3/action/datastore_delete": {
+      "$ref": "paths/datastore/datastore_delete.json"
+    },
+    "/api/3/action/datastore_records_delete": {
+      "$ref": "paths/datastore/datastore_records_delete.json"
+    },
+    "/api/3/action/datastore_info": {
+      "$ref": "paths/datastore/datastore_info.json"
+    },
+    "/api/3/action/datastore_run_triggers": {
+      "$ref": "paths/datastore/datastore_run_triggers.json"
+    },
+    "/api/3/action/datastore_function_create": {
+      "$ref": "paths/datastore/datastore_function_create.json"
+    },
+    "/api/3/action/datastore_function_delete": {
+      "$ref": "paths/datastore/datastore_function_delete.json"
+    },
+    "/datastore/dump/{resource_id}": {
+      "$ref": "paths/filestore/dump.json"
+    },
+    "/api/3/action/user_activity_list": {
+      "$ref": "paths/activity/user_activity_list.json"
+    },
+    "/api/3/action/package_activity_list": {
+      "$ref": "paths/activity/package_activity_list.json"
+    },
+    "/api/3/action/group_activity_list": {
+      "$ref": "paths/activity/group_activity_list.json"
+    },
+    "/api/3/action/organization_activity_list": {
+      "$ref": "paths/activity/organization_activity_list.json"
+    },
+    "/api/3/action/recently_changed_packages_activity_list": {
+      "$ref": "paths/activity/recently_changed_packages_activity_list.json"
+    },
+    "/api/3/action/dashboard_activity_list": {
+      "$ref": "paths/activity/dashboard_activity_list.json"
+    },
+    "/api/3/action/activity_show": {
+      "$ref": "paths/activity/activity_show.json"
+    },
+    "/api/3/action/activity_data_show": {
+      "$ref": "paths/activity/activity_data_show.json"
+    },
+    "/api/3/action/activity_diff": {
+      "$ref": "paths/activity/activity_diff.json"
+    },
+    "/api/3/action/dashboard_new_activities_count": {
+      "$ref": "paths/activity/dashboard_new_activities_count.json"
+    },
+    "/api/3/action/dashboard_mark_activities_old": {
+      "$ref": "paths/activity/dashboard_mark_activities_old.json"
+    },
+    "/api/3/action/activity_create": {
+      "$ref": "paths/activity/activity_create.json"
+    },
+    "/api/3/action/send_email_notifications": {
+      "$ref": "paths/activity/send_email_notifications.json"
+    },
+    "/api/3/action/activity_delete": {
+      "$ref": "paths/activity/activity_delete.json"
+    },
+    "/api/3/action/activity_delete_all": {
+      "$ref": "paths/activity/activity_delete_all.json"
+    },
+    "/api/3/action/harvest_source_list": {
+      "$ref": "paths/harvest/harvest_source_list.json"
+    },
+    "/api/3/action/harvest_source_show": {
+      "$ref": "paths/harvest/harvest_source_show.json"
+    },
+    "/api/3/action/harvest_source_create": {
+      "$ref": "paths/harvest/harvest_source_create.json"
+    },
+    "/api/3/action/harvest_source_update": {
+      "$ref": "paths/harvest/harvest_source_update.json"
+    },
+    "/api/3/action/harvest_source_delete": {
+      "$ref": "paths/harvest/harvest_source_delete.json"
+    },
+    "/api/3/action/harvest_source_clear": {
+      "$ref": "paths/harvest/harvest_source_clear.json"
+    },
+    "/api/3/action/harvest_job_create": {
+      "$ref": "paths/harvest/harvest_job_create.json"
+    },
+    "/api/3/action/harvest_job_list": {
+      "$ref": "paths/harvest/harvest_job_list.json"
+    },
+    "/api/3/action/harvest_job_show": {
+      "$ref": "paths/harvest/harvest_job_show.json"
+    },
+    "/api/3/action/harvest_job_abort": {
+      "$ref": "paths/harvest/harvest_job_abort.json"
+    },
+    "/api/3/action/harvest_object_show": {
+      "$ref": "paths/harvest/harvest_object_show.json"
+    },
+    "/api/3/action/harvest_object_list": {
+      "$ref": "paths/harvest/harvest_object_list.json"
+    },
+    "/api/3/action/harvesters_info_show": {
+      "$ref": "paths/harvest/harvesters_info_show.json"
+    },
+    "/api/3/action/package_search_spatial": {
+      "$ref": "paths/spatial/package_search_spatial.json"
+    },
+    "/catalog.{format}": {
+      "$ref": "paths/dcat/catalog.json"
+    },
+    "/dataset/{dataset_id}.{format}": {
+      "$ref": "paths/dcat/dataset_rdf.json"
+    },
+    "/dataset/{dataset_id}/schema.org": {
+      "$ref": "paths/dcat/google_dataset_search.json"
+    }
+  }
+}

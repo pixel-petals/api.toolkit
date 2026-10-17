@@ -1,0 +1,42 @@
+{
+  "get": {
+    "operationId": "downloadGpxData",
+    "summary": "Download GPX trace data",
+    "tags": [
+      "GPS Traces"
+    ],
+    "security": [
+      {
+        "oauth2": [
+          "read_gpx"
+        ]
+      }
+    ],
+    "parameters": [
+      {
+        "$ref": "../components/parameters/elementId.json"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "GPX file data",
+        "content": {
+          "application/gpx+xml": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "404": {
+        "$ref": "../components/responses/404.json"
+      }
+    }
+  }
+}

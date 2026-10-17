@@ -1,0 +1,43 @@
+{
+  "get": {
+    "tags": [
+      "FileStore"
+    ],
+    "operationId": "file_show",
+    "security": [
+      {
+        "ApiToken": []
+      }
+    ],
+    "summary": "Get a file record (CKAN 2.12+)",
+    "description": "Return metadata for a managed file.",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "File record dict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas/ActionResponse.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "$ref": "../../components/responses/AuthError.json"
+      },
+      "404": {
+        "$ref": "../../components/responses/NotFound.json"
+      }
+    }
+  }
+}

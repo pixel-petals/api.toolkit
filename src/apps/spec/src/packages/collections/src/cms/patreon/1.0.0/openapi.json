@@ -1,0 +1,1652 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Patreon API v1",
+    "version": "1.0.0",
+    "description": "OpenAPI 3.1 specification for the Patreon API v1, split into subfiles using JSON `$ref` references.\n\n## Key concepts\n\n- **JSON:API**: All responses follow the [JSON:API](https://jsonapi.org/) specification. Primary data is in `data`, related resources in `included`.\n- **Pledges**: The v1 core patronage object. A `pledge` represents a patron's subscription to a campaign. Replaced by `Member` in API v2.\n- **Rewards**: v1 equivalent of Tiers in v2. Define pledge levels and benefits.\n- **Default fields**: Unlike v2, v1 returns a sensible set of fields by default. Use the `includes` parameter to include related resources.\n\n## Authentication\n\nAll requests require an OAuth 2.0 Bearer access token. Obtain one via the OAuth flow (`GET /oauth2/authorize` → `POST /api/oauth2/token`) or use your Creator's Access Token from the developer portal.\n\n## API v1 Scopes\n\n| Scope | Description |\n|-------|-------------|\n| `users` | Read user profile data |\n| `my-campaign` | Read the creator's own campaign |\n| `pledges-to-me` | Read pledges made to the creator |\n| `campaigns` | Read campaign data |\n\n## Rate Limits\n\nRequests are rate-limited at both the client and token level. HTTP 429 responses include a `retry_after_seconds` field. An edge-level block (30 minutes) is triggered after 2,000+ bad requests in a 10-minute window.\n\n## Directory structure\n\n```\nopenapi.json                          ← root entry point\ncomponents/\n  schemas/          (14 files)         ← Error, User, Campaign, Pledge, Reward, Goal, Webhook, etc.\n  parameters/       (1 file)           ← includes\n  responses/        (6 files)          ← shared HTTP error responses\n  securitySchemes/  (2 files)          ← OAuth2, BearerToken\npaths/\n  oauth/            (2 files)          ← token exchange + refresh\n  identity/         (1 file)           ← /current_user\n  campaigns/        (2 files)          ← /current_user/campaigns + /campaigns/{id}\n  pledges/          (1 file)           ← /campaigns/{id}/pledges\n  webhooks/         (2 files)          ← webhook CRUD\n```",
+    "contact": {
+      "name": "Patreon Developer Support",
+      "url": "https://www.patreondevelopers.com"
+    },
+    "termsOfService": "https://www.patreon.com/policy/legal",
+    "license": {
+      "name": "Patreon Platform Usage Policy",
+      "url": "https://www.patreon.com/policy/legal"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.patreon.com",
+      "description": "Patreon production API"
+    }
+  ],
+  "security": [
+    {
+      "OAuth2": []
+    },
+    {
+      "BearerToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth",
+      "description": "OAuth 2.0 token exchange and refresh endpoints. No authentication required."
+    },
+    {
+      "name": "Identity",
+      "description": "Fetch the current authenticated user's profile."
+    },
+    {
+      "name": "Campaigns",
+      "description": "Access campaign data — the creator's page including rewards and goals."
+    },
+    {
+      "name": "Pledges",
+      "description": "Access pledge data — patron subscriptions to a campaign. v1 equivalent of Members in v2."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Manage webhooks for real-time pledge event notifications (`pledges:create`, `pledges:update`, `pledges:delete`)."
+    }
+  ],
+  "paths": {
+    "/api/oauth2/token": {
+      "post": {
+        "tags": [
+          "OAuth"
+        ],
+        "operationId": "exchangeOAuthCode",
+        "summary": "Exchange authorization code for tokens",
+        "description": "Exchange a single-use authorization code for an access token and refresh token. The `Content-Type` must be `application/x-www-form-urlencoded`.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "grant_type",
+                  "client_id",
+                  "client_secret",
+                  "redirect_uri"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Single-use authorization code received from the OAuth redirect."
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code"
+                    ]
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token issued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/oauth2/token#refresh": {
+      "post": {
+        "tags": [
+          "OAuth"
+        ],
+        "operationId": "refreshOAuthToken",
+        "summary": "Refresh an OAuth access token",
+        "description": "Issue a new access token using a refresh token. The old token pair is invalidated.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "grant_type",
+                  "refresh_token",
+                  "client_id",
+                  "client_secret"
+                ],
+                "properties": {
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "refresh_token"
+                    ]
+                  },
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New token pair issued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/current_user": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "operationId": "getCurrentUser",
+        "summary": "Get the current user",
+        "description": "Fetch the current user's profile, including their campaign and pledges (if scopes permit). Requires the `users` scope for full profile data. The `pledges-to-me` scope is needed to read pledges made to your campaign.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/includes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The current user resource with optional includes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                },
+                "example": {
+                  "data": {
+                    "attributes": {
+                      "email": "user@example.com",
+                      "full_name": "Jane Creator"
+                    },
+                    "id": "123456",
+                    "type": "user"
+                  },
+                  "links": {
+                    "self": "https://www.patreon.com/api/oauth2/api/current_user"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/current_user/campaigns": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCurrentUserCampaigns",
+        "summary": "Get the current user's campaigns",
+        "description": "Returns a JSON representation of the current creator's campaigns, including rewards, goals, and the first page of pledges. Requires the `my-campaign` scope.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/includes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The campaign list resource with optional includes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/campaigns/{campaign_id}": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "operationId": "getCampaignById",
+        "summary": "Get a campaign by ID",
+        "description": "Fetch a specific campaign by its ID. Includes rewards and goals by default. Requires the `campaigns` scope.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the campaign to fetch.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/includes"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The campaign resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/campaigns/{campaign_id}/pledges": {
+      "get": {
+        "tags": [
+          "Pledges"
+        ],
+        "operationId": "getCampaignPledges",
+        "summary": "List pledges for a campaign",
+        "description": "Returns the list of pledges for a given campaign. Results are paginated (up to 20 per page). Requires the `pledges-to-me` scope. Use the `page[count]` and `sort` query params for pagination control.\n\n**Note:** Pledges are the v1 equivalent of Members in v2.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/includes"
+          },
+          {
+            "name": "page[count]",
+            "in": "query",
+            "description": "Number of pledges to return per page (max 20).",
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort by. Prefix with `-` for descending. E.g. `created` or `-created`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated pledge list with patron info included.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "attributes": {
+                        "amount_cents": 500,
+                        "created_at": "2023-01-01T00:00:00+00:00"
+                      },
+                      "id": "pledge-123",
+                      "type": "pledge"
+                    }
+                  ],
+                  "links": {
+                    "next": "https://www.patreon.com/api/oauth2/api/campaigns/12345/pledges?page%5Bcursor%5D=xyz"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/webhooks": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "listWebhooks",
+        "summary": "List webhooks for the authenticated client",
+        "description": "Returns all webhooks created by the current client for the authenticated user's campaign.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of webhooks.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "createWebhook",
+        "summary": "Create a webhook",
+        "description": "Create a new webhook on the current user's campaign for pledge events.\n\n**v1 triggers:** `pledges:create`, `pledges:update`, `pledges:delete`.\n\nWebhook payloads are signed with HMAC-MD5 using the webhook secret. Verify the `X-Patreon-Signature` header.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "attributes"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "webhook"
+                        ]
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "required": [
+                          "triggers",
+                          "uri"
+                        ],
+                        "properties": {
+                          "triggers": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "pledges:create",
+                                "pledges:update",
+                                "pledges:delete"
+                              ]
+                            },
+                            "description": "Events that trigger this webhook."
+                          },
+                          "uri": {
+                            "type": "string",
+                            "format": "uri",
+                            "description": "The URL to POST webhook payloads to."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created webhook resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/oauth2/api/webhooks/{webhook_id}": {
+      "patch": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "updateWebhook",
+        "summary": "Update a webhook",
+        "description": "Update the triggers, URI, or paused state of a webhook. You can only update webhooks created by your client.\n\n**Note:** To resend queued missed events after webhook downtime, PATCH with `paused: false`.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "webhook"
+                        ]
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "properties": {
+                          "paused": {
+                            "type": "boolean"
+                          },
+                          "triggers": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "uri": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonApiSingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Webhooks"
+        ],
+        "operationId": "deleteWebhook",
+        "summary": "Delete a webhook",
+        "description": "Permanently delete a webhook created by your client.",
+        "security": [
+          {
+            "OAuth2": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Webhook deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "Patreon OAuth 2.0. Obtain an access token by completing the OAuth flow at https://www.patreon.com/oauth2/authorize and exchanging the code at POST /api/oauth2/token.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://www.patreon.com/oauth2/authorize",
+            "tokenUrl": "https://www.patreon.com/api/oauth2/token",
+            "scopes": {
+              "users": "Read access to the user's public profile information.",
+              "my-campaign": "Read access to the creator's campaign and rewards.",
+              "pledges-to-me": "Read access to pledges made to the creator's campaign.",
+              "campaigns": "Read access to campaign data."
+            }
+          }
+        }
+      },
+      "BearerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "OAuth2 access token",
+        "description": "Creator's Access Token obtained from the Patreon developer portal or via OAuth flow."
+      }
+    },
+    "parameters": {
+      "includes": {
+        "name": "includes",
+        "in": "query",
+        "description": "Comma-separated list of related resources to include in the response.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "400 Bad Request — malformed request syntax or invalid parameters.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "401 Unauthorized — invalid or missing OAuth token.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "403 Forbidden — authenticated but insufficient privileges.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "404 Not Found — the resource does not exist.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "429 Too Many Requests — rate limit exceeded. Check `retry_after_seconds` in the error object.",
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Seconds to wait before retrying."
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "500 Internal Server Error — unexpected server-side failure.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "description": "A single JSON:API error object.",
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code_name": {
+            "type": "string",
+            "description": "Machine-readable error code, e.g. RequestThrottled."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of the error."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retry_after_seconds": {
+            "type": "integer",
+            "description": "Seconds to wait before retrying (rate-limit responses only)."
+          },
+          "status": {
+            "type": "string",
+            "description": "HTTP status code as a string."
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "OAuthTokenResponse": {
+        "type": "object",
+        "description": "OAuth 2.0 token response.",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "Token lifetime in seconds."
+          },
+          "scope": {
+            "type": "string",
+            "description": "Space-separated list of granted scopes."
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type"
+        ]
+      },
+      "ResourceLinkage": {
+        "type": "object",
+        "description": "JSON:API resource linkage (type + id reference).",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ]
+      },
+      "Relationship": {
+        "type": "object",
+        "description": "JSON:API relationship object.",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResourceLinkage"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResourceLinkage"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "related": {
+                "type": "string",
+                "format": "uri"
+              },
+              "self": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "description": "A Patreon user.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "user"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "about": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The creator's summary of their account. Can be null."
+              },
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "discord_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Requires the `users` scope. Can be null."
+              },
+              "facebook": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "facebook_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "first_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "full_name": {
+                "type": "string"
+              },
+              "gender": {
+                "type": "integer",
+                "description": "The user's gender. 0 for unset, 1 for male, 2 for female."
+              },
+              "has_password": {
+                "type": "boolean"
+              },
+              "image_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "is_deleted": {
+                "type": "boolean"
+              },
+              "is_email_verified": {
+                "type": "boolean"
+              },
+              "is_nuked": {
+                "type": "boolean"
+              },
+              "is_suspended": {
+                "type": "boolean"
+              },
+              "last_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "social_connections": {
+                "type": "object",
+                "description": "Map of connected social accounts.",
+                "additionalProperties": true
+              },
+              "thumb_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "twitch": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "twitter": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Profile URL on patreon.com."
+              },
+              "vanity": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "pledges": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Campaign": {
+        "type": "object",
+        "description": "A creator's Patreon campaign (API v1).",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "campaign"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "creation_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "discord_server_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_patron_goals": {
+                "type": "boolean"
+              },
+              "earnings_visibility": {
+                "type": "string"
+              },
+              "image_small_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "image_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "is_charged_immediately": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "is_monthly": {
+                "type": "boolean"
+              },
+              "is_nsfw": {
+                "type": "boolean"
+              },
+              "is_plural": {
+                "type": "boolean"
+              },
+              "main_video_embed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "main_video_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "one_liner": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "outstanding_payment_amount_cents": {
+                "type": "integer"
+              },
+              "patron_count": {
+                "type": "integer"
+              },
+              "pay_per_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "pledge_sum": {
+                "type": "integer",
+                "description": "Total pledge sum in cents (cents of campaign's currency)."
+              },
+              "pledge_url": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "summary": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_embed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_msg": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "thanks_video_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "creator": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "goals": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "pledges": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "rewards": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Pledge": {
+        "type": "object",
+        "description": "A patron's pledge to a campaign (API v1). Replaced by Member in API v2.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "pledge"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount_cents": {
+                "type": "integer",
+                "description": "Pledge amount in cents."
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "currency": {
+                "type": "string",
+                "description": "ISO 4217 currency code."
+              },
+              "declined_since": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "If charge declined, when the most recent charge attempt was. Can be null."
+              },
+              "has_shipping_address": {
+                "type": "boolean"
+              },
+              "is_paused": {
+                "type": "boolean"
+              },
+              "is_twitch_pledge": {
+                "type": "boolean"
+              },
+              "pledge_cap_cents": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "total_historical_amount_cents": {
+                "type": "integer"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "creator": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "patron": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "reward": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Reward": {
+        "type": "object",
+        "description": "A reward tier on a v1 campaign.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "reward"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "description": "Reward amount in cents."
+              },
+              "amount_cents": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "deleted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "discord_role_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "edited_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "image_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "patron_count": {
+                "type": "integer"
+              },
+              "post_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "remaining": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Remaining number of available slots. Null if unlimited."
+              },
+              "requires_shipping": {
+                "type": "boolean"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "unpublished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "url": {
+                "type": "string"
+              },
+              "user_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              },
+              "creator": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Goal": {
+        "type": "object",
+        "description": "A funding goal on a v1 campaign.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "goal"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount_cents": {
+                "type": "integer"
+              },
+              "completed_percentage": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reached_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "$ref": "#/components/schemas/Relationship"
+              }
+            }
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "description": "A v1 webhook on a campaign (pledge events).",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "webhook"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "last_attempted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "num_consecutive_times_failed": {
+                "type": "integer"
+              },
+              "paused": {
+                "type": "boolean"
+              },
+              "secret": {
+                "type": "string",
+                "description": "HMAC-MD5 secret used to sign webhook payloads in the X-Patreon-Signature header."
+              },
+              "triggers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "v1 triggers: pledges:create, pledges:update, pledges:delete."
+              },
+              "uri": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "JsonApiSingleResponse": {
+        "type": "object",
+        "description": "JSON:API response containing a single primary resource.",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The primary resource object."
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Related resources included in the response."
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "JsonApiListResponse": {
+        "type": "object",
+        "description": "JSON:API response containing a list of primary resources.",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              },
+              "prev": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  }
+}

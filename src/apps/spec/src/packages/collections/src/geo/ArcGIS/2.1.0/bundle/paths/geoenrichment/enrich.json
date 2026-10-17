@@ -1,0 +1,83 @@
+{
+  "post": {
+    "tags": [
+      "GeoEnrichment Service"
+    ],
+    "operationId": "enrichLocations",
+    "summary": "Enrich locations with demographic data",
+    "description": "Appends demographic facts and local statistics to input locations (points, polygons, or standard geographies). Returns the requested data variables for each feature.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/x-www-form-urlencoded": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "studyAreas"
+            ],
+            "properties": {
+              "studyAreas": {
+                "type": "string",
+                "description": "JSON array of study area objects. Can be points (with optional buffer), polygons, or named place IDs. Example: `[{\"geometry\":{\"x\":-117.196,\"y\":34.057}}]`."
+              },
+              "analysisVariables": {
+                "type": "string",
+                "description": "JSON array of variable IDs. Example: `[\"AtRisk.ACSTOTPOP\",\"AtRisk.ACSOMALES\"]`."
+              },
+              "dataCollections": {
+                "type": "string",
+                "description": "JSON array of data collection names (returns all variables in each collection)."
+              },
+              "studyAreasOptions": {
+                "type": "string",
+                "description": "JSON buffer options: `{areaType, bufferUnits, bufferRadii}`."
+              },
+              "returnGeometry": {
+                "type": "boolean",
+                "default": false
+              },
+              "inSR": {
+                "type": "integer",
+                "default": 4326
+              },
+              "outSR": {
+                "type": "integer",
+                "default": 4326
+              },
+              "f": {
+                "type": "string",
+                "default": "json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Enrichment results per study area.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses/ArcGISError.json"
+      },
+      "401": {
+        "$ref": "../../components/responses/Unauthorized.json"
+      }
+    }
+  }
+}

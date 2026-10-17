@@ -1,0 +1,10 @@
+{
+  "name": "compressed",
+  "in": "query",
+  "description": "If set to `true`, this parameter can compress the output file of a specific export format with GZIP, e.g. `.csv.gzip`.\n",
+  "required": false,
+  "schema": {
+    "type": "boolean",
+    "default": false
+  }
+}
