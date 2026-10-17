@@ -61,6 +61,7 @@
 # ignore local overrides
 **/.claude/settings.local.json
 **/claude.local.md
+**/agent.local.md
 
 # source code
 # ——————————————————————————————
