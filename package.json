@@ -20,9 +20,18 @@
     "dependencies": "packager link || exit 0",
     "lint": "eslint .",
     "metapak": "metapak-px",
+    "package:arazzo": "npm run --workspace @package/arazzo",
+    "package:asyncapi": "npm run --workspace @package/asyncapi",
+    "package:collections": "npm run --workspace @package/collections",
+    "package:graphql": "npm run --workspace @package/graphql",
+    "package:mcp": "npm run --workspace @package/mcp",
+    "package:openapi": "npm run --workspace @package/openapi",
+    "package:protobuf": "npm run --workspace @package/protobuf",
+    "package:typeapi": "npm run --workspace @package/typeapi",
     "plugin:yaak-human-ids": "npm run --workspace @plugin/yaak-human-ids",
     "test": "ws-run test",
-    "typecheck": "ws-run typecheck"
+    "typecheck": "ws-run typecheck",
+    "util:api": "npm run --workspace @util/api"
   },
   "imports": {},
   "exports": {},
@@ -34,7 +43,9 @@
     "src/packages/*",
     "src/plugins/*",
     "src/tools/*",
-    "src/utils/*"
+    "src/utils/*",
+    "src/apps/spec/src/packages/*",
+    "src/apps/spec/src/utils/*"
   ],
   "engines": {
     "node": ">=24"
