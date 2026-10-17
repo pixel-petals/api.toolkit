@@ -8,7 +8,7 @@
   "json.schemas": [
     {
       "fileMatch": ["**/schema/bundle/spec.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/spec.json"
+      "url": "./src/packages/openapi/src/schema/3.2/schema.json"
     },
 
     /**
@@ -18,47 +18,47 @@
 
     {
       "fileMatch": ["**/schema/bundle/schemas/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/schemas.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/schemas.json"
     },
     {
       "fileMatch": ["**/schema/bundle/responses/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/responses.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/responses.json"
     },
     {
       "fileMatch": ["**/schema/bundle/parameters/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/parameters.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/parameters.json"
     },
     {
       "fileMatch": ["**/schema/bundle/examples/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/examples.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/examples.json"
     },
     {
       "fileMatch": ["**/schema/bundle/requestBodies/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/requestBodies.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/requestBodies.json"
     },
     {
       "fileMatch": ["**/schema/bundle/headers/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/headers.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/headers.json"
     },
     {
       "fileMatch": ["**/schema/bundle/securitySchemes/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/securitySchemes.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/securitySchemes.json"
     },
     {
       "fileMatch": ["**/schema/bundle/links/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/links.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/links.json"
     },
     {
       "fileMatch": ["**/schema/bundle/callbacks/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/callbacks.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/callbacks.json"
     },
     {
       "fileMatch": ["**/schema/bundle/pathItems/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/pathItems.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/fragments/pathItem.json"
     },
     {
       "fileMatch": ["**/schema/bundle/mediaTypes/*.json"],
-      "url": "./src/packages/openapi/src/schema/3.2/components/mediaTypes.json"
+      "url": "./src/packages/openapi/src/schema/3.2/defs/components/mediaTypes.json"
     }
   ],
 
